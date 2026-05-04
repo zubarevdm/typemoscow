@@ -219,8 +219,21 @@
     gap: 20px;
   }
 
+  /* Центрируем одиночный последний элемент в 3-колоночной сетке */
+  @media (min-width: 961px) {
+    .works-grid > .work-item:last-child:nth-child(3n + 1) {
+      grid-column: 2;
+    }
+  }
+
   @media (max-width: 960px) {
     .works-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    /* Центрируем одиночный последний элемент в 2-колоночной сетке */
+    .works-grid > .work-item:last-child:nth-child(2n + 1) {
+      grid-column: 1 / 3;
+      max-width: 50%;
+      justify-self: center;
+    }
   }
   @media (max-width: 560px) {
     .works-grid { grid-template-columns: 1fr; gap: 14px; }
@@ -409,9 +422,6 @@
   .reveal-stagger.is-visible .work-item:nth-child(5) { transition-delay: 240ms; }
   .reveal-stagger.is-visible .work-item:nth-child(6) { transition-delay: 300ms; }
   .reveal-stagger.is-visible .work-item:nth-child(7) { transition-delay: 360ms; }
-  .reveal-stagger.is-visible .work-item:nth-child(8) { transition-delay: 420ms; }
-  .reveal-stagger.is-visible .work-item:nth-child(9) { transition-delay: 480ms; }
-  .reveal-stagger.is-visible .work-item:nth-child(10) { transition-delay: 540ms; }
 
   @media (max-width: 720px) {
     .works-section { padding: 56px 0 80px; }
@@ -456,7 +466,7 @@
         <p class="section-tag">Works · TYPE</p>
         <div class="page-hero-meta">
           <h1 class="h-section">Работы мастеров <span class="marker"></span></h1>
-          <span class="page-hero-count">10 работ</span>
+          <span class="page-hero-count">7 работ</span>
         </div>
         <p class="lede">Чёрно-белые редакционные снимки. Каждый образ — результат диалога мастера и клиента. Потом работ будет больше.</p>
       </div>
@@ -468,83 +478,59 @@
     <div class="container">
       <div class="works-grid reveal-stagger" id="worksGrid">
 
-        <article class="work-item" data-src="assets/works/DSCF0033.JPG" tabindex="0" role="button" aria-label="Работа 1 — открыть">
+        <article class="work-item" data-src="assets/works/DSCF0046.JPG" tabindex="0" role="button" aria-label="Работа 1 — открыть">
           <div class="work-item-inner">
-            <img src="assets/works/DSCF0033.JPG" alt="Работа мастеров TYPE — 01" loading="lazy" decoding="async" />
+            <img src="assets/works/DSCF0046.JPG" alt="Работа мастеров TYPE — 01" loading="lazy" decoding="async" />
           </div>
           <span class="work-num">01</span>
           <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
         </article>
 
-        <article class="work-item" data-src="assets/works/DSCF0046.JPG" tabindex="0" role="button" aria-label="Работа 2 — открыть">
+        <article class="work-item" data-src="assets/works/DSCF0079.JPG" tabindex="0" role="button" aria-label="Работа 2 — открыть">
           <div class="work-item-inner">
-            <img src="assets/works/DSCF0046.JPG" alt="Работа мастеров TYPE — 02" loading="lazy" decoding="async" />
+            <img src="assets/works/DSCF0079.JPG" alt="Работа мастеров TYPE — 02" loading="lazy" decoding="async" />
           </div>
           <span class="work-num">02</span>
           <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
         </article>
 
-        <article class="work-item" data-src="assets/works/DSCF0079.JPG" tabindex="0" role="button" aria-label="Работа 3 — открыть">
+        <article class="work-item" data-src="assets/works/DSCF0355.JPG" tabindex="0" role="button" aria-label="Работа 3 — открыть">
           <div class="work-item-inner">
-            <img src="assets/works/DSCF0079.JPG" alt="Работа мастеров TYPE — 03" loading="lazy" decoding="async" />
+            <img src="assets/works/DSCF0355.JPG" alt="Работа мастеров TYPE — 03" loading="lazy" decoding="async" />
           </div>
           <span class="work-num">03</span>
           <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
         </article>
 
-        <article class="work-item" data-src="assets/works/DSCF0237.JPG" tabindex="0" role="button" aria-label="Работа 4 — открыть">
+        <article class="work-item" data-src="assets/works/DSCF0881.JPG" tabindex="0" role="button" aria-label="Работа 4 — открыть">
           <div class="work-item-inner">
-            <img src="assets/works/DSCF0237.JPG" alt="Работа мастеров TYPE — 04" loading="lazy" decoding="async" />
+            <img src="assets/works/DSCF0881.JPG" alt="Работа мастеров TYPE — 04" loading="lazy" decoding="async" />
           </div>
           <span class="work-num">04</span>
           <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
         </article>
 
-        <article class="work-item" data-src="assets/works/DSCF0355.JPG" tabindex="0" role="button" aria-label="Работа 5 — открыть">
+        <article class="work-item" data-src="assets/works/DSCF1049.JPG" tabindex="0" role="button" aria-label="Работа 5 — открыть">
           <div class="work-item-inner">
-            <img src="assets/works/DSCF0355.JPG" alt="Работа мастеров TYPE — 05" loading="lazy" decoding="async" />
+            <img src="assets/works/DSCF1049.JPG" alt="Работа мастеров TYPE — 05" loading="lazy" decoding="async" />
           </div>
           <span class="work-num">05</span>
           <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
         </article>
 
-        <article class="work-item" data-src="assets/works/DSCF0881.JPG" tabindex="0" role="button" aria-label="Работа 6 — открыть">
+        <article class="work-item" data-src="assets/works/DSCF1208.JPG" tabindex="0" role="button" aria-label="Работа 6 — открыть">
           <div class="work-item-inner">
-            <img src="assets/works/DSCF0881.JPG" alt="Работа мастеров TYPE — 06" loading="lazy" decoding="async" />
+            <img src="assets/works/DSCF1208.JPG" alt="Работа мастеров TYPE — 06" loading="lazy" decoding="async" />
           </div>
           <span class="work-num">06</span>
           <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
         </article>
 
-        <article class="work-item" data-src="assets/works/DSCF0991.JPG" tabindex="0" role="button" aria-label="Работа 7 — открыть">
+        <article class="work-item" data-src="assets/works/DSCF1436.JPG" tabindex="0" role="button" aria-label="Работа 7 — открыть">
           <div class="work-item-inner">
-            <img src="assets/works/DSCF0991.JPG" alt="Работа мастеров TYPE — 07" loading="lazy" decoding="async" />
+            <img src="assets/works/DSCF1436.JPG" alt="Работа мастеров TYPE — 07" loading="lazy" decoding="async" />
           </div>
           <span class="work-num">07</span>
-          <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
-        </article>
-
-        <article class="work-item" data-src="assets/works/DSCF1049.JPG" tabindex="0" role="button" aria-label="Работа 8 — открыть">
-          <div class="work-item-inner">
-            <img src="assets/works/DSCF1049.JPG" alt="Работа мастеров TYPE — 08" loading="lazy" decoding="async" />
-          </div>
-          <span class="work-num">08</span>
-          <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
-        </article>
-
-        <article class="work-item" data-src="assets/works/DSCF1208.JPG" tabindex="0" role="button" aria-label="Работа 9 — открыть">
-          <div class="work-item-inner">
-            <img src="assets/works/DSCF1208.JPG" alt="Работа мастеров TYPE — 09" loading="lazy" decoding="async" />
-          </div>
-          <span class="work-num">09</span>
-          <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
-        </article>
-
-        <article class="work-item" data-src="assets/works/DSCF1436.JPG" tabindex="0" role="button" aria-label="Работа 10 — открыть">
-          <div class="work-item-inner">
-            <img src="assets/works/DSCF1436.JPG" alt="Работа мастеров TYPE — 10" loading="lazy" decoding="async" />
-          </div>
-          <span class="work-num">10</span>
           <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
         </article>
 
