@@ -740,12 +740,19 @@
     width: 100%; height: 100%;
     border: none; display: block;
   }
+  /* белая полоса перекрывает яндексовскую панель снизу */
+  .map-frame::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 52px; z-index: 1;
+    background: var(--paper);
+  }
   .map-link {
-    position: absolute; left: 10px; bottom: 8px; z-index: 2;
+    position: absolute; left: 16px; bottom: 10px; z-index: 2;
     font-family: var(--font-mono); font-weight: 700;
-    font-size: 13px; letter-spacing: .14em; text-transform: uppercase;
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
     color: var(--ink); background: var(--paper);
-    padding: 14px 32px; border-radius: 999px;
+    padding: 11px 28px; border-radius: 999px;
     border: 1.5px solid var(--ink);
     transition: background var(--dur-fast), color var(--dur-fast);
     white-space: nowrap;
@@ -1439,7 +1446,7 @@
           <div class="reveal">
             <div class="map-frame">
               <iframe
-                src="https://yandex.ru/map-widget/v1/?ll=37.595713%2C55.737849&z=17&pt=37.595713%2C55.737849,pm2rdl&text=TYPE+Barbershop%2C+%D0%9E%D1%81%D1%82%D0%BE%D0%B6%D0%B5%D0%BD%D0%BA%D0%B0+47"
+                src="https://yandex.ru/map-widget/v1/?ll=37.595713%2C55.737849&z=17&pt=37.595713%2C55.737849,pm2rdl"
                 title="TYPE Barbershop на карте"
                 allowfullscreen
                 loading="lazy"
