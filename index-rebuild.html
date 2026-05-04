@@ -903,6 +903,8 @@
     margin-bottom: 18px;
   }
   .footer-col ul { display: grid; gap: 10px; }
+  nav.footer-col ul { columns: 2; column-gap: 20px; display: block; }
+  nav.footer-col ul li { margin-bottom: 10px; break-inside: avoid; }
   .footer-col a { font-size: 14px; color: var(--ink); }
   .footer-col a:hover { color: var(--forest); }
 
@@ -1485,11 +1487,11 @@
           <div class="partner-row">
             <div class="partner-logo" aria-label="«Ш» — мужской уход">
               <svg viewBox="0 0 72 72" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <!-- Ш — три вертикальные полосы и горизонтальная сверху -->
-                <rect x="0"  y="0" width="72" height="11"/>
-                <rect x="0"  y="0" width="11" height="72"/>
-                <rect x="30" y="0" width="11" height="72"/>
-                <rect x="61" y="0" width="11" height="72"/>
+                <!-- Ш — три вертикальные полосы и горизонтальная снизу -->
+                <rect x="0"  y="61" width="72" height="11"/>
+                <rect x="0"  y="0"  width="11" height="72"/>
+                <rect x="30" y="0"  width="11" height="72"/>
+                <rect x="61" y="0"  width="11" height="72"/>
               </svg>
             </div>
             <p class="partner-text">«Ш» — мужской российский бренд по уходу за волосами. Сделан мастерами TYPE для мастеров СНГ и их клиентов.</p>
@@ -1581,7 +1583,7 @@
         <div class="footer-col">
           <h4>Партнёры</h4>
           <ul>
-            <li><a href="#partners">Lulu · «Ш»</a></li>
+            <li><a href="#partners">«Ш»</a></li>
             <li><a href="#partners">BETONE</a></li>
             <li><a href="#partners">SHEVELIZM</a></li>
             <li><a href="#partners">TAKTO</a></li>
