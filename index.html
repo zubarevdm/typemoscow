@@ -730,38 +730,18 @@
 
   .map-frame {
     aspect-ratio: 4 / 3;
-    background:
-      linear-gradient(135deg, var(--paper-2), var(--paper-d));
     border: 1px solid var(--line-d);
     border-radius: 24px;
     overflow: hidden; position: relative;
+    background: var(--paper-2);
   }
-  .map-frame::before {
-    content: ''; position: absolute; inset: 0;
-    background-image:
-      linear-gradient(to right,  rgba(11,11,11,.06) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(11,11,11,.06) 1px, transparent 1px);
-    background-size: 36px 36px;
-  }
-  .map-pin {
-    position: absolute; top: 50%; left: 52%;
-    transform: translate(-50%, -100%);
-    display: flex; flex-direction: column; align-items: center; gap: 6px;
-  }
-  .map-pin-dot {
-    width: 14px; height: 14px;
-    background: var(--forest); border: 2px solid var(--paper);
-    border-radius: 50%;
-    box-shadow: 0 0 0 4px rgba(4,38,21,.12);
-  }
-  .map-pin-label {
-    font-family: var(--font-mono); font-weight: 700;
-    font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
-    background: var(--ink); color: var(--paper);
-    padding: 5px 12px; border-radius: 999px;
+  .map-frame iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: none; display: block;
   }
   .map-link {
-    position: absolute; left: 16px; bottom: 16px;
+    position: absolute; left: 16px; bottom: 16px; z-index: 2;
     font-family: var(--font-mono); font-weight: 700;
     font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
     color: var(--ink); background: var(--paper);
@@ -1459,12 +1439,15 @@
           </div>
 
           <div class="reveal">
-            <div class="map-frame" role="img" aria-label="Карта: TYPE на Остоженке 47">
-              <div class="map-pin">
-                <span class="map-pin-dot"></span>
-                <span class="map-pin-label">TYPE</span>
-              </div>
-              <a href="https://yandex.ru/maps/?text=Москва+Остоженка+47" target="_blank" rel="noopener" class="map-link">Открыть в Яндекс Картах →</a>
+            <div class="map-frame">
+              <iframe
+                src="https://yandex.ru/map-widget/v1/?org=85480441148&ll=37.595713%2C55.737849&z=17&lang=ru_RU"
+                title="TYPE Barbershop на карте"
+                allow="fullscreen"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              ></iframe>
+              <a href="https://yandex.ru/maps/213/moscow/?ll=37.595876%2C55.737846&mode=poi&poi%5Bpoint%5D=37.595713%2C55.737849&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D85480441148&z=19.6" target="_blank" rel="noopener" class="map-link">Открыть в Яндекс Картах →</a>
             </div>
           </div>
         </div>
@@ -1554,7 +1537,7 @@
             <a href="https://www.instagram.com/typemoscow/" target="_blank" rel="noopener noreferrer">Instagram</a>
             <a href="https://t.me/typemoscowtg" target="_blank" rel="noopener noreferrer">Telegram</a>
             <a href="https://vk.com/typemoscowvk" target="_blank" rel="noopener noreferrer">VK</a>
-            <a href="https://yandex.ru/maps/?text=TYPE+Остоженка+47" target="_blank" rel="noopener noreferrer">Yandex</a>
+            <a href="https://yandex.ru/maps/213/moscow/?ll=37.595876%2C55.737846&mode=poi&poi%5Bpoint%5D=37.595713%2C55.737849&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D85480441148&z=19.6" target="_blank" rel="noopener noreferrer">Yandex</a>
           </div>
         </div>
 
