@@ -25,8 +25,3 @@
   X-Content-Type-Options: nosniff
   X-Frame-Options: SAMEORIGIN
   Referrer-Policy: strict-origin-when-cross-origin
-
-# Админка CMS — защита от встраивания
-/admin/*
-  X-Frame-Options: SAMEORIGIN
-  X-Content-Type-Options: nosniff
