@@ -25,6 +25,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="font" type="font/ttf" href="assets/fonts/Disket-Mono-Regular.ttf" crossorigin />
+  <link rel="preload" as="font" type="font/ttf" href="assets/fonts/Disket-Mono-Bold.ttf" crossorigin />
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" /></noscript>
@@ -464,7 +466,7 @@
   <div class="container">
     <div class="nav-row">
 
-      <a href="index.html" class="brand" aria-label="TYPE — на главную">
+      <a href="index.html" class="brand" aria-label="TYPE Moscow, est. 2024 — на главную">
         <span class="brand-logo" aria-hidden="true">
           <img src="assets/type-logo-main.svg" alt="" width="223" height="81" />
         </span>
@@ -504,60 +506,81 @@
     <div class="container">
       <div class="works-grid reveal-stagger" id="worksGrid">
 
-        <div class="work-item" data-src="assets/works/DSCF0046.JPG" tabindex="0" role="button" aria-label="01 TYPE Moscow — открыть фото">
+        <div class="work-item" data-src="assets/works/DSCF0046.JPG" tabindex="0" role="button" aria-label="Работа 01 TYPE Moscow — открыть фото">
           <div class="work-item-inner">
-            <img src="assets/works/DSCF0046.JPG" alt="Работа мастеров TYPE — 01" loading="eager" fetchpriority="high" decoding="async" width="700" height="1050" />
+            <img src="assets/works/DSCF0046.JPG"
+                 srcset="assets/works/_mobile/DSCF0046.JPG 400w, assets/works/DSCF0046.JPG 800w"
+                 sizes="(min-width: 961px) 420px, (min-width: 721px) 360px, calc(100vw - 40px)"
+                 alt="" loading="eager" fetchpriority="high" decoding="async" width="800" height="1200" />
           </div>
           <span class="work-num">01</span>
-          <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
+          <div class="work-caption" aria-hidden="true"><span class="work-caption-text">TYPE Moscow</span></div>
         </div>
 
-        <div class="work-item" data-src="assets/works/DSCF0079.JPG" tabindex="0" role="button" aria-label="02 TYPE Moscow — открыть фото">
+        <div class="work-item" data-src="assets/works/DSCF0079.JPG" tabindex="0" role="button" aria-label="Работа 02 TYPE Moscow — открыть фото">
           <div class="work-item-inner">
-            <img src="assets/works/DSCF0079.JPG" alt="Работа мастеров TYPE — 02" loading="lazy" decoding="async" />
+            <img src="assets/works/DSCF0079.JPG"
+                 srcset="assets/works/_mobile/DSCF0079.JPG 400w, assets/works/DSCF0079.JPG 800w"
+                 sizes="(min-width: 961px) 420px, (min-width: 721px) 360px, calc(100vw - 40px)"
+                 alt="" loading="lazy" decoding="async" width="800" height="1200" />
           </div>
           <span class="work-num">02</span>
-          <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
+          <div class="work-caption" aria-hidden="true"><span class="work-caption-text">TYPE Moscow</span></div>
         </div>
 
-        <div class="work-item" data-src="assets/works/DSCF0355.JPG" tabindex="0" role="button" aria-label="03 TYPE Moscow — открыть фото">
+        <div class="work-item" data-src="assets/works/DSCF0355.JPG" tabindex="0" role="button" aria-label="Работа 03 TYPE Moscow — открыть фото">
           <div class="work-item-inner">
-            <img src="assets/works/DSCF0355.JPG" alt="Работа мастеров TYPE — 03" loading="lazy" decoding="async" />
+            <img src="assets/works/DSCF0355.JPG"
+                 srcset="assets/works/_mobile/DSCF0355.JPG 400w, assets/works/DSCF0355.JPG 800w"
+                 sizes="(min-width: 961px) 420px, (min-width: 721px) 360px, calc(100vw - 40px)"
+                 alt="" loading="lazy" decoding="async" width="800" height="1200" />
           </div>
           <span class="work-num">03</span>
-          <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
+          <div class="work-caption" aria-hidden="true"><span class="work-caption-text">TYPE Moscow</span></div>
         </div>
 
-        <div class="work-item" data-src="assets/works/DSCF0881.JPG" tabindex="0" role="button" aria-label="04 TYPE Moscow — открыть фото">
+        <div class="work-item" data-src="assets/works/DSCF0881.JPG" tabindex="0" role="button" aria-label="Работа 04 TYPE Moscow — открыть фото">
           <div class="work-item-inner">
-            <img src="assets/works/DSCF0881.JPG" alt="Работа мастеров TYPE — 04" loading="lazy" decoding="async" />
+            <img src="assets/works/DSCF0881.JPG"
+                 srcset="assets/works/_mobile/DSCF0881.JPG 400w, assets/works/DSCF0881.JPG 800w"
+                 sizes="(min-width: 961px) 420px, (min-width: 721px) 360px, calc(100vw - 40px)"
+                 alt="" loading="lazy" decoding="async" width="800" height="1200" />
           </div>
           <span class="work-num">04</span>
-          <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
+          <div class="work-caption" aria-hidden="true"><span class="work-caption-text">TYPE Moscow</span></div>
         </div>
 
-        <div class="work-item" data-src="assets/works/DSCF1049.JPG" tabindex="0" role="button" aria-label="05 TYPE Moscow — открыть фото">
+        <div class="work-item" data-src="assets/works/DSCF1049.JPG" tabindex="0" role="button" aria-label="Работа 05 TYPE Moscow — открыть фото">
           <div class="work-item-inner">
-            <img src="assets/works/DSCF1049.JPG" alt="Работа мастеров TYPE — 05" loading="lazy" decoding="async" />
+            <img src="assets/works/DSCF1049.JPG"
+                 srcset="assets/works/_mobile/DSCF1049.JPG 400w, assets/works/DSCF1049.JPG 800w"
+                 sizes="(min-width: 961px) 420px, (min-width: 721px) 360px, calc(100vw - 40px)"
+                 alt="" loading="lazy" decoding="async" width="800" height="1200" />
           </div>
           <span class="work-num">05</span>
-          <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
+          <div class="work-caption" aria-hidden="true"><span class="work-caption-text">TYPE Moscow</span></div>
         </div>
 
-        <div class="work-item" data-src="assets/works/DSCF1208.JPG" tabindex="0" role="button" aria-label="06 TYPE Moscow — открыть фото">
+        <div class="work-item" data-src="assets/works/DSCF1208.JPG" tabindex="0" role="button" aria-label="Работа 06 TYPE Moscow — открыть фото">
           <div class="work-item-inner">
-            <img src="assets/works/DSCF1208.JPG" alt="Работа мастеров TYPE — 06" loading="lazy" decoding="async" />
+            <img src="assets/works/DSCF1208.JPG"
+                 srcset="assets/works/_mobile/DSCF1208.JPG 400w, assets/works/DSCF1208.JPG 800w"
+                 sizes="(min-width: 961px) 420px, (min-width: 721px) 360px, calc(100vw - 40px)"
+                 alt="" loading="lazy" decoding="async" width="800" height="1200" />
           </div>
           <span class="work-num">06</span>
-          <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
+          <div class="work-caption" aria-hidden="true"><span class="work-caption-text">TYPE Moscow</span></div>
         </div>
 
-        <div class="work-item" data-src="assets/works/DSCF1436.JPG" tabindex="0" role="button" aria-label="07 TYPE Moscow — открыть фото">
+        <div class="work-item" data-src="assets/works/DSCF1436.JPG" tabindex="0" role="button" aria-label="Работа 07 TYPE Moscow — открыть фото">
           <div class="work-item-inner">
-            <img src="assets/works/DSCF1436.JPG" alt="Работа мастеров TYPE — 07" loading="lazy" decoding="async" />
+            <img src="assets/works/DSCF1436.JPG"
+                 srcset="assets/works/_mobile/DSCF1436.JPG 400w, assets/works/DSCF1436.JPG 800w"
+                 sizes="(min-width: 961px) 420px, (min-width: 721px) 360px, calc(100vw - 40px)"
+                 alt="" loading="lazy" decoding="async" width="800" height="1200" />
           </div>
           <span class="work-num">07</span>
-          <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
+          <div class="work-caption" aria-hidden="true"><span class="work-caption-text">TYPE Moscow</span></div>
         </div>
 
       </div>
@@ -637,7 +660,8 @@
   function openLightbox(idx) {
     current = idx;
     const src = items[idx].dataset.src;
-    const altText = items[idx].querySelector('img').alt;
+    const ariaLabel = items[idx].getAttribute('aria-label') || '';
+    const altText = ariaLabel.replace(/\s—\sоткрыть фото$/, '');
     lbImg.src = src;
     lbImg.alt = altText;
     lb.classList.add('is-open');

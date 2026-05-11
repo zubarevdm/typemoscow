@@ -1,1 +1,6 @@
-﻿.DS_StoreThumbs.dbdesktop.ini*.zip*.pdfnode_modules/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.zip
+*.pdf
+node_modules/
