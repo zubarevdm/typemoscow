@@ -1,0 +1,32 @@
+# Кэширование статических ассетов на год (immutable)
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/works/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/interior/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/*.svg
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML — без кэша, чтобы изменения подхватывались сразу
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Безопасность для корневого index
+/
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# Админка CMS — защита от встраивания
+/admin/*
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
