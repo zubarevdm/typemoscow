@@ -640,23 +640,13 @@
     overflow: hidden;
     min-height: calc(13.5px * 1.55 * 5);
   }
-  .master-bio.is-expanded {
-    -webkit-line-clamp: unset;
-    display: block;
-    overflow: visible;
-  }
-  .master-bio-toggle {
-    display: none;
-    font-family: var(--font-mono); font-weight: 700;
-    font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
-    color: var(--ink); background: transparent;
-    border: none; padding: 0; margin-top: -8px;
-    cursor: pointer; justify-self: start;
-    border-bottom: 1px solid var(--ink);
-    line-height: 1.4;
-  }
   @media (max-width: 760px) {
-    .master-bio-toggle.is-needed { display: inline-block; }
+    .master-bio {
+      display: block;
+      -webkit-line-clamp: unset;
+      overflow: visible;
+      min-height: 0;
+    }
   }
   .master-tags {
     display: flex; flex-wrap: wrap; gap: 6px;
@@ -1719,34 +1709,6 @@
       });
     });
 
-    /* Master bio expand/collapse on mobile */
-    function setupBioToggles() {
-      $$('.master-bio').forEach(bio => {
-        if (bio.nextElementSibling && bio.nextElementSibling.classList.contains('master-bio-toggle')) return;
-        const btn = document.createElement('button');
-        btn.className = 'master-bio-toggle';
-        btn.type = 'button';
-        btn.textContent = 'Читать полностью';
-        bio.insertAdjacentElement('afterend', btn);
-        btn.addEventListener('click', () => {
-          const expanded = bio.classList.toggle('is-expanded');
-          btn.textContent = expanded ? 'Свернуть' : 'Читать полностью';
-        });
-      });
-    }
-    function checkBioOverflow() {
-      $$('.master-bio').forEach(bio => {
-        const btn = bio.nextElementSibling;
-        if (!btn || !btn.classList.contains('master-bio-toggle')) return;
-        bio.classList.remove('is-expanded');
-        btn.textContent = 'Читать полностью';
-        const overflows = bio.scrollHeight > bio.clientHeight + 2;
-        btn.classList.toggle('is-needed', overflows);
-      });
-    }
-    setupBioToggles();
-    checkBioOverflow();
-    window.addEventListener('resize', checkBioOverflow, { passive: true });
   })();
   </script>
 </body>
