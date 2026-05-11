@@ -1,0 +1,79 @@
+---
+import site from '../content/site.json';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+  ogImage?: string;
+  pageType?: 'website' | 'business.business';
+}
+
+const {
+  title = site.title,
+  description = site.description,
+  canonicalPath = '/',
+  ogImage = '/assets/og-image.jpg',
+  pageType = 'website',
+} = Astro.props;
+
+const canonicalUrl = new URL(canonicalPath, site.url).toString();
+const ogImageUrl = new URL(ogImage, site.url).toString();
+---
+
+<!doctype html>
+<html lang={site.lang}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content={site.themeColor} />
+  <meta name="description" content={description} />
+  <meta name="keywords" content={site.keywords} />
+  {site.stagingNoindex ? (
+    <>
+      {/* STAGING-NOINDEX: на боевом домене заменить на content="index, follow" */}
+      <meta name="robots" content="noindex, nofollow" />
+    </>
+  ) : (
+    <meta name="robots" content="index, follow" />
+  )}
+  <link rel="canonical" href={canonicalUrl} />
+  <title>{title}</title>
+
+  <meta property="og:type" content={pageType} />
+  <meta property="og:site_name" content={site.shortTitle} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:image" content={ogImageUrl} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content={site.title} />
+  <meta property="og:locale" content={site.locale} />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={site.shortDescription} />
+  <meta name="twitter:image" content={ogImageUrl} />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" /></noscript>
+
+  <link rel="icon" type="image/svg+xml" href="/assets/type-mark.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="apple-mobile-web-app-title" content="TYPE" />
+  <meta name="application-name" content={site.shortTitle} />
+
+  <slot name="head" />
+</head>
+<body>
+  <slot />
+</body>
+</html>

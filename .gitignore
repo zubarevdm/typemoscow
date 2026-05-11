@@ -4,3 +4,6 @@ desktop.ini
 *.zip
 *.pdf
 node_modules/
+
+# Локальные мокапы — не деплоить
+_mockup_*.html

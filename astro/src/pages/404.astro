@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#EBEAE5" />
+  <meta name="robots" content="noindex, follow" />
+  <title>404 — Страница не найдена · TYPE Moscow</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/type-mark.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+  @font-face { font-family: 'Disket Mono'; src: url('/assets/fonts/Disket-Mono-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+  @font-face { font-family: 'Disket Mono'; src: url('/assets/fonts/Disket-Mono-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+
+  :root {
+    --paper: #EBEAE5;
+    --ink:   #0B0B0B;
+    --ink-2: #1F1F1F;
+    --ash-d: #6E6E6E;
+    --forest: #042615;
+    --font-body: 'Montserrat', system-ui, sans-serif;
+    --font-mono: 'Disket Mono', ui-monospace, monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-body);
+    background: var(--paper); color: var(--ink);
+    min-height: 100dvh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { text-align: center; max-width: 520px; }
+  .code {
+    font-family: var(--font-mono); font-weight: 700;
+    font-size: clamp(72px, 18vw, 144px); line-height: 1;
+    letter-spacing: -.02em;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+  .marker {
+    display: inline-block; width: 14px; height: 14px;
+    background: var(--forest); transform: rotate(45deg);
+    vertical-align: middle; margin: 0 6px;
+  }
+  .title {
+    font-weight: 700;
+    font-size: clamp(22px, 3vw, 32px); line-height: 1.2;
+    letter-spacing: -.01em;
+    margin-bottom: 14px;
+  }
+  .sub {
+    color: var(--ink-2); font-size: 15px; line-height: 1.55;
+    margin-bottom: 32px;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 16px 28px; min-height: 52px;
+    font-family: var(--font-mono); font-weight: 700;
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    border: 1px solid var(--ink); border-radius: 999px;
+    background: var(--ink); color: var(--paper);
+    text-decoration: none;
+    transition: background .2s, border-color .2s;
+  }
+  .btn:hover { background: var(--forest); border-color: var(--forest); }
+  .arrow {
+    display: inline-block; width: 14px; height: 1px; background: currentColor;
+    position: relative;
+  }
+  .arrow::after {
+    content: ''; position: absolute; right: 0; top: -3px;
+    width: 7px; height: 7px;
+    border-top: 1px solid currentColor; border-right: 1px solid currentColor;
+    transform: rotate(45deg);
+  }
+  .meta {
+    margin-top: 40px;
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ash-d);
+  }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p class="code">404 <span class="marker"></span></p>
+    <h1 class="title">Страница не найдена</h1>
+    <p class="sub">Возможно, она была удалена или ссылка устарела. Вернёмся на главную.</p>
+    <a href="/" class="btn">На главную <span class="arrow" aria-hidden="true"></span></a>
+    <p class="meta">TYPE · Moscow · Остоженка 47</p>
+  </div>
+</body>
+</html>

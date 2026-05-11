@@ -1,0 +1,36 @@
+{
+  "_comment": "Контактная информация. Редактируется через админку.",
+  "phone": {
+    "display": "+7 965 31 31 31 5",
+    "tel": "+79653131315"
+  },
+  "email": "typemoscow@yandex.ru",
+  "address": {
+    "city": "Москва",
+    "street": "ул. Остоженка, 47",
+    "postalCode": "119034",
+    "country": "RU",
+    "metro": "Метро Парк Культуры",
+    "district": "район Хамовники",
+    "entrance": "вход справа от фасада"
+  },
+  "geo": {
+    "lat": 55.737849,
+    "lng": 37.595713
+  },
+  "hours": {
+    "display": "10:00–22:00",
+    "opens": "10:00",
+    "closes": "22:00",
+    "note": "Без выходных"
+  },
+  "social": {
+    "instagram": "https://www.instagram.com/typemoscow/",
+    "telegram": "https://t.me/typemoscowtg",
+    "vk": "https://vk.com/typemoscowvk",
+    "yandex_maps": "https://yandex.ru/maps/213/moscow/?ll=37.595876%2C55.737846&mode=poi&poi%5Bpoint%5D=37.595713%2C55.737849&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D85480441148&z=19.6"
+  },
+  "booking": {
+    "yclients": "https://n120635.yclients.com/company/93295/personal/select-master?o="
+  }
+}
