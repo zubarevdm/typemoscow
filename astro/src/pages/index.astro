@@ -7,6 +7,76 @@ import site from '../content/site.json';
 
 // Форматирование цены: 6000 -> "6 000 ₽"
 const fmtPrice = (n: number) => n.toLocaleString('ru-RU').replace(/,/g, ' ') + ' ₽';
+
+// Schema.org HairSalon — собираем из JSON, чтобы не дублировать данные
+const allPrices = services.categories.flatMap(c => c.items.map(i => i.price));
+const minPrice = Math.min(...allPrices);
+const maxPrice = Math.max(...allPrices);
+
+const schemaJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'HairSalon',
+  '@id': `${site.url}/#salon`,
+  name: site.shortTitle,
+  alternateName: 'ТАЙП Москва',
+  description: 'Мужская парикмахерская на Остоженке. Стрижки, оформление бороды, классическое бритьё.',
+  image: `${site.url}/assets/og-image.jpg`,
+  logo: `${site.url}/assets/type-logo-main.svg`,
+  url: `${site.url}/`,
+  telephone: contacts.phone.tel,
+  email: contacts.email,
+  priceRange: `${minPrice}–${maxPrice} ₽`,
+  currenciesAccepted: 'RUB',
+  paymentAccepted: 'Cash, Credit Card',
+  knowsLanguage: ['ru-RU'],
+  publicAccess: true,
+  smokingAllowed: false,
+  isAccessibleForFree: false,
+  areaServed: { '@type': 'City', name: contacts.address.city },
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: contacts.address.street,
+    addressLocality: contacts.address.city,
+    addressRegion: contacts.address.city,
+    postalCode: contacts.address.postalCode,
+    addressCountry: contacts.address.country,
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: contacts.geo.lat,
+    longitude: contacts.geo.lng,
+  },
+  openingHoursSpecification: [{
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    opens: contacts.hours.opens,
+    closes: contacts.hours.closes,
+  }],
+  sameAs: [
+    contacts.social.instagram,
+    contacts.social.telegram,
+    contacts.social.vk,
+  ],
+  hasMap: contacts.social.yandex_maps,
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: `Услуги ${site.shortTitle}`,
+    itemListElement: services.categories.flatMap(cat =>
+      cat.items.filter(it => it.available !== false).map(item => ({
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: item.name,
+          ...(item.description ? { description: item.description } : {}),
+          serviceType: item.type || cat.name,
+        },
+        price: String(item.price),
+        priceCurrency: 'RUB',
+        availability: 'https://schema.org/InStock',
+      }))
+    ),
+  },
+};
 ---
 <!doctype html>
 <html lang={site.lang}>
@@ -60,155 +130,7 @@ const fmtPrice = (n: number) => n.toLocaleString('ru-RU').replace(/,/g, ' ') + '
   <meta name="application-name" content="TYPE Moscow" />
 
   <!-- Schema.org разметка — Яндекс/Google показывают как rich-snippet -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "HairSalon",
-    "@id": "https://typemoscowtest.pages.dev/#salon",
-    "name": "TYPE Moscow",
-    "alternateName": "ТАЙП Москва",
-    "description": "Мужская парикмахерская на Остоженке. Стрижки, оформление бороды, классическое бритьё.",
-    "image": "https://typemoscowtest.pages.dev/assets/og-image.jpg",
-    "logo": "https://typemoscowtest.pages.dev/assets/type-logo-main.svg",
-    "url": "https://typemoscowtest.pages.dev/",
-    "telephone": "+79653131315",
-    "email": "typemoscow@yandex.ru",
-    "priceRange": "2500–12000 ₽",
-    "currenciesAccepted": "RUB",
-    "paymentAccepted": "Cash, Credit Card",
-    "knowsLanguage": ["ru-RU"],
-    "publicAccess": true,
-    "smokingAllowed": false,
-    "isAccessibleForFree": false,
-    "areaServed": {
-      "@type": "City",
-      "name": "Москва"
-    },
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "ул. Остоженка, 47",
-      "addressLocality": "Москва",
-      "addressRegion": "Москва",
-      "postalCode": "119034",
-      "addressCountry": "RU"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": 55.737849,
-      "longitude": 37.595713
-    },
-    "openingHoursSpecification": [{
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
-      "opens": "10:00",
-      "closes": "22:00"
-    }],
-    "sameAs": [
-      "https://www.instagram.com/typemoscow/",
-      "https://t.me/typemoscowtg",
-      "https://vk.com/typemoscowvk"
-    ],
-    "hasMap": "https://yandex.ru/maps/213/moscow/?ll=37.595876%2C55.737846&mode=poi&poi%5Bpoint%5D=37.595713%2C55.737849&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D85480441148&z=19.6",
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": "Услуги TYPE Moscow",
-      "itemListElement": [
-        {
-          "@type": "Offer",
-          "itemOffered": { "@type": "Service", "name": "Мужская стрижка", "serviceType": "Стрижка" },
-          "price": "3500",
-          "priceCurrency": "RUB",
-          "availability": "https://schema.org/InStock"
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": { "@type": "Service", "name": "Детская стрижка", "serviceType": "Стрижка" },
-          "price": "3500",
-          "priceCurrency": "RUB",
-          "availability": "https://schema.org/InStock"
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": { "@type": "Service", "name": "Стрижка бороды London Grooming", "serviceType": "Оформление бороды" },
-          "price": "3000",
-          "priceCurrency": "RUB",
-          "availability": "https://schema.org/InStock"
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": { "@type": "Service", "name": "Стрижка бороды Solomons Beard", "serviceType": "Оформление бороды" },
-          "price": "3500",
-          "priceCurrency": "RUB",
-          "availability": "https://schema.org/InStock"
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": { "@type": "Service", "name": "Стрижка машинкой (головы или бороды)", "serviceType": "Стрижка" },
-          "price": "3000",
-          "priceCurrency": "RUB",
-          "availability": "https://schema.org/InStock"
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": { "@type": "Service", "name": "Мужская стрижка + стрижка бороды", "serviceType": "Стрижка и борода" },
-          "price": "6500",
-          "priceCurrency": "RUB",
-          "availability": "https://schema.org/InStock"
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": { "@type": "Service", "name": "Бритьё London Grooming", "serviceType": "Бритьё" },
-          "price": "2500",
-          "priceCurrency": "RUB",
-          "availability": "https://schema.org/InStock"
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": { "@type": "Service", "name": "Бритьё Solomons Beard", "serviceType": "Бритьё" },
-          "price": "3000",
-          "priceCurrency": "RUB",
-          "availability": "https://schema.org/InStock"
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Комплекс ЛЮКС",
-            "description": "Стрижка + уход Luxina + воск или патчи",
-            "serviceType": "Комплекс услуг"
-          },
-          "price": "6000",
-          "priceCurrency": "RUB",
-          "availability": "https://schema.org/InStock"
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Комплекс ТЯЖЁЛЫЙ ЛЮКС",
-            "description": "Стрижка + борода или бритьё Solomons Beard + уход Luxina + воск",
-            "serviceType": "Комплекс услуг"
-          },
-          "price": "9000",
-          "priceCurrency": "RUB",
-          "availability": "https://schema.org/InStock"
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Комплекс ПОЛНЫЙ ФАРШ",
-            "description": "Стрижка + борода или бритьё + уход за лицом + Luxina + воск",
-            "serviceType": "Комплекс услуг"
-          },
-          "price": "12000",
-          "priceCurrency": "RUB",
-          "availability": "https://schema.org/InStock"
-        }
-      ]
-    }
-  }
-  </script>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(schemaJsonLd)}></script>
 
   <style>
   /* ============================================================
@@ -1332,7 +1254,7 @@ const fmtPrice = (n: number) => n.toLocaleString('ru-RU').replace(/,/g, ' ') + '
         </div>
 
         <div class="hero-foot">
-          <span class="hero-pill">Москва · Остоженка 47</span>
+          <span class="hero-pill">{contacts.address.city} · Остоженка 47</span>
           <a href="#cta" class="hero-cta">Записаться онлайн <span class="arrow"></span></a>
           <span class="hero-secondary">Сегодня открыто <span style="color:var(--ash);">·</span> до 22:00</span>
         </div>
@@ -1472,7 +1394,7 @@ const fmtPrice = (n: number) => n.toLocaleString('ru-RU').replace(/,/g, ' ') + '
         <div class="contacts-grid">
           <div class="reveal">
             <h2 class="h-section">Контакты <span class="marker"></span></h2>
-            <p class="lede" style="margin-top:24px;">Москва, ул. Остоженка 47. Метро Парк Культуры, район Хамовники. Вход справа от фасада.</p>
+            <p class="lede" style="margin-top:24px;">{contacts.address.city}, {contacts.address.street.replace('ул. ', '')}. {contacts.address.metro}, {contacts.address.district}. {contacts.address.entrance.charAt(0).toUpperCase() + contacts.address.entrance.slice(1)}.</p>
 
             <dl class="contacts-list">
               <div class="contacts-list-item">
@@ -1485,7 +1407,7 @@ const fmtPrice = (n: number) => n.toLocaleString('ru-RU').replace(/,/g, ' ') + '
               </div>
               <div class="contacts-list-item">
                 <dt>Адрес</dt>
-                <dd>г. Москва, ул. Остоженка&nbsp;47<span class="muted">Метро Парк Культуры · район Хамовники · вход справа от фасада</span></dd>
+                <dd>г.&nbsp;{contacts.address.city}, {contacts.address.street}<span class="muted">{contacts.address.metro} · {contacts.address.district} · {contacts.address.entrance}</span></dd>
               </div>
               <div class="contacts-list-item">
                 <dt>Часы</dt>
