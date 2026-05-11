@@ -1,7 +1,7 @@
 // Endpoint редактирования контента из админки.
 //
 // dev:  пишет напрямую в astro/src/content/{collection}.json
-// prod: TODO — коммит в GitHub через REST API (Phase 3 step 6)
+// prod: коммит в GitHub через REST API. CF Pages передеплоит автоматически.
 
 import type { APIRoute } from 'astro';
 import path from 'node:path';
@@ -9,6 +9,9 @@ import path from 'node:path';
 export const prerender = false;
 
 const CONTENT_DIR = path.resolve(process.cwd(), 'src/content');
+
+// Путь к JSON-файлам в репозитории (относительно root репо).
+const REPO_CONTENT_PATH = 'astro/src/content';
 
 type Collection = 'services' | 'team' | 'contacts' | 'works' | 'partners' | 'site';
 
@@ -27,7 +30,7 @@ interface SaveRequest {
   data: Record<string, unknown> | unknown[];
 }
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const body = (await request.json()) as Partial<SaveRequest>;
     const { collection, key, data } = body;
@@ -58,18 +61,122 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    // production path: пока заглушка, добавим в Phase 3 step 6
-    return json(
-      {
-        error: 'production save not implemented yet',
-        note: 'Будет коммит в GitHub через REST API. См. Phase 3 step 6.',
-      },
-      501,
+    // ──────────────────────────────────────────────────────────────────────
+    // Production: коммитим в GitHub через REST API.
+    // ENV-переменные пробрасываются Cloudflare Pages в locals.runtime.env.
+    // ──────────────────────────────────────────────────────────────────────
+    const env = (locals as any)?.runtime?.env ?? {};
+    const token = env.GITHUB_TOKEN as string | undefined;
+    const owner = (env.GITHUB_OWNER as string | undefined) || 'zubarevdm';
+    const repo = (env.GITHUB_REPO as string | undefined) || 'typemoscow';
+    const branch = (env.GITHUB_BRANCH as string | undefined) || 'main';
+
+    if (!token) {
+      return json(
+        { error: 'GITHUB_TOKEN not configured in Cloudflare Pages env' },
+        500,
+      );
+    }
+
+    // Кто публиковал — берём email из заголовка CF Access (если включен).
+    const editorEmail =
+      request.headers.get('cf-access-authenticated-user-email') || 'cms@typemoscow';
+
+    const filePath = `${REPO_CONTENT_PATH}/${collection}.json`;
+
+    // 1. Get current file (нужен SHA + содержимое)
+    const getRes = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}?ref=${branch}`,
+      { headers: githubHeaders(token) },
     );
+    if (!getRes.ok) {
+      const detail = await getRes.text();
+      return json({ error: 'github get failed', status: getRes.status, detail }, 502);
+    }
+    const meta = (await getRes.json()) as { sha: string; content: string };
+    const currentRaw = atob(meta.content.replace(/\n/g, ''));
+    const current = JSON.parse(currentRaw);
+
+    // 2. Apply patch
+    const patched = applyPatch(current, collection as Collection, key, data);
+    const newRaw = JSON.stringify(patched, null, 2) + '\n';
+
+    // Если содержимое не изменилось — не создаём пустой коммит
+    if (newRaw === currentRaw) {
+      return json({ ok: true, mode: 'prod', noChanges: true, collection, key: key ?? null });
+    }
+
+    // 3. PUT новый файл (создаёт коммит)
+    const summary = describeChange(collection as Collection, key, data);
+    const putRes = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`,
+      {
+        method: 'PUT',
+        headers: githubHeaders(token),
+        body: JSON.stringify({
+          message: `CMS: ${summary}\n\nedited by ${editorEmail}`,
+          content: utf8ToBase64(newRaw),
+          sha: meta.sha,
+          branch,
+        }),
+      },
+    );
+    if (!putRes.ok) {
+      const detail = await putRes.text();
+      return json({ error: 'github put failed', status: putRes.status, detail }, 502);
+    }
+    const putBody = (await putRes.json()) as { commit: { sha: string; html_url: string } };
+
+    return json({
+      ok: true,
+      mode: 'prod',
+      collection,
+      key: key ?? null,
+      commit: putBody.commit.sha,
+      url: putBody.commit.html_url,
+      note: 'Коммит создан. CF Pages автодеплоит за ~1 минуту.',
+    });
   } catch (err) {
     return json({ error: 'unexpected', detail: String(err) }, 500);
   }
 };
+
+function githubHeaders(token: string) {
+  return {
+    Authorization: `Bearer ${token}`,
+    Accept: 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+    'User-Agent': 'type-moscow-cms',
+    'Content-Type': 'application/json',
+  } as Record<string, string>;
+}
+
+function utf8ToBase64(str: string): string {
+  // На Cloudflare Workers btoa требует ASCII-инпут. Кодируем UTF-8 в байты, затем в base64.
+  const bytes = new TextEncoder().encode(str);
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary);
+}
+
+function describeChange(collection: Collection, key: string | undefined, data: any): string {
+  switch (collection) {
+    case 'services':
+      return `update service ${key} — ${data?.name || ''}`.trim();
+    case 'team':
+      return `update master ${key} — ${data?.name || ''}`.trim();
+    case 'contacts':
+      return 'update contacts';
+    case 'works':
+      return `update work ${key} — ${data?.num || ''}`.trim();
+    case 'partners':
+      return `update partner ${key}`;
+    case 'site':
+      return 'update site meta';
+    default:
+      return `update ${collection}`;
+  }
+}
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Логика патча по коллекциям.
