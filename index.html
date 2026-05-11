@@ -54,6 +54,7 @@
   {
     "@context": "https://schema.org",
     "@type": "HairSalon",
+    "@id": "https://typemoscowtest.pages.dev/#salon",
     "name": "TYPE Moscow",
     "alternateName": "ТАЙП Москва",
     "description": "Мужская парикмахерская на Остоженке. Стрижки, оформление бороды, классическое бритьё.",
@@ -65,6 +66,14 @@
     "priceRange": "2500–12000 ₽",
     "currenciesAccepted": "RUB",
     "paymentAccepted": "Cash, Credit Card",
+    "knowsLanguage": ["ru-RU"],
+    "publicAccess": true,
+    "smokingAllowed": false,
+    "isAccessibleForFree": false,
+    "areaServed": {
+      "@type": "City",
+      "name": "Москва"
+    },
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "ул. Остоженка, 47",
@@ -89,7 +98,105 @@
       "https://t.me/typemoscowtg",
       "https://vk.com/typemoscowvk"
     ],
-    "hasMap": "https://yandex.ru/maps/213/moscow/?ll=37.595876%2C55.737846&mode=poi&poi%5Bpoint%5D=37.595713%2C55.737849&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D85480441148&z=19.6"
+    "hasMap": "https://yandex.ru/maps/213/moscow/?ll=37.595876%2C55.737846&mode=poi&poi%5Bpoint%5D=37.595713%2C55.737849&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D85480441148&z=19.6",
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Услуги TYPE Moscow",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": { "@type": "Service", "name": "Мужская стрижка", "serviceType": "Стрижка" },
+          "price": "3500",
+          "priceCurrency": "RUB",
+          "availability": "https://schema.org/InStock"
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": { "@type": "Service", "name": "Детская стрижка", "serviceType": "Стрижка" },
+          "price": "3500",
+          "priceCurrency": "RUB",
+          "availability": "https://schema.org/InStock"
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": { "@type": "Service", "name": "Стрижка бороды London Grooming", "serviceType": "Оформление бороды" },
+          "price": "3000",
+          "priceCurrency": "RUB",
+          "availability": "https://schema.org/InStock"
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": { "@type": "Service", "name": "Стрижка бороды Solomons Beard", "serviceType": "Оформление бороды" },
+          "price": "3500",
+          "priceCurrency": "RUB",
+          "availability": "https://schema.org/InStock"
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": { "@type": "Service", "name": "Стрижка машинкой (головы или бороды)", "serviceType": "Стрижка" },
+          "price": "3000",
+          "priceCurrency": "RUB",
+          "availability": "https://schema.org/InStock"
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": { "@type": "Service", "name": "Мужская стрижка + стрижка бороды", "serviceType": "Стрижка и борода" },
+          "price": "6500",
+          "priceCurrency": "RUB",
+          "availability": "https://schema.org/InStock"
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": { "@type": "Service", "name": "Бритьё London Grooming", "serviceType": "Бритьё" },
+          "price": "2500",
+          "priceCurrency": "RUB",
+          "availability": "https://schema.org/InStock"
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": { "@type": "Service", "name": "Бритьё Solomons Beard", "serviceType": "Бритьё" },
+          "price": "3000",
+          "priceCurrency": "RUB",
+          "availability": "https://schema.org/InStock"
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Комплекс ЛЮКС",
+            "description": "Стрижка + уход Luxina + воск или патчи",
+            "serviceType": "Комплекс услуг"
+          },
+          "price": "6000",
+          "priceCurrency": "RUB",
+          "availability": "https://schema.org/InStock"
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Комплекс ТЯЖЁЛЫЙ ЛЮКС",
+            "description": "Стрижка + борода или бритьё Solomons Beard + уход Luxina + воск",
+            "serviceType": "Комплекс услуг"
+          },
+          "price": "9000",
+          "priceCurrency": "RUB",
+          "availability": "https://schema.org/InStock"
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Комплекс ПОЛНЫЙ ФАРШ",
+            "description": "Стрижка + борода или бритьё + уход за лицом + Luxina + воск",
+            "serviceType": "Комплекс услуг"
+          },
+          "price": "12000",
+          "priceCurrency": "RUB",
+          "availability": "https://schema.org/InStock"
+        }
+      ]
+    }
   }
   </script>
 
