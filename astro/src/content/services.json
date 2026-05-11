@@ -6,26 +6,96 @@
       "id": "basic",
       "name": "Основные услуги",
       "items": [
-        { "name": "Мужская стрижка", "price": 3500, "type": "Стрижка", "available": true },
-        { "name": "Детская стрижка", "price": 3500, "type": "Стрижка", "available": true },
-        { "name": "Стрижка бороды London Grooming", "price": 3000, "type": "Оформление бороды", "available": true },
-        { "name": "Стрижка бороды Solomons Beard", "price": 3500, "type": "Оформление бороды", "available": true },
-        { "name": "Стрижка машинкой (головы / бороды)", "price": 3000, "type": "Стрижка", "available": true },
-        { "name": "Мужская стрижка + стрижка бороды", "price": 6500, "type": "Стрижка и борода", "available": true },
-        { "name": "Бритьё London Grooming", "price": 2500, "type": "Бритьё", "available": true },
-        { "name": "Бритьё Solomons Beard", "price": 3000, "type": "Бритьё", "available": true }
+        {
+          "name": "Мужская стрижка",
+          "price": 3500,
+          "type": "Стрижка",
+          "available": true
+        },
+        {
+          "name": "Детская стрижка",
+          "price": 3500,
+          "type": "Стрижка",
+          "available": true
+        },
+        {
+          "name": "Стрижка бороды London Grooming",
+          "price": 3000,
+          "type": "Оформление бороды",
+          "available": true
+        },
+        {
+          "name": "Стрижка бороды Solomons Beard",
+          "price": 3500,
+          "type": "Оформление бороды",
+          "available": true
+        },
+        {
+          "name": "Стрижка машинкой (головы / бороды)",
+          "price": 3000,
+          "type": "Стрижка",
+          "available": true
+        },
+        {
+          "name": "Мужская стрижка + стрижка бороды",
+          "price": 6500,
+          "type": "Стрижка и борода",
+          "available": true
+        },
+        {
+          "name": "Бритьё London Grooming",
+          "price": 2500,
+          "type": "Бритьё",
+          "available": true
+        },
+        {
+          "name": "Бритьё Solomons Beard",
+          "price": 3000,
+          "type": "Бритьё",
+          "available": true
+        }
       ]
     },
     {
       "id": "additional",
       "name": "Дополнительные",
       "items": [
-        { "name": "Уход за лицом London Grooming", "price": 3000, "type": "Уход", "available": true },
-        { "name": "Уход за волосами и кожей головы Luxina", "price": 2000, "type": "Уход", "available": true },
-        { "name": "Тонирование седины (1 зона)", "price": 2000, "type": "Окрашивание", "available": true },
-        { "name": "Укладка", "price": 1000, "type": "Стайлинг", "available": true },
-        { "name": "Воск", "price": 900, "type": "Стайлинг", "available": true },
-        { "name": "Патчи", "price": 500, "type": "Уход", "available": true }
+        {
+          "name": "Уход за лицом London Grooming",
+          "price": 3000,
+          "type": "Уход",
+          "available": true
+        },
+        {
+          "name": "Уход за волосами и кожей головы Luxina",
+          "price": 2000,
+          "type": "Уход",
+          "available": true
+        },
+        {
+          "name": "Тонирование седины (1 зона)",
+          "price": 2000,
+          "type": "Окрашивание",
+          "available": true
+        },
+        {
+          "name": "Укладка",
+          "price": 1000,
+          "type": "Стайлинг",
+          "available": true
+        },
+        {
+          "name": "Воск",
+          "price": 900,
+          "type": "Стайлинг",
+          "available": true
+        },
+        {
+          "name": "Патчи",
+          "price": 500,
+          "type": "Уход",
+          "available": true
+        }
       ]
     },
     {

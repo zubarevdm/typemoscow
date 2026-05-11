@@ -71,6 +71,74 @@ const collections: Array<{ id: 'services' | 'team' | 'contacts' | 'works'; label
 
 </div>
 
+<!-- Toast-уведомления -->
+<div class="admin-toast" data-admin-toast hidden></div>
+
+<!-- Централизованный сабмит всех форм админки. Любая форма с data-edit-form
+     автоматически отправляет POST /api/admin/save и показывает результат. -->
+<script>
+  type ToastKind = 'info' | 'success' | 'error';
+  const toast = document.querySelector<HTMLElement>('[data-admin-toast]');
+
+  function showToast(text: string, kind: ToastKind = 'info', ms = 4000) {
+    if (!toast) { alert(text); return; }
+    toast.textContent = text;
+    toast.dataset.kind = kind;
+    toast.hidden = false;
+    window.clearTimeout((toast as any)._t);
+    (toast as any)._t = window.setTimeout(() => { toast.hidden = true; }, ms);
+  }
+
+  document.querySelectorAll<HTMLFormElement>('form[data-edit-form]').forEach((form) => {
+    const collection = form.dataset.collection;
+    const key = form.dataset.key;
+    if (!collection) return;
+
+    const pending = form.querySelector<HTMLElement>('[data-pending]');
+    const initialState = JSON.stringify(Array.from(new FormData(form).entries()));
+
+    form.addEventListener('input', () => {
+      if (pending) {
+        const current = JSON.stringify(Array.from(new FormData(form).entries()));
+        pending.hidden = current === initialState;
+      }
+    });
+
+    async function save(publish: boolean) {
+      const data = Object.fromEntries(new FormData(form).entries());
+      const btn = form.querySelector<HTMLButtonElement>(publish ? 'button[type="submit"]' : '[data-save="draft"]');
+      if (btn) btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/admin/save', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ collection, key: key || undefined, data }),
+        });
+        const body = await res.json();
+
+        if (!res.ok) {
+          showToast(`Ошибка ${res.status}: ${body.error || 'unknown'}`, 'error', 6000);
+          return;
+        }
+
+        if (body.mode === 'dev') {
+          showToast('Сохранено локально. Чтобы выкатить на прод — закоммитьте JSON.', 'success', 5000);
+        } else {
+          showToast('Опубликовано. Изменения появятся на сайте через ~1 минуту.', 'success', 5000);
+        }
+      } catch (err) {
+        showToast(`Сеть/сервер: ${String(err)}`, 'error', 6000);
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    form.addEventListener('submit', (e) => { e.preventDefault(); save(true); });
+    form.querySelector('[data-save="draft"]')?.addEventListener('click', () => save(false));
+  });
+</script>
+
 <style is:global>
   @font-face { font-family: 'Disket Mono'; src: url('/assets/fonts/Disket-Mono-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
   @font-face { font-family: 'Disket Mono'; src: url('/assets/fonts/Disket-Mono-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
@@ -588,6 +656,31 @@ const collections: Array<{ id: 'services' | 'team' | 'contacts' | 'works'; label
   }
   .col-group-title .count {
     color: var(--ash-d); font-weight: 400;
+  }
+
+  /* ── TOAST ────────────────────────────────────────────────── */
+  .admin-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 14px 20px;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .06em;
+    max-width: 420px;
+    line-height: 1.45;
+    box-shadow: 0 10px 40px rgba(11,11,11,.25);
+    animation: admin-toast-in .25s var(--ease-out, ease-out);
+  }
+  .admin-toast[data-kind="success"] { background: var(--forest); }
+  .admin-toast[data-kind="error"] { background: #8b1d1d; color: #fff; }
+  @keyframes admin-toast-in {
+    from { transform: translateY(16px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
   }
 </style>
 </body>

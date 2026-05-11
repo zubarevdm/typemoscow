@@ -123,33 +123,3 @@ const siblings = cat.items.slice(0, 4);
   </form>
 </AdminLayout>
 
-<script>
-  // Минимальный «есть несохранённые изменения» индикатор + перехват submit.
-  // Реальная отправка на бэкенд — Phase 3 (Cloudflare Pages Function + GitHub API).
-  const form = document.querySelector<HTMLFormElement>('[data-edit-form]');
-  const pending = document.querySelector<HTMLElement>('[data-pending]');
-  if (form && pending) {
-    const initial = new FormData(form);
-    const initialStr = JSON.stringify(Array.from(initial.entries()));
-
-    form.addEventListener('input', () => {
-      const current = JSON.stringify(Array.from(new FormData(form).entries()));
-      pending.hidden = current === initialStr;
-    });
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const fd = new FormData(form);
-      const payload = Object.fromEntries(fd.entries());
-      // TODO Phase 3: POST на /api/admin/save с этим payload
-      console.log('[admin] would publish:', payload);
-      alert('Phase 2 UI готов. Сохранение появится в Phase 3 (бэкенд).');
-    });
-
-    document.querySelector('[data-save="draft"]')?.addEventListener('click', () => {
-      const fd = new FormData(form);
-      console.log('[admin] would save draft:', Object.fromEntries(fd.entries()));
-      alert('Черновик сохранён локально (заглушка). Phase 3 добавит бэкенд.');
-    });
-  }
-</script>

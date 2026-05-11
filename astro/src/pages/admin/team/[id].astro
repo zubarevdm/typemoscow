@@ -162,24 +162,3 @@ const masterNum = String(idx + 1).padStart(2, '0');
   }
 </style>
 
-<script>
-  const form = document.querySelector<HTMLFormElement>('[data-edit-form]');
-  const pending = document.querySelector<HTMLElement>('[data-pending]');
-  if (form && pending) {
-    const initial = JSON.stringify(Array.from(new FormData(form).entries()));
-    form.addEventListener('input', () => {
-      pending.hidden = JSON.stringify(Array.from(new FormData(form).entries())) === initial;
-    });
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const fd = new FormData(form);
-      console.log('[admin/team] would publish:', Object.fromEntries(fd.entries()));
-      alert('Phase 2 UI готов. Сохранение появится в Phase 3 (бэкенд).');
-    });
-    document.querySelector('[data-save="draft"]')?.addEventListener('click', () => {
-      const fd = new FormData(form);
-      console.log('[admin/team] would save draft:', Object.fromEntries(fd.entries()));
-      alert('Черновик сохранён локально (заглушка). Phase 3 добавит бэкенд.');
-    });
-  }
-</script>

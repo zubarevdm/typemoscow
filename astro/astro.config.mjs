@@ -1,10 +1,19 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import cloudflare from '@astrojs/cloudflare';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://typemoscowtest.pages.dev',
+  // 'static' = по умолчанию страницы prerender-нутся в HTML на этапе билда.
+  // Любая страница с `export const prerender = false` будет SSR через Worker.
+  // Мы используем это только для /api/admin/* (сохранение из CMS).
   output: 'static',
+  adapter: cloudflare({
+    // Возвращаем платформенный объект context в endpoint'ах
+    // (понадобится для доступа к env vars типа GITHUB_TOKEN).
+    platformProxy: { enabled: true },
+  }),
   build: {
     inlineStylesheets: 'auto',
   },

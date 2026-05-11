@@ -225,22 +225,3 @@ import contacts from '../../content/contacts.json';
   }
 </style>
 
-<script>
-  const form = document.querySelector<HTMLFormElement>('[data-edit-form]');
-  const pending = document.querySelector<HTMLElement>('[data-pending]');
-  if (form && pending) {
-    const initial = JSON.stringify(Array.from(new FormData(form).entries()));
-    form.addEventListener('input', () => {
-      pending.hidden = JSON.stringify(Array.from(new FormData(form).entries())) === initial;
-    });
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      console.log('[admin/contacts] would publish:', Object.fromEntries(new FormData(form).entries()));
-      alert('Phase 2 UI готов. Сохранение появится в Phase 3 (бэкенд).');
-    });
-    document.querySelector('[data-save="draft"]')?.addEventListener('click', () => {
-      console.log('[admin/contacts] would save draft');
-      alert('Черновик сохранён локально (заглушка).');
-    });
-  }
-</script>
