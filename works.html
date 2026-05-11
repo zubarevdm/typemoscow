@@ -226,7 +226,7 @@
     }
   }
 
-  @media (max-width: 960px) {
+  @media (min-width: 721px) and (max-width: 960px) {
     .works-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
     /* Центрируем одиночный последний элемент в 2-колоночной сетке */
     .works-grid > .work-item:last-child:nth-child(2n + 1) {
@@ -235,7 +235,7 @@
       justify-self: center;
     }
   }
-  @media (max-width: 560px) {
+  @media (max-width: 720px) {
     .works-grid { grid-template-columns: 1fr; gap: 14px; }
   }
 
