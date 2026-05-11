@@ -1,5 +1,5 @@
+# STAGING-NOINDEX: на боевом домене вернуть "Allow: /" и убрать "Disallow: /"
 User-agent: *
-Allow: /
-Disallow: /admin/
+Disallow: /
 
 Sitemap: https://typemoscowtest.pages.dev/sitemap.xml
