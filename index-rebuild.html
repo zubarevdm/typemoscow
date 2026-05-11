@@ -235,6 +235,8 @@
   .site-header {
     position: fixed; top: 0; left: 0; right: 0;
     z-index: 200;
+    /* отступ под статус-бар iOS в PWA-режиме (notch / Dynamic Island) */
+    padding-top: env(safe-area-inset-top);
     transition: background var(--dur-base), border-color var(--dur-base), backdrop-filter var(--dur-base);
     border-bottom: 1px solid transparent;
   }
@@ -345,7 +347,7 @@
   .mobile-overlay {
     position: fixed; inset: 0; z-index: 190;
     background: var(--paper);
-    padding: calc(var(--header-h) + 32px) var(--gutter) var(--gutter);
+    padding: calc(var(--header-h) + env(safe-area-inset-top) + 32px) var(--gutter) var(--gutter);
     opacity: 0; pointer-events: none;
     transition: opacity var(--dur-base);
     display: flex; flex-direction: column; justify-content: space-between;
@@ -395,7 +397,7 @@
     flex: 1; position: relative; z-index: 1;
     display: grid;
     grid-template-rows: auto 1fr auto;
-    padding-top: calc(var(--header-h) + 16px);
+    padding-top: calc(var(--header-h) + env(safe-area-inset-top) + 16px);
   }
 
   .hero-meta {

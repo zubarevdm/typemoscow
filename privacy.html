@@ -67,6 +67,7 @@
 
   .site-header {
     position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    padding-top: env(safe-area-inset-top);
     background: rgba(235, 234, 229, .85);
     backdrop-filter: blur(14px) saturate(140%);
     -webkit-backdrop-filter: blur(14px) saturate(140%);
@@ -103,7 +104,7 @@
   }
 
   .page-hero {
-    padding-top: calc(var(--header-h) + 80px);
+    padding-top: calc(var(--header-h) + env(safe-area-inset-top) + 80px);
     padding-bottom: 32px;
     border-bottom: 1px solid var(--line-d);
   }
