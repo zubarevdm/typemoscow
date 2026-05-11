@@ -25,7 +25,9 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" /></noscript>
   <link rel="icon" type="image/svg+xml" href="assets/type-mark.svg" />
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png" />
@@ -50,7 +52,7 @@
     --ink-2:    #1F1F1F;
     --forest:   #042615;
     --ash:      #A0A0A0;
-    --ash-d:    #6E6E6E;
+    --ash-d:    #595959;
     --line:     rgba(11,11,11,.10);
     --line-d:   rgba(11,11,11,.18);
 
@@ -502,71 +504,71 @@
     <div class="container">
       <div class="works-grid reveal-stagger" id="worksGrid">
 
-        <article class="work-item" data-src="assets/works/DSCF0046.JPG" tabindex="0" role="button" aria-label="Работа 1 — открыть">
+        <div class="work-item" data-src="assets/works/DSCF0046.JPG" tabindex="0" role="button" aria-label="01 TYPE Moscow — открыть фото">
           <div class="work-item-inner">
-            <img src="assets/works/DSCF0046.JPG" alt="Работа мастеров TYPE — 01" loading="lazy" decoding="async" />
+            <img src="assets/works/DSCF0046.JPG" alt="Работа мастеров TYPE — 01" loading="eager" fetchpriority="high" decoding="async" width="700" height="1050" />
           </div>
           <span class="work-num">01</span>
           <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
-        </article>
+        </div>
 
-        <article class="work-item" data-src="assets/works/DSCF0079.JPG" tabindex="0" role="button" aria-label="Работа 2 — открыть">
+        <div class="work-item" data-src="assets/works/DSCF0079.JPG" tabindex="0" role="button" aria-label="02 TYPE Moscow — открыть фото">
           <div class="work-item-inner">
             <img src="assets/works/DSCF0079.JPG" alt="Работа мастеров TYPE — 02" loading="lazy" decoding="async" />
           </div>
           <span class="work-num">02</span>
           <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
-        </article>
+        </div>
 
-        <article class="work-item" data-src="assets/works/DSCF0355.JPG" tabindex="0" role="button" aria-label="Работа 3 — открыть">
+        <div class="work-item" data-src="assets/works/DSCF0355.JPG" tabindex="0" role="button" aria-label="03 TYPE Moscow — открыть фото">
           <div class="work-item-inner">
             <img src="assets/works/DSCF0355.JPG" alt="Работа мастеров TYPE — 03" loading="lazy" decoding="async" />
           </div>
           <span class="work-num">03</span>
           <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
-        </article>
+        </div>
 
-        <article class="work-item" data-src="assets/works/DSCF0881.JPG" tabindex="0" role="button" aria-label="Работа 4 — открыть">
+        <div class="work-item" data-src="assets/works/DSCF0881.JPG" tabindex="0" role="button" aria-label="04 TYPE Moscow — открыть фото">
           <div class="work-item-inner">
             <img src="assets/works/DSCF0881.JPG" alt="Работа мастеров TYPE — 04" loading="lazy" decoding="async" />
           </div>
           <span class="work-num">04</span>
           <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
-        </article>
+        </div>
 
-        <article class="work-item" data-src="assets/works/DSCF1049.JPG" tabindex="0" role="button" aria-label="Работа 5 — открыть">
+        <div class="work-item" data-src="assets/works/DSCF1049.JPG" tabindex="0" role="button" aria-label="05 TYPE Moscow — открыть фото">
           <div class="work-item-inner">
             <img src="assets/works/DSCF1049.JPG" alt="Работа мастеров TYPE — 05" loading="lazy" decoding="async" />
           </div>
           <span class="work-num">05</span>
           <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
-        </article>
+        </div>
 
-        <article class="work-item" data-src="assets/works/DSCF1208.JPG" tabindex="0" role="button" aria-label="Работа 6 — открыть">
+        <div class="work-item" data-src="assets/works/DSCF1208.JPG" tabindex="0" role="button" aria-label="06 TYPE Moscow — открыть фото">
           <div class="work-item-inner">
             <img src="assets/works/DSCF1208.JPG" alt="Работа мастеров TYPE — 06" loading="lazy" decoding="async" />
           </div>
           <span class="work-num">06</span>
           <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
-        </article>
+        </div>
 
-        <article class="work-item" data-src="assets/works/DSCF1436.JPG" tabindex="0" role="button" aria-label="Работа 7 — открыть">
+        <div class="work-item" data-src="assets/works/DSCF1436.JPG" tabindex="0" role="button" aria-label="07 TYPE Moscow — открыть фото">
           <div class="work-item-inner">
             <img src="assets/works/DSCF1436.JPG" alt="Работа мастеров TYPE — 07" loading="lazy" decoding="async" />
           </div>
           <span class="work-num">07</span>
           <div class="work-caption"><span class="work-caption-text">TYPE Moscow</span></div>
-        </article>
+        </div>
 
       </div>
     </div>
   </section>
 
   <!-- LIGHTBOX -->
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Просмотр фото" aria-hidden="true">
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Просмотр фото" inert>
     <button class="lightbox-close" id="lightboxClose" aria-label="Закрыть">✕</button>
     <div class="lightbox-inner">
-      <img class="lightbox-img" id="lightboxImg" src="" alt="" />
+      <img class="lightbox-img" id="lightboxImg" src="" alt="" width="520" height="780" />
       <div class="lightbox-nav">
         <button class="lightbox-nav-btn" id="lightboxPrev" aria-label="Предыдущее фото">‹</button>
         <button class="lightbox-nav-btn" id="lightboxNext" aria-label="Следующее фото">›</button>
@@ -639,7 +641,7 @@
     lbImg.src = src;
     lbImg.alt = altText;
     lb.classList.add('is-open');
-    lb.setAttribute('aria-hidden', 'false');
+    lb.removeAttribute('inert');
     lbCount.textContent = (idx + 1) + ' / ' + items.length;
     lbClose.focus();
     document.body.style.overflow = 'hidden';
@@ -647,7 +649,7 @@
 
   function closeLightbox() {
     lb.classList.remove('is-open');
-    lb.setAttribute('aria-hidden', 'true');
+    lb.setAttribute('inert', '');
     document.body.style.overflow = '';
     items[current].focus();
   }
