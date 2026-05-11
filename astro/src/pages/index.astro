@@ -1,5 +1,15 @@
+---
+import services from '../content/services.json';
+import team from '../content/team.json';
+import contacts from '../content/contacts.json';
+import partners from '../content/partners.json';
+import site from '../content/site.json';
+
+// Форматирование цены: 6000 -> "6 000 ₽"
+const fmtPrice = (n: number) => n.toLocaleString('ru-RU').replace(/,/g, ' ') + ' ₽';
+---
 <!doctype html>
-<html lang="ru">
+<html lang={site.lang}>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -1256,7 +1266,7 @@
       </nav>
 
       <div class="nav-cta">
-        <a href="tel:+79653131315" class="nav-phone">+7 965 31 31 31 5</a>
+        <a href={`tel:${contacts.phone.tel}`} class="nav-phone">{contacts.phone.display}</a>
         <a href="#cta" class="nav-book">Записаться</a>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Открыть меню">
           <span></span><span></span><span></span>
@@ -1278,7 +1288,7 @@
       </ul>
     </nav>
     <div class="mobile-foot">
-      <a href="tel:+79653131315" style="font-family:var(--font-mono); font-size:18px; color:var(--ink); letter-spacing:.04em; font-variant-numeric:tabular-nums;">+7 965 31 31 31 5</a>
+      <a href={`tel:${contacts.phone.tel}`} style="font-family:var(--font-mono); font-size:18px; color:var(--ink); letter-spacing:.04em; font-variant-numeric:tabular-nums;">{contacts.phone.display}</a>
       <a href="#cta" class="btn btn-primary">Записаться <span class="arrow"></span></a>
     </div>
   </div>
@@ -1292,7 +1302,7 @@
       <div class="hero-grid">
         <div class="hero-meta">
           <span class="l">est. 2024 <span class="dot"></span> Moscow</span>
-          <span class="r meta-hide">Остоженка 47 <span class="dot"></span> 10:00–22:00</span>
+          <span class="r meta-hide">Остоженка 47 <span class="dot"></span> {contacts.hours.display}</span>
         </div>
 
         <div class="hero-stage">
@@ -1343,70 +1353,35 @@
         </header>
 
         <div class="services-cats reveal-stagger">
-
-          <!-- ОСНОВНЫЕ -->
-          <div>
-            <header class="services-cat-head">
-              <span class="services-cat-name">Основные услуги</span>
-              <span class="services-cat-tag">01 / 03</span>
-            </header>
-            <ul class="price-list">
-              <li class="price-row"><span class="name">Мужская стрижка</span><span class="price">3 500 ₽</span></li>
-              <li class="price-row"><span class="name">Детская стрижка</span><span class="price">3 500 ₽</span></li>
-              <li class="price-row"><span class="name">Стрижка бороды London Grooming</span><span class="price">3 000 ₽</span></li>
-              <li class="price-row"><span class="name">Стрижка бороды Solomons Beard</span><span class="price">3 500 ₽</span></li>
-              <li class="price-row"><span class="name">Стрижка машинкой (головы / бороды)</span><span class="price">3 000 ₽</span></li>
-              <li class="price-row"><span class="name">Мужская стрижка + стрижка бороды</span><span class="price">6 500 ₽</span></li>
-              <li class="price-row"><span class="name">Бритьё London Grooming</span><span class="price">2 500 ₽</span></li>
-              <li class="price-row"><span class="name">Бритьё Solomons Beard</span><span class="price">3 000 ₽</span></li>
-            </ul>
-          </div>
-
-          <!-- ДОПОЛНИТЕЛЬНЫЕ -->
-          <div>
-            <header class="services-cat-head">
-              <span class="services-cat-name">Дополнительные</span>
-              <span class="services-cat-tag">02 / 03</span>
-            </header>
-            <ul class="price-list">
-              <li class="price-row"><span class="name">Уход за лицом London Grooming</span><span class="price">3 000 ₽</span></li>
-              <li class="price-row"><span class="name">Уход за волосами и кожей головы Luxina</span><span class="price">2 000 ₽</span></li>
-              <li class="price-row"><span class="name">Тонирование седины (1 зона)</span><span class="price">2 000 ₽</span></li>
-              <li class="price-row"><span class="name">Укладка</span><span class="price">1 000 ₽</span></li>
-              <li class="price-row"><span class="name">Воск</span><span class="price">900 ₽</span></li>
-              <li class="price-row"><span class="name">Патчи</span><span class="price">500 ₽</span></li>
-            </ul>
-          </div>
-
-          <!-- КОМПЛЕКСЫ -->
-          <div>
-            <header class="services-cat-head">
-              <span class="services-cat-name">Комплексы</span>
-              <span class="services-cat-tag">03 / 03</span>
-            </header>
-            <ul class="complex-list">
-              <li class="complex">
-                <span class="complex-name">ЛЮКС</span>
-                <span class="complex-price">6 000 ₽</span>
-                <p class="complex-note">Стрижка + уход Luxina + воск или патчи</p>
-              </li>
-              <li class="complex">
-                <span class="complex-name">ТЯЖЁЛЫЙ ЛЮКС</span>
-                <span class="complex-price">9 000 ₽</span>
-                <p class="complex-note">Стрижка + борода / бритьё Solomons Beard + уход Luxina + воск</p>
-              </li>
-              <li class="complex">
-                <span class="complex-name">ПОЛНЫЙ ФАРШ</span>
-                <span class="complex-price">12 000 ₽</span>
-                <p class="complex-note">Стрижка + борода / бритьё + уход за лицом + Luxina + воск</p>
-              </li>
-            </ul>
-          </div>
-
+          {services.categories.map((cat, i) => (
+            <div>
+              <header class="services-cat-head">
+                <span class="services-cat-name">{cat.name}</span>
+                <span class="services-cat-tag">{String(i + 1).padStart(2, '0')} / {String(services.categories.length).padStart(2, '0')}</span>
+              </header>
+              {cat.id === 'packages' ? (
+                <ul class="complex-list">
+                  {cat.items.filter(it => it.available !== false).map(item => (
+                    <li class="complex">
+                      <span class="complex-name">{item.name}</span>
+                      <span class="complex-price">{fmtPrice(item.price)}</span>
+                      {item.description && <p class="complex-note">{item.description}</p>}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <ul class="price-list">
+                  {cat.items.filter(it => it.available !== false).map(item => (
+                    <li class="price-row"><span class="name">{item.name}</span><span class="price">{fmtPrice(item.price)}</span></li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
         </div>
 
         <div class="services-foot">
-          <span class="services-foot-note">Указаны минимальные цены. Стоимость может отличаться в&nbsp;зависимости от&nbsp;мастера.</span>
+          <span class="services-foot-note">{services.footnote}</span>
           <a href="#cta" class="btn btn-ghost">Записаться <span class="arrow"></span></a>
         </div>
       </div>
@@ -1426,142 +1401,20 @@
         </header>
 
         <div class="team-grid reveal-stagger">
-
-          <article class="master">
-            <div class="master-head">
-              <span class="num">01</span>
-              <span class="role">Мастер</span>
-            </div>
-            <div class="master-photo" data-init="ШЮ" aria-label="Шевел Юра — фото"></div>
-            <h3 class="master-name">Шевел Юра</h3>
-            <p class="master-bio">Действующий спикер на крупнейших барбер-фестивалях и судья батлов. Мастер с 2009 года, стоявший у истоков и внёсший большой вклад в развитие барбер-индустрии СНГ. Международный преподаватель: более 1000 мастер-классов.</p>
-            <div class="master-tags">
-              <span class="master-tag">с 2009</span>
-              <span class="master-tag">Спикер</span>
-              <span class="master-tag">Бренд «Ш»</span>
-            </div>
-          </article>
-
-          <article class="master">
-            <div class="master-head">
-              <span class="num">02</span>
-              <span class="role">Мастер</span>
-            </div>
-            <div class="master-photo" data-init="АК" aria-label="Артур Культ — фото"></div>
-            <h3 class="master-name">Артур Культ</h3>
-            <p class="master-bio">Мастер с 2019 года. Любитель новой школы, но и старую добрую классику может выполнить безупречно. Особое внимание уделяет бороде и бритью. По совместительству — управляющий мужской парикмахерской TYPE.</p>
-            <div class="master-tags">
-              <span class="master-tag">с 2019</span>
-              <span class="master-tag">Борода</span>
-              <span class="master-tag">Управляющий</span>
-            </div>
-          </article>
-
-          <article class="master">
-            <div class="master-head">
-              <span class="num">03</span>
-              <span class="role">Мастер</span>
-            </div>
-            <div class="master-photo" data-init="ИГ" aria-label="Иван Гориванов — фото"></div>
-            <h3 class="master-name">Иван Гориванов</h3>
-            <p class="master-bio">Талантливый мастер с уникальным стилем и сервисом. В профессии с 2019 года, за плечами более 40 пройденных обучений. Действующий спикер парикмахерских фестивалей. Главный козырь — клиентоориентированный подход.</p>
-            <div class="master-tags">
-              <span class="master-tag">с 2019</span>
-              <span class="master-tag">40+ обучений</span>
-              <span class="master-tag">Спикер</span>
-            </div>
-          </article>
-
-          <article class="master">
-            <div class="master-head">
-              <span class="num">04</span>
-              <span class="role">Мастер</span>
-            </div>
-            <div class="master-photo" data-init="ММ" aria-label="Миша МиХэир — фото"></div>
-            <h3 class="master-name">Миша МиХэир</h3>
-            <p class="master-bio">Мастер с 2022 года. Начал свою карьеру с музыки, но быстро понял, что настоящее призвание&nbsp;— стилистика. Особая страсть к длинным волосам и текстурным дизайнам. Преподаватель и резидент SHEVELIZM.</p>
-            <div class="master-tags">
-              <span class="master-tag">с 2022</span>
-              <span class="master-tag">Длинные волосы</span>
-              <span class="master-tag">SHEVELIZM</span>
-            </div>
-          </article>
-
-          <article class="master">
-            <div class="master-head">
-              <span class="num">05</span>
-              <span class="role">Мастер</span>
-            </div>
-            <div class="master-photo" data-init="ЛС" aria-label="Лилия Стасюк — фото"></div>
-            <h3 class="master-name">Лилия Стасюк</h3>
-            <p class="master-bio">Работает за креслом с 16 лет. Закончила Академию «Долорес», получив международный диплом. Уже в 13 лет поняла, что хочет делать людей красивыми. Переехав в Москву, освоила барберинг и не останавливается на достигнутом.</p>
-            <div class="master-tags">
-              <span class="master-tag">с 16 лет</span>
-              <span class="master-tag">«Долорес»</span>
-              <span class="master-tag">Барберинг</span>
-            </div>
-          </article>
-
-          <article class="master">
-            <div class="master-head">
-              <span class="num">06</span>
-              <span class="role">Мастер</span>
-            </div>
-            <div class="master-photo" data-init="КА" aria-label="Кирилл Альт — фото"></div>
-            <h3 class="master-name">Кирилл Альт</h3>
-            <p class="master-bio">Мастер с 2022 года. Переехал из Волгограда в Москву, чтобы развиваться. Активно выстраивает карьеру преподавателя. Любит одинаково удлинённые и короткие стрижки. Всегда ориентирован на клиента.</p>
-            <div class="master-tags">
-              <span class="master-tag">с 2022</span>
-              <span class="master-tag">Удлинённые</span>
-              <span class="master-tag">Преподаватель</span>
-            </div>
-          </article>
-
-          <article class="master">
-            <div class="master-head">
-              <span class="num">07</span>
-              <span class="role">Мастер</span>
-            </div>
-            <div class="master-photo" data-init="А" aria-label="Арина — фото"></div>
-            <h3 class="master-name">Арина</h3>
-            <p class="master-bio">Опытный барбер с креативным подходом и преподавательской практикой. В индустрии мужских стрижек с 2019 года. До барберинга работала стилистом, с детства увлечена творчеством. «Со мной скучно не бывает — приходите за образом и&nbsp;настроением.»</p>
-            <div class="master-tags">
-              <span class="master-tag">с 2019</span>
-              <span class="master-tag">Креатив</span>
-              <span class="master-tag">Преподаватель</span>
-            </div>
-          </article>
-
-          <article class="master">
-            <div class="master-head">
-              <span class="num">08</span>
-              <span class="role">Мастер</span>
-            </div>
-            <div class="master-photo" data-init="АД" aria-label="Алина Дубровская — фото"></div>
-            <h3 class="master-name">Алина Дубровская</h3>
-            <p class="master-bio">Полное описание мастера появится в&nbsp;ближайшее время. Алина уже принимает клиентов в&nbsp;парикмахерской TYPE на&nbsp;Остоженке&nbsp;47. Запись&nbsp;— по телефону или через онлайн-сервис записи.</p>
-            <div class="master-tags">
-              <span class="master-tag">Москва</span>
-              <span class="master-tag">Остоженка 47</span>
-              <span class="master-tag">Принимает</span>
-            </div>
-          </article>
-
-          <article class="master">
-            <div class="master-head">
-              <span class="num">09</span>
-              <span class="role">Мастер</span>
-            </div>
-            <div class="master-photo" data-init="ВД" aria-label="Виталий Дубровский — фото"></div>
-            <h3 class="master-name">Виталий Дубровский</h3>
-            <p class="master-bio">Полное описание мастера появится в&nbsp;ближайшее время. Виталий уже принимает клиентов в&nbsp;парикмахерской TYPE на&nbsp;Остоженке&nbsp;47. Запись&nbsp;— по телефону или через онлайн-сервис записи.</p>
-            <div class="master-tags">
-              <span class="master-tag">Москва</span>
-              <span class="master-tag">Остоженка 47</span>
-              <span class="master-tag">Принимает</span>
-            </div>
-          </article>
-
+          {team.masters.filter(m => m.available !== false).map((master, i) => (
+            <article class="master">
+              <div class="master-head">
+                <span class="num">{String(i + 1).padStart(2, '0')}</span>
+                <span class="role">{master.role}</span>
+              </div>
+              <div class="master-photo" data-init={master.initials} aria-label={`${master.name} — фото`}></div>
+              <h3 class="master-name">{master.name}</h3>
+              <p class="master-bio">{master.bio}</p>
+              <div class="master-tags">
+                {master.tags.map(tag => <span class="master-tag">{tag}</span>)}
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>
@@ -1589,7 +1442,7 @@
             <figcaption>Лаунж</figcaption>
           </figure>
           <figure class="interior-figure">
-            <img src="/assets/interior/20.jpg" alt="Рабочие станции TYPE, вид со стороны входа" loading="lazy" decoding="async" style="object-position: center 20%;"/>
+            <img src="/assets/interior/20.jpg" alt="Рабочие станции TYPE, вид со стороны входа" loading="lazy" decoding="async"/>
             <figcaption>Рабочие места</figcaption>
           </figure>
         </div>
@@ -1604,8 +1457,8 @@
         <h2 class="cta-title">Записаться</h2>
         <p class="cta-sub">Запись по телефону или через онлайн-сервис. Перезвоним в течение 5 минут и подберём время у нужного мастера.</p>
         <div class="cta-buttons">
-          <a href="tel:+79653131315" class="btn btn-primary">Позвонить · +7 965 31 31 31 5</a>
-          <a href="https://n120635.yclients.com/company/93295/personal/select-master?o=" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">Онлайн-запись (YClients) <span class="arrow"></span></a>
+          <a href={`tel:${contacts.phone.tel}`} class="btn btn-primary">Позвонить · {contacts.phone.display}</a>
+          <a href={contacts.booking.yclients} target="_blank" rel="noopener noreferrer" class="btn btn-ghost">Онлайн-запись (YClients) <span class="arrow"></span></a>
         </div>
       </div>
     </section>
@@ -1624,11 +1477,11 @@
             <dl class="contacts-list">
               <div class="contacts-list-item">
                 <dt>Запись</dt>
-                <dd><a class="phone" href="tel:+79653131315">+7 965 31 31 31 5</a></dd>
+                <dd><a class="phone" href={`tel:${contacts.phone.tel}`}>{contacts.phone.display}</a></dd>
               </div>
               <div class="contacts-list-item">
                 <dt>Почта</dt>
-                <dd><a href="mailto:typemoscow@yandex.ru">typemoscow@yandex.ru</a></dd>
+                <dd><a href={`mailto:${contacts.email}`}>{contacts.email}</a></dd>
               </div>
               <div class="contacts-list-item">
                 <dt>Адрес</dt>
@@ -1636,7 +1489,7 @@
               </div>
               <div class="contacts-list-item">
                 <dt>Часы</dt>
-                <dd>10:00–22:00<span class="muted">Без выходных</span></dd>
+                <dd>{contacts.hours.display}<span class="muted">{contacts.hours.note}</span></dd>
               </div>
             </dl>
           </div>
@@ -1650,7 +1503,7 @@
                 loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"
               ></iframe>
-              <a href="https://yandex.ru/maps/213/moscow/?ll=37.595876%2C55.737846&mode=poi&poi%5Bpoint%5D=37.595713%2C55.737849&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D85480441148&z=19.6" target="_blank" rel="noopener" class="map-link">Открыть в Яндекс Картах →</a>
+              <a href={contacts.social.yandex_maps} target="_blank" rel="noopener" class="map-link">Открыть в Яндекс Картах →</a>
             </div>
           </div>
         </div>
@@ -1678,7 +1531,7 @@
                 <path d="M63.2637 26.6542V53.308L51.237 53.2853L39.1988 53.2513L39.1647 39.0397L39.1419 24.8395H35.3871H31.6323L31.6096 39.0397L31.5754 53.2513L27.2289 53.2853L22.8711 53.308V56.6539V59.9998H46.936H71.0009V30.0001V0.000413571H67.1323H63.2637V26.6542Z" fill="currentColor"/>
               </svg>
             </div>
-            <p class="partner-text">«Ш» — мужской российский бренд по уходу за волосами. Сделан мастерами TYPE для мастеров СНГ и их клиентов.</p>
+            <p class="partner-text">{partners.partners.find(p => p.id === 'sh')?.text}</p>
           </div>
 
           <!-- BETONE -->
@@ -1686,7 +1539,7 @@
             <div class="partner-logo">
               <span class="logo-betone" aria-label="Betone">BETONE</span>
             </div>
-            <p class="partner-text">Наши важные партнёры — сеть авторских барбершопов и салонов BETONE. Эко-система, частью которой мы являемся.</p>
+            <p class="partner-text">{partners.partners.find(p => p.id === 'betone')?.text}</p>
           </div>
 
           <!-- SHEVELIZM -->
@@ -1700,7 +1553,7 @@
                 <rect x="5"  y="60" width="70" height="6"  rx="1"/>
               </svg>
             </div>
-            <p class="partner-text">Творческое объединение SHEVELIZM, которое специализируется на образовании мастеров стран СНГ. Учебники, инструмент, образовательные курсы.</p>
+            <p class="partner-text">{partners.partners.find(p => p.id === 'shevelizm')?.text}</p>
           </div>
 
           <!-- TAKTO -->
@@ -1708,7 +1561,7 @@
             <div class="partner-logo">
               <span class="logo-takto" aria-label="Takto">ta k to</span>
             </div>
-            <p class="partner-text">Российский, прогрессивный бренд одежды с ностальгическими мотивами из прошлого нашей необъятной.</p>
+            <p class="partner-text">{partners.partners.find(p => p.id === 'takto')?.text}</p>
           </div>
 
         </div>
@@ -1734,13 +1587,13 @@
       <div class="footer-grid">
         <div class="footer-col">
           <p class="footer-pitch">Мужская парикмахерская нашего времени</p>
-          <a href="tel:+79653131315" class="footer-phone">+7 965 31 31 31 5</a>
-          <a href="mailto:typemoscow@yandex.ru" class="footer-email">typemoscow@yandex.ru</a>
+          <a href={`tel:${contacts.phone.tel}`} class="footer-phone">{contacts.phone.display}</a>
+          <a href={`mailto:${contacts.email}`} class="footer-email">{contacts.email}</a>
           <div class="footer-social">
-            <a href="https://www.instagram.com/typemoscow/" target="_blank" rel="noopener noreferrer">Instagram</a>
-            <a href="https://t.me/typemoscowtg" target="_blank" rel="noopener noreferrer">Telegram</a>
-            <a href="https://vk.com/typemoscowvk" target="_blank" rel="noopener noreferrer">VK</a>
-            <a href="https://yandex.ru/maps/213/moscow/?ll=37.595876%2C55.737846&mode=poi&poi%5Bpoint%5D=37.595713%2C55.737849&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D85480441148&z=19.6" target="_blank" rel="noopener noreferrer">Yandex</a>
+            <a href={contacts.social.instagram} target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href={contacts.social.telegram} target="_blank" rel="noopener noreferrer">Telegram</a>
+            <a href={contacts.social.vk} target="_blank" rel="noopener noreferrer">VK</a>
+            <a href={contacts.social.yandex_maps} target="_blank" rel="noopener noreferrer">Yandex</a>
           </div>
         </div>
 
@@ -1760,7 +1613,7 @@
         <div class="footer-col">
           <h4>Адрес</h4>
           <p style="font-size:14px; color:var(--ink-2); line-height:1.7;">
-            Москва<br>ул. Остоженка 47<br>метро Парк Культуры<br><br>10:00–22:00<br>без выходных
+            {contacts.address.city}<br>{contacts.address.street}<br>{contacts.address.metro}<br><br>{contacts.hours.display}<br>{contacts.hours.note.toLowerCase()}
           </p>
         </div>
 
