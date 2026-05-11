@@ -1,0 +1,80 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import team from '../../../content/team.json';
+---
+
+<AdminLayout pageTitle="Команда" activeCollection="team">
+  <p class="crumbs">
+    <a href="/admin">Главная</a><span class="sep">·</span>Команда
+  </p>
+
+  <div class="title-row">
+    <h1 class="page-title">Команда мастеров</h1>
+    <div class="title-actions">
+      <a class="btn btn-primary" href="/admin/team/new">+ Добавить мастера</a>
+    </div>
+  </div>
+
+  <div class="col-list">
+    {team.masters.map((m, i) => (
+      <a class="col-item col-item--team" href={`/admin/team/${i}`}>
+        <div class="master-photo-mini" aria-hidden="true">{m.initials}</div>
+        <div class="col-item-body">
+          <div class="col-item-head">
+            <span class="col-item-cat">{String(i + 1).padStart(2, '0')} · {m.role}</span>
+            {m.available !== false ? (
+              <span class="status-pill">опубликован</span>
+            ) : (
+              <span class="status-pill status-pill--draft">скрыт</span>
+            )}
+          </div>
+          <div class="col-item-name">{m.name}</div>
+          <div class="col-item-tags">
+            {m.tags.slice(0, 3).map(tag => <span class="mini-tag">{tag}</span>)}
+          </div>
+        </div>
+      </a>
+    ))}
+  </div>
+</AdminLayout>
+
+<style is:global>
+  .col-item--team {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .master-photo-mini {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    display: grid;
+    place-items: center;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: .02em;
+  }
+  .col-item--team .col-item-head {
+    margin-bottom: 4px;
+  }
+  .col-item-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .mini-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ash-d);
+    border: 1px solid var(--line-d);
+    padding: 4px 8px;
+    border-radius: 999px;
+  }
+</style>

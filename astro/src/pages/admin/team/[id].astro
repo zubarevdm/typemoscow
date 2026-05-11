@@ -1,0 +1,185 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import team from '../../../content/team.json';
+
+export async function getStaticPaths() {
+  return team.masters.map((_, i) => ({
+    params: { id: String(i) },
+    props: { idx: i },
+  }));
+}
+
+const { idx } = Astro.props;
+const master = team.masters[idx];
+const masterNum = String(idx + 1).padStart(2, '0');
+---
+
+<AdminLayout pageTitle={master.name} activeCollection="team">
+  <p class="crumbs">
+    <a href="/admin">Главная</a><span class="sep">·</span>
+    <a href="/admin/team">Команда</a><span class="sep">·</span>
+    {master.name}
+  </p>
+
+  <div class="title-row">
+    <h1 class="page-title">{master.name}</h1>
+    {master.available !== false ? (
+      <span class="status-pill">опубликован</span>
+    ) : (
+      <span class="status-pill status-pill--draft">скрыт</span>
+    )}
+  </div>
+
+  <form class="form-grid" data-edit-form data-collection="team" data-key={idx}>
+    <div>
+      <div class="fieldset-2">
+        <div class="field">
+          <label class="field-label" for="name">Имя <span class="required">·</span></label>
+          <input id="name" name="name" type="text" class="input" value={master.name} required />
+        </div>
+        <div class="field">
+          <label class="field-label" for="initials">Инициалы для аватара</label>
+          <input id="initials" name="initials" type="text" class="input" value={master.initials} maxlength="3" />
+          <span class="field-hint">1–2 буквы. Например ШЮ, АК.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="role">Роль</label>
+        <input id="role" name="role" type="text" class="input" value={master.role} />
+        <span class="field-hint">Обычно «Мастер». Можно «Управляющий», «Преподаватель» и т.&nbsp;п.</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="bio">Био <span class="required">·</span></label>
+        <textarea id="bio" name="bio" class="textarea" rows="5" required>{master.bio}</textarea>
+        <span class="field-hint">2–4 предложения. Не больше 350 символов. Без эмодзи.</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="tags">Теги</label>
+        <input id="tags" name="tags" type="text" class="input" value={master.tags.join(', ')} />
+        <span class="field-hint">Через запятую. Появятся под био как кружки. Например: «с 2019, Борода, Управляющий».</span>
+      </div>
+
+      <div class="field">
+        <label class="checkbox">
+          <input type="checkbox" name="available" checked={master.available !== false} />
+          <span class="box"></span>
+          <span>Показывать мастера на сайте</span>
+        </label>
+      </div>
+    </div>
+
+    <aside class="preview">
+      <p class="preview-tag">Превью карточки</p>
+
+      <div class="master-card-preview">
+        <div class="master-card-preview__head">
+          <span class="master-card-preview__num">{masterNum}</span>
+          <span class="master-card-preview__role">{master.role}</span>
+        </div>
+        <div class="master-card-preview__photo" aria-hidden="true">{master.initials}</div>
+        <div class="master-card-preview__name">{master.name}</div>
+        <div class="master-card-preview__bio">{master.bio}</div>
+        <div class="master-card-preview__tags">
+          {master.tags.map(t => <span class="master-card-preview__tag">{t}</span>)}
+        </div>
+      </div>
+
+      <p class="preview-note">Так карточка выглядит в блоке «Команда» на главной.</p>
+    </aside>
+
+    <div class="form-foot" style="grid-column: 1 / -1;">
+      <span class="pending" data-pending hidden>Есть несохранённые изменения</span>
+      <a class="btn btn-ghost" href="/admin/team">Отмена</a>
+      <button type="button" class="btn btn-ghost" data-save="draft">Сохранить черновик</button>
+      <button type="submit" class="btn btn-primary"><span class="dot"></span> Опубликовать</button>
+    </div>
+  </form>
+</AdminLayout>
+
+<style is:global>
+  .master-card-preview {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px;
+  }
+  .master-card-preview__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--ash-d);
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .master-card-preview__photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    display: grid;
+    place-items: center;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: .02em;
+    margin-bottom: 14px;
+  }
+  .master-card-preview__name {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .master-card-preview__bio {
+    font-size: 13px;
+    color: var(--ink-2);
+    line-height: 1.55;
+    margin-bottom: 12px;
+  }
+  .master-card-preview__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .master-card-preview__tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ash-d);
+    border: 1px solid var(--line-d);
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-edit-form]');
+  const pending = document.querySelector<HTMLElement>('[data-pending]');
+  if (form && pending) {
+    const initial = JSON.stringify(Array.from(new FormData(form).entries()));
+    form.addEventListener('input', () => {
+      pending.hidden = JSON.stringify(Array.from(new FormData(form).entries())) === initial;
+    });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      console.log('[admin/team] would publish:', Object.fromEntries(fd.entries()));
+      alert('Phase 2 UI готов. Сохранение появится в Phase 3 (бэкенд).');
+    });
+    document.querySelector('[data-save="draft"]')?.addEventListener('click', () => {
+      const fd = new FormData(form);
+      console.log('[admin/team] would save draft:', Object.fromEntries(fd.entries()));
+      alert('Черновик сохранён локально (заглушка). Phase 3 добавит бэкенд.');
+    });
+  }
+</script>

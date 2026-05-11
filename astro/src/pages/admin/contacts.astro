@@ -1,0 +1,246 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import contacts from '../../content/contacts.json';
+---
+
+<AdminLayout pageTitle="Контакты" activeCollection="contacts">
+  <p class="crumbs">
+    <a href="/admin">Главная</a><span class="sep">·</span>Контакты
+  </p>
+
+  <div class="title-row">
+    <h1 class="page-title">Контактная информация</h1>
+    <span class="status-pill">опубликовано</span>
+  </div>
+
+  <form class="form-grid" data-edit-form data-collection="contacts">
+    <div>
+
+      <fieldset class="form-section">
+        <legend>Запись</legend>
+
+        <div class="fieldset-2">
+          <div class="field">
+            <label class="field-label" for="phone-display">Телефон (как показывается) <span class="required">·</span></label>
+            <input id="phone-display" name="phone.display" type="text" class="input" value={contacts.phone.display} required />
+            <span class="field-hint">Например «+7 965 31 31 31 5».</span>
+          </div>
+          <div class="field">
+            <label class="field-label" for="phone-tel">Телефон для tel:</label>
+            <input id="phone-tel" name="phone.tel" type="text" class="input" value={contacts.phone.tel} pattern="\+\d+" />
+            <span class="field-hint">Только цифры с «+». Например «+79653131315».</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="email">Эл. почта</label>
+          <input id="email" name="email" type="email" class="input" value={contacts.email} />
+        </div>
+      </fieldset>
+
+      <fieldset class="form-section">
+        <legend>Адрес</legend>
+
+        <div class="fieldset-2">
+          <div class="field">
+            <label class="field-label" for="city">Город</label>
+            <input id="city" name="address.city" type="text" class="input" value={contacts.address.city} />
+          </div>
+          <div class="field">
+            <label class="field-label" for="postal">Индекс</label>
+            <input id="postal" name="address.postalCode" type="text" class="input" value={contacts.address.postalCode} />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="street">Улица и дом <span class="required">·</span></label>
+          <input id="street" name="address.street" type="text" class="input" value={contacts.address.street} required />
+        </div>
+
+        <div class="fieldset-2">
+          <div class="field">
+            <label class="field-label" for="metro">Метро</label>
+            <input id="metro" name="address.metro" type="text" class="input" value={contacts.address.metro} />
+          </div>
+          <div class="field">
+            <label class="field-label" for="district">Район</label>
+            <input id="district" name="address.district" type="text" class="input" value={contacts.address.district} />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="entrance">Уточнение по входу</label>
+          <input id="entrance" name="address.entrance" type="text" class="input" value={contacts.address.entrance} />
+        </div>
+      </fieldset>
+
+      <fieldset class="form-section">
+        <legend>Часы работы</legend>
+
+        <div class="fieldset-2">
+          <div class="field">
+            <label class="field-label" for="hours-display">Отображаемые часы</label>
+            <input id="hours-display" name="hours.display" type="text" class="input" value={contacts.hours.display} />
+            <span class="field-hint">Например «10:00–22:00».</span>
+          </div>
+          <div class="field">
+            <label class="field-label" for="hours-note">Подпись</label>
+            <input id="hours-note" name="hours.note" type="text" class="input" value={contacts.hours.note} />
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="form-section">
+        <legend>Социальные сети и карты</legend>
+
+        <div class="field">
+          <label class="field-label" for="instagram">Instagram</label>
+          <input id="instagram" name="social.instagram" type="url" class="input" value={contacts.social.instagram} />
+        </div>
+        <div class="field">
+          <label class="field-label" for="telegram">Telegram</label>
+          <input id="telegram" name="social.telegram" type="url" class="input" value={contacts.social.telegram} />
+        </div>
+        <div class="field">
+          <label class="field-label" for="vk">ВКонтакте</label>
+          <input id="vk" name="social.vk" type="url" class="input" value={contacts.social.vk} />
+        </div>
+        <div class="field">
+          <label class="field-label" for="yandex">Яндекс Карты</label>
+          <input id="yandex" name="social.yandex_maps" type="url" class="input" value={contacts.social.yandex_maps} />
+        </div>
+      </fieldset>
+
+      <fieldset class="form-section">
+        <legend>Онлайн-запись</legend>
+        <div class="field">
+          <label class="field-label" for="yclients">YClients</label>
+          <input id="yclients" name="booking.yclients" type="url" class="input" value={contacts.booking.yclients} />
+        </div>
+      </fieldset>
+
+    </div>
+
+    <aside class="preview">
+      <p class="preview-tag">Превью в подвале</p>
+      <div class="preview-card">
+        <div class="contact-prev-pitch">Мужская парикмахерская нашего времени</div>
+        <div class="contact-prev-phone">{contacts.phone.display}</div>
+        <div class="contact-prev-email">{contacts.email}</div>
+        <div class="contact-prev-social">
+          <span>Instagram</span>
+          <span>Telegram</span>
+          <span>VK</span>
+          <span>Yandex</span>
+        </div>
+        <hr class="contact-prev-hr" />
+        <div class="contact-prev-addr">
+          {contacts.address.city}<br/>
+          {contacts.address.street}<br/>
+          {contacts.address.metro}<br/><br/>
+          {contacts.hours.display}<br/>
+          <span style="text-transform: lowercase">{contacts.hours.note}</span>
+        </div>
+      </div>
+      <p class="preview-note">Изменения видны в шапке, подвале и блоке «Контакты» главной.</p>
+    </aside>
+
+    <div class="form-foot" style="grid-column: 1 / -1;">
+      <span class="pending" data-pending hidden>Есть несохранённые изменения</span>
+      <button type="button" class="btn btn-ghost" data-save="draft">Сохранить черновик</button>
+      <button type="submit" class="btn btn-primary"><span class="dot"></span> Опубликовать</button>
+    </div>
+  </form>
+</AdminLayout>
+
+<style is:global>
+  .form-section {
+    border: none;
+    padding: 0;
+    margin: 0 0 32px 0;
+  }
+  .form-section legend {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding: 0 0 12px 0;
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+    width: 100%;
+  }
+  .form-section legend::before {
+    content: '';
+    display: inline-block;
+    width: 16px; height: 1px;
+    background: var(--ink);
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+
+  .contact-prev-pitch {
+    font-size: 13px;
+    color: var(--ink-2);
+    margin-bottom: 14px;
+  }
+  .contact-prev-phone {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 18px;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 6px;
+  }
+  .contact-prev-email {
+    font-size: 13px;
+    color: var(--ink-2);
+    margin-bottom: 12px;
+  }
+  .contact-prev-social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .contact-prev-social span {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    border: 1px solid var(--line-d);
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+  .contact-prev-hr {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 8px 0 14px;
+  }
+  .contact-prev-addr {
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.7;
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-edit-form]');
+  const pending = document.querySelector<HTMLElement>('[data-pending]');
+  if (form && pending) {
+    const initial = JSON.stringify(Array.from(new FormData(form).entries()));
+    form.addEventListener('input', () => {
+      pending.hidden = JSON.stringify(Array.from(new FormData(form).entries())) === initial;
+    });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      console.log('[admin/contacts] would publish:', Object.fromEntries(new FormData(form).entries()));
+      alert('Phase 2 UI готов. Сохранение появится в Phase 3 (бэкенд).');
+    });
+    document.querySelector('[data-save="draft"]')?.addEventListener('click', () => {
+      console.log('[admin/contacts] would save draft');
+      alert('Черновик сохранён локально (заглушка).');
+    });
+  }
+</script>

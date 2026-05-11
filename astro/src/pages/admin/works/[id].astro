@@ -1,0 +1,158 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import works from '../../../content/works.json';
+
+export async function getStaticPaths() {
+  return works.items.map((_, i) => ({
+    params: { id: String(i) },
+    props: { idx: i },
+  }));
+}
+
+const { idx } = Astro.props;
+const item = works.items[idx];
+---
+
+<AdminLayout pageTitle={`Работа ${item.num}`} activeCollection="works">
+  <p class="crumbs">
+    <a href="/admin">Главная</a><span class="sep">·</span>
+    <a href="/admin/works">Работы</a><span class="sep">·</span>
+    Работа {item.num}
+  </p>
+
+  <div class="title-row">
+    <h1 class="page-title">Работа {item.num}</h1>
+    <span class="status-pill">опубликована</span>
+  </div>
+
+  <form class="form-grid" data-edit-form data-collection="works" data-key={idx}>
+    <div>
+      <div class="fieldset-2">
+        <div class="field">
+          <label class="field-label" for="num">Номер</label>
+          <input id="num" name="num" type="text" class="input" value={item.num} maxlength="2" />
+          <span class="field-hint">Двузначный, показывается на превью. Например 01, 02 …</span>
+        </div>
+        <div class="field">
+          <label class="field-label" for="src">Путь к файлу <span class="required">·</span></label>
+          <input id="src" name="src" type="text" class="input" value={item.src} required />
+          <span class="field-hint">/assets/works/DSCFxxxx.JPG</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="alt">Альтернативный текст <span class="required">·</span></label>
+        <input id="alt" name="alt" type="text" class="input" value={item.alt} required />
+        <span class="field-hint">Описание для поисковиков и читалок экрана. Например «Работа мастеров TYPE — 01».</span>
+      </div>
+
+      <div class="field-callout">
+        <span class="field-callout__icon">⚑</span>
+        <div>
+          <strong>Загрузка фото — в следующей версии.</strong><br/>
+          Сейчас файл нужно положить в <code>assets/works/</code> через git/SFTP. Поле «Путь» свяжет его с записью. В Phase&nbsp;3 здесь будет drag-and-drop с автоматической оптимизацией.
+        </div>
+      </div>
+    </div>
+
+    <aside class="preview">
+      <p class="preview-tag">Превью на странице «Работы»</p>
+      <div class="work-prev">
+        <img src={item.src} alt={item.alt} />
+        <span class="work-prev__num">{item.num}</span>
+        <div class="work-prev__caption">TYPE Moscow</div>
+      </div>
+      <p class="preview-note">При клике на сайте откроется в lightbox.</p>
+    </aside>
+
+    <div class="form-foot" style="grid-column: 1 / -1;">
+      <span class="pending" data-pending hidden>Есть несохранённые изменения</span>
+      <a class="btn btn-ghost" href="/admin/works">Отмена</a>
+      <button type="button" class="btn btn-ghost" data-save="draft">Сохранить черновик</button>
+      <button type="submit" class="btn btn-primary"><span class="dot"></span> Опубликовать</button>
+    </div>
+  </form>
+</AdminLayout>
+
+<style is:global>
+  .field-callout {
+    background: rgba(4, 38, 21, .06);
+    border-left: 3px solid var(--forest);
+    padding: 14px 16px;
+    border-radius: 0 6px 6px 0;
+    display: flex;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--ink-2);
+    line-height: 1.55;
+    margin-top: 24px;
+  }
+  .field-callout__icon {
+    color: var(--forest);
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .field-callout code {
+    background: var(--paper-d);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+
+  .work-prev {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--ink);
+  }
+  .work-prev img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(10%);
+  }
+  .work-prev__num {
+    position: absolute;
+    top: 14px; left: 14px;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: .2em;
+    color: rgba(235, 234, 229, .7);
+  }
+  .work-prev__caption {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 20px 18px;
+    background: linear-gradient(to top, rgba(4,38,21,.65), transparent);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--paper);
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-edit-form]');
+  const pending = document.querySelector<HTMLElement>('[data-pending]');
+  if (form && pending) {
+    const initial = JSON.stringify(Array.from(new FormData(form).entries()));
+    form.addEventListener('input', () => {
+      pending.hidden = JSON.stringify(Array.from(new FormData(form).entries())) === initial;
+    });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      console.log('[admin/works] would publish:', Object.fromEntries(new FormData(form).entries()));
+      alert('Phase 2 UI готов. Сохранение появится в Phase 3 (бэкенд).');
+    });
+    document.querySelector('[data-save="draft"]')?.addEventListener('click', () => {
+      console.log('[admin/works] would save draft');
+      alert('Черновик сохранён локально (заглушка).');
+    });
+  }
+</script>

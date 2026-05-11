@@ -1,0 +1,109 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import works from '../../../content/works.json';
+---
+
+<AdminLayout pageTitle="Работы" activeCollection="works">
+  <p class="crumbs">
+    <a href="/admin">Главная</a><span class="sep">·</span>Работы
+  </p>
+
+  <div class="title-row">
+    <h1 class="page-title">Портфолио работ</h1>
+    <div class="title-actions">
+      <a class="btn btn-primary" href="/admin/works/new">+ Загрузить работу</a>
+    </div>
+  </div>
+
+  <p class="works-intro-meta">{works.intro.lede}</p>
+
+  <div class="works-list">
+    {works.items.map((item, i) => (
+      <a class="works-list__item" href={`/admin/works/${i}`}>
+        <div class="works-list__thumb">
+          <img src={item.src} alt={item.alt} loading="lazy" />
+          <span class="works-list__num">{item.num}</span>
+        </div>
+        <div class="works-list__meta">
+          <span class="works-list__label">Работа {item.num}</span>
+          <span class="works-list__alt">{item.alt}</span>
+        </div>
+      </a>
+    ))}
+  </div>
+</AdminLayout>
+
+<style is:global>
+  .works-intro-meta {
+    color: var(--ash-d);
+    font-size: 13px;
+    margin-bottom: 24px;
+    max-width: 60ch;
+  }
+  .works-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .works-list__item {
+    display: block;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color .15s, transform .15s;
+  }
+  .works-list__item:hover {
+    border-color: var(--ink);
+    transform: translateY(-2px);
+  }
+  .works-list__thumb {
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    background: var(--ink);
+    position: relative;
+  }
+  .works-list__thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(20%);
+    transition: filter .3s;
+  }
+  .works-list__item:hover .works-list__thumb img {
+    filter: grayscale(0);
+  }
+  .works-list__num {
+    position: absolute;
+    top: 10px; left: 12px;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: .14em;
+    color: var(--paper);
+    background: rgba(11,11,11,.5);
+    padding: 4px 8px;
+    border-radius: 999px;
+    backdrop-filter: blur(4px);
+  }
+  .works-list__meta {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .works-list__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--ash-d);
+  }
+  .works-list__alt {
+    font-size: 13px;
+    color: var(--ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>
