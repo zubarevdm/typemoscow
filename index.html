@@ -930,7 +930,8 @@
   .contacts-list-item dd a { color: var(--ink); border-bottom: 1px solid var(--line-d); padding-bottom: 1px; }
   .contacts-list-item dd a:hover { color: var(--forest); border-color: var(--forest); }
   .contacts-list-item dd .muted { color: var(--ash-d); display: block; font-size: 14px; margin-top: 2px; }
-  .contacts-list-item dd .phone { font-family: var(--font-mono); font-weight: 700; font-size: 22px; letter-spacing: .04em; font-variant-numeric: tabular-nums; }
+  .contacts-list-item dd .phone { font-family: var(--font-mono); font-weight: 700; font-size: 22px; letter-spacing: .04em; font-variant-numeric: tabular-nums; transition: color var(--dur-fast); }
+  .contacts-list-item dd a.phone:hover { color: var(--forest); }
 
   .map-frame {
     aspect-ratio: 4 / 3;
@@ -1332,7 +1333,7 @@
     <section class="services section-pad" id="services">
       <span class="topo" aria-hidden="true"></span>
       <div class="container section-content">
-        <p class="section-tag">01- УСЛУГИ</p>
+        <p class="section-tag">01 · SERVICES</p>
 
         <header class="services-head reveal">
           <div>
@@ -1415,7 +1416,7 @@
     <section class="team section-pad" id="team">
       <span class="topo" aria-hidden="true"></span>
       <div class="container section-content">
-        <p class="section-tag">02- TEAM</p>
+        <p class="section-tag">02 · TEAM</p>
 
         <header class="team-head reveal">
           <div>
@@ -1569,7 +1570,7 @@
     <section class="interior section-pad" id="interior">
       <span class="topo" aria-hidden="true"></span>
       <div class="container section-content">
-        <p class="section-tag">03- INTERIOR</p>
+        <p class="section-tag">03 · INTERIOR</p>
 
         <div class="reveal" style="max-width:780px;">
           <h2 class="h-section">Пространство <span class="marker"></span></h2>
@@ -1599,7 +1600,7 @@
     <section class="cta" id="cta">
       <span class="topo" aria-hidden="true"></span>
       <div class="container cta-inner reveal">
-        <p class="cta-tag">03 — booking</p>
+        <p class="cta-tag">BOOKING</p>
         <h2 class="cta-title">Записаться</h2>
         <p class="cta-sub">Запись по телефону или через онлайн-сервис. Перезвоним в течение 5 минут и подберём время у нужного мастера.</p>
         <div class="cta-buttons">
@@ -1613,7 +1614,7 @@
     <section class="contacts section-pad" id="contacts">
       <span class="topo" aria-hidden="true"></span>
       <div class="container section-content">
-        <p class="section-tag">04- CONTACTS</p>
+        <p class="section-tag">04 · CONTACTS</p>
 
         <div class="contacts-grid">
           <div class="reveal">
@@ -1623,7 +1624,7 @@
             <dl class="contacts-list">
               <div class="contacts-list-item">
                 <dt>Запись</dt>
-                <dd><span class="phone">+7 965 31 31 31 5</span><span class="muted"><a href="tel:+79653131315">Позвонить</a></span></dd>
+                <dd><a class="phone" href="tel:+79653131315">+7 965 31 31 31 5</a></dd>
               </div>
               <div class="contacts-list-item">
                 <dt>Email</dt>
@@ -1635,7 +1636,7 @@
               </div>
               <div class="contacts-list-item">
                 <dt>Часы</dt>
-                <dd>с 10 до 22 часов<span class="muted">Без выходных</span></dd>
+                <dd>10:00–22:00<span class="muted">Без выходных</span></dd>
               </div>
             </dl>
           </div>
@@ -1660,7 +1661,7 @@
     <section class="partners section-pad" id="partners">
       <span class="topo" aria-hidden="true"></span>
       <div class="container section-content">
-        <p class="section-tag">05- PARTNERS</p>
+        <p class="section-tag">05 · PARTNERS</p>
 
         <div class="reveal" style="max-width:780px;">
           <h2 class="h-section">Наши партнёры <span class="marker"></span></h2>
@@ -1759,7 +1760,7 @@
         <div class="footer-col">
           <h4>Адрес</h4>
           <p style="font-size:14px; color:var(--ink-2); line-height:1.7;">
-            Москва<br>ул. Остоженка 47<br>метро Парк Культуры<br><br>с 10 до 22<br>без выходных
+            Москва<br>ул. Остоженка 47<br>метро Парк Культуры<br><br>10:00–22:00<br>без выходных
           </p>
         </div>
 
