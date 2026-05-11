@@ -1,0 +1,47 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import services from '../../../content/services.json';
+
+const fmtPrice = (n: number) => n.toLocaleString('ru-RU').replace(/,/g, ' ') + ' ₽';
+---
+
+<AdminLayout pageTitle="Услуги" activeCollection="services">
+  <p class="crumbs">
+    <a href="/admin">Главная</a><span class="sep">·</span>Услуги
+  </p>
+
+  <div class="title-row">
+    <h1 class="page-title">Услуги и цены</h1>
+    <div class="title-actions">
+      <a class="btn btn-primary" href="/admin/services/new">+ Добавить услугу</a>
+    </div>
+  </div>
+
+  {services.categories.map((cat, catIdx) => (
+    <section class="col-group">
+      <div class="col-group-title">
+        <span>{cat.name}</span>
+        <span class="count">{String(cat.items.length).padStart(2, '0')} {cat.items.length === 1 ? 'услуга' : 'услуг'}</span>
+      </div>
+
+      <div class="col-list">
+        {cat.items.map((item, itemIdx) => (
+          <a class="col-item" href={`/admin/services/${cat.id}-${itemIdx}`}>
+            <div class="col-item-head">
+              <span class="col-item-cat">{item.type || cat.name}</span>
+              <span class="col-item-price">{fmtPrice(item.price)}</span>
+            </div>
+            <div class="col-item-name">{item.name}</div>
+            <div class="col-item-meta">
+              {item.available !== false ? (
+                <span class="status-pill">опубликовано</span>
+              ) : (
+                <span class="status-pill status-pill--draft">скрыто</span>
+              )}
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+</AdminLayout>

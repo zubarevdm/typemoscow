@@ -1,0 +1,97 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import services from '../../content/services.json';
+import team from '../../content/team.json';
+import works from '../../content/works.json';
+
+const totalServices = services.categories.reduce((s, c) => s + c.items.length, 0);
+const masters = team.masters.length;
+const photos = works.items.length;
+---
+
+<AdminLayout pageTitle="Главная">
+  <p class="crumbs">Главная</p>
+
+  <div class="title-row">
+    <h1 class="page-title">Добро пожаловать</h1>
+    <a class="btn btn-primary" href="/" target="_blank">Открыть сайт →</a>
+  </div>
+
+  <div class="dashboard-grid">
+    <a class="dashboard-card" href="/admin/services">
+      <span class="dashboard-card__tag">Коллекция</span>
+      <span class="dashboard-card__count">{String(totalServices).padStart(2, '0')}</span>
+      <span class="dashboard-card__name">Услуги и цены</span>
+      <span class="dashboard-card__hint">Стрижки, борода, бритьё, комплексы</span>
+    </a>
+
+    <a class="dashboard-card" href="/admin/team">
+      <span class="dashboard-card__tag">Коллекция</span>
+      <span class="dashboard-card__count">{String(masters).padStart(2, '0')}</span>
+      <span class="dashboard-card__name">Команда</span>
+      <span class="dashboard-card__hint">Мастера, био, теги</span>
+    </a>
+
+    <a class="dashboard-card" href="/admin/contacts">
+      <span class="dashboard-card__tag">Запись</span>
+      <span class="dashboard-card__count">·</span>
+      <span class="dashboard-card__name">Контакты</span>
+      <span class="dashboard-card__hint">Телефон, email, адрес, часы</span>
+    </a>
+
+    <a class="dashboard-card" href="/admin/works">
+      <span class="dashboard-card__tag">Портфолио</span>
+      <span class="dashboard-card__count">{String(photos).padStart(2, '0')}</span>
+      <span class="dashboard-card__name">Работы</span>
+      <span class="dashboard-card__hint">Фотографии работ мастеров</span>
+    </a>
+  </div>
+</AdminLayout>
+
+<style is:global>
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .dashboard-card {
+    display: grid;
+    grid-template-rows: auto 1fr auto auto;
+    gap: 8px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 24px;
+    min-height: 200px;
+    transition: border-color .15s, transform .15s;
+    color: inherit;
+  }
+  .dashboard-card:hover {
+    border-color: var(--ink);
+    transform: translateY(-2px);
+  }
+  .dashboard-card__tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--ash-d);
+  }
+  .dashboard-card__count {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 44px;
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: -.01em;
+  }
+  .dashboard-card__name {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--ink);
+  }
+  .dashboard-card__hint {
+    font-size: 12px;
+    color: var(--ash-d);
+  }
+</style>

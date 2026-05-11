@@ -1,0 +1,155 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import services from '../../../content/services.json';
+
+export async function getStaticPaths() {
+  const paths: Array<{ params: { id: string }; props: { catId: string; itemIdx: number } }> = [];
+  for (const cat of services.categories) {
+    cat.items.forEach((_, i) => {
+      paths.push({
+        params: { id: `${cat.id}-${i}` },
+        props: { catId: cat.id, itemIdx: i },
+      });
+    });
+  }
+  return paths;
+}
+
+const { catId, itemIdx } = Astro.props;
+const cat = services.categories.find(c => c.id === catId)!;
+const item = cat.items[itemIdx];
+const isPackage = catId === 'packages';
+
+const fmtPrice = (n: number) => n.toLocaleString('ru-RU').replace(/,/g, ' ') + ' ₽';
+
+// Соседние услуги для превью
+const siblings = cat.items.slice(0, 4);
+---
+
+<AdminLayout pageTitle={item.name} activeCollection="services">
+  <p class="crumbs">
+    <a href="/admin">Главная</a><span class="sep">·</span>
+    <a href="/admin/services">Услуги</a><span class="sep">·</span>
+    {cat.name}
+  </p>
+
+  <div class="title-row">
+    <h1 class="page-title">{item.name}</h1>
+    {item.available !== false ? (
+      <span class="status-pill">опубликовано</span>
+    ) : (
+      <span class="status-pill status-pill--draft">скрыто</span>
+    )}
+  </div>
+
+  <form class="form-grid" data-edit-form data-collection="services" data-key={`${catId}-${itemIdx}`}>
+    <div>
+      <div class="field">
+        <label class="field-label" for="name">Название услуги <span class="required">·</span></label>
+        <input id="name" name="name" type="text" class="input" value={item.name} required />
+      </div>
+
+      <div class="fieldset-2">
+        <div class="field">
+          <label class="field-label" for="price">Цена <span class="required">·</span></label>
+          <div class="input-with-suffix">
+            <input id="price" name="price" type="number" min="0" step="100" class="input price" value={item.price} required />
+            <span class="suffix">₽</span>
+          </div>
+          <span class="field-hint">Изменение появится на сайте через 1–2 минуты после публикации.</span>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="type">Тип</label>
+          <select id="type" name="type" class="select">
+            {['Стрижка', 'Оформление бороды', 'Бритьё', 'Стрижка и борода', 'Уход', 'Окрашивание', 'Стайлинг', 'Комплекс услуг'].map(t => (
+              <option value={t} selected={item.type === t}>{t}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="category">Категория</label>
+        <select id="category" name="category" class="select">
+          {services.categories.map(c => (
+            <option value={c.id} selected={c.id === catId}>{c.name}</option>
+          ))}
+        </select>
+        <span class="field-hint">Перемещение между «Основными», «Дополнительными» и «Комплексами».</span>
+      </div>
+
+      {isPackage && (
+        <div class="field">
+          <label class="field-label" for="description">Описание комплекса</label>
+          <textarea id="description" name="description" class="textarea" placeholder="Что входит в комплекс">{item.description || ''}</textarea>
+          <span class="field-hint">Появится мелким текстом под названием на сайте.</span>
+        </div>
+      )}
+
+      <div class="field">
+        <label class="checkbox">
+          <input type="checkbox" name="available" checked={item.available !== false} />
+          <span class="box"></span>
+          <span>Доступно для записи (показывать на сайте)</span>
+        </label>
+      </div>
+    </div>
+
+    <aside class="preview">
+      <p class="preview-tag">Превью на сайте</p>
+
+      <div class="preview-card">
+        {siblings.map((sibling, i) => {
+          const isCurrent = i === itemIdx;
+          return (
+            <div class={`preview-row${isCurrent ? ' highlight' : ''}`}>
+              <span class="name">{isCurrent ? item.name : sibling.name}</span>
+              <span class="price">{fmtPrice(isCurrent ? item.price : sibling.price)}</span>
+            </div>
+          );
+        })}
+      </div>
+
+      <p class="preview-note">Так услуга выглядит на главной странице, в блоке «Услуги&nbsp;→ {cat.name}».</p>
+    </aside>
+
+    <div class="form-foot" style="grid-column: 1 / -1;">
+      <span class="pending" data-pending hidden>Есть несохранённые изменения</span>
+      <a class="btn btn-ghost" href="/admin/services">Отмена</a>
+      <button type="button" class="btn btn-ghost" data-save="draft">Сохранить черновик</button>
+      <button type="submit" class="btn btn-primary"><span class="dot"></span> Опубликовать</button>
+    </div>
+  </form>
+</AdminLayout>
+
+<script>
+  // Минимальный «есть несохранённые изменения» индикатор + перехват submit.
+  // Реальная отправка на бэкенд — Phase 3 (Cloudflare Pages Function + GitHub API).
+  const form = document.querySelector<HTMLFormElement>('[data-edit-form]');
+  const pending = document.querySelector<HTMLElement>('[data-pending]');
+  if (form && pending) {
+    const initial = new FormData(form);
+    const initialStr = JSON.stringify(Array.from(initial.entries()));
+
+    form.addEventListener('input', () => {
+      const current = JSON.stringify(Array.from(new FormData(form).entries()));
+      pending.hidden = current === initialStr;
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const payload = Object.fromEntries(fd.entries());
+      // TODO Phase 3: POST на /api/admin/save с этим payload
+      console.log('[admin] would publish:', payload);
+      alert('Phase 2 UI готов. Сохранение появится в Phase 3 (бэкенд).');
+    });
+
+    document.querySelector('[data-save="draft"]')?.addEventListener('click', () => {
+      const fd = new FormData(form);
+      console.log('[admin] would save draft:', Object.fromEntries(fd.entries()));
+      alert('Черновик сохранён локально (заглушка). Phase 3 добавит бэкенд.');
+    });
+  }
+</script>

@@ -14,6 +14,16 @@ export default defineConfig({
     host: '127.0.0.1',
     port: 4321,
   },
+  vite: {
+    server: {
+      watch: {
+        // OneDrive ломает native file watchers на Windows.
+        // Polling медленнее, но надёжно ловит изменения.
+        usePolling: true,
+        interval: 500,
+      },
+    },
+  },
   // Cloudflare Pages обслуживает /public/ как корень сайта,
   // поэтому /public/assets/works/X.JPG будет доступен по /assets/works/X.JPG
 });
