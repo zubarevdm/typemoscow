@@ -1,5 +1,20 @@
+---
+import works from '../content/works.json';
+import contacts from '../content/contacts.json';
+import site from '../content/site.json';
+
+const wordForms = (n: number, [one, few, many]: [string, string, string]) => {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return one;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return few;
+  return many;
+};
+const worksCount = works.items.length;
+const worksLabel = `${worksCount} ${wordForms(worksCount, ['работа', 'работы', 'работ'])}`;
+---
 <!doctype html>
-<html lang="ru">
+<html lang={site.lang}>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -495,7 +510,7 @@
         <p class="section-tag">Works · TYPE</p>
         <div class="page-hero-meta">
           <h1 class="h-section">Работы мастеров <span class="marker"></span></h1>
-          <span class="page-hero-count">7 работ</span>
+          <span class="page-hero-count">{worksLabel}</span>
         </div>
         <p class="lede">Чёрно-белые редакционные снимки. Каждый образ — результат диалога мастера и клиента. Потом работ будет больше.</p>
       </div>
@@ -506,84 +521,26 @@
   <section class="works-section">
     <div class="container">
       <div class="works-grid reveal-stagger" id="worksGrid">
-
-        <div class="work-item" data-src="/assets/works/DSCF0046.JPG" tabindex="0" role="button" aria-label="Работа 01 TYPE Moscow — открыть фото">
-          <div class="work-item-inner">
-            <img src="/assets/works/DSCF0046.JPG"
-                 srcset="/assets/works/_mobile/DSCF0046.JPG 400w, /assets/works/DSCF0046.JPG 800w"
-                 sizes="(min-width: 961px) 420px, (min-width: 721px) 360px, calc(100vw - 40px)"
-                 alt="" loading="eager" fetchpriority="high" decoding="async" width="800" height="1200" />
-          </div>
-          <span class="work-num">01</span>
-          <div class="work-caption" aria-hidden="true"><span class="work-caption-text">TYPE Moscow</span></div>
-        </div>
-
-        <div class="work-item" data-src="/assets/works/DSCF0079.JPG" tabindex="0" role="button" aria-label="Работа 02 TYPE Moscow — открыть фото">
-          <div class="work-item-inner">
-            <img src="/assets/works/DSCF0079.JPG"
-                 srcset="/assets/works/_mobile/DSCF0079.JPG 400w, /assets/works/DSCF0079.JPG 800w"
-                 sizes="(min-width: 961px) 420px, (min-width: 721px) 360px, calc(100vw - 40px)"
-                 alt="" loading="lazy" decoding="async" width="800" height="1200" />
-          </div>
-          <span class="work-num">02</span>
-          <div class="work-caption" aria-hidden="true"><span class="work-caption-text">TYPE Moscow</span></div>
-        </div>
-
-        <div class="work-item" data-src="/assets/works/DSCF0355.JPG" tabindex="0" role="button" aria-label="Работа 03 TYPE Moscow — открыть фото">
-          <div class="work-item-inner">
-            <img src="/assets/works/DSCF0355.JPG"
-                 srcset="/assets/works/_mobile/DSCF0355.JPG 400w, /assets/works/DSCF0355.JPG 800w"
-                 sizes="(min-width: 961px) 420px, (min-width: 721px) 360px, calc(100vw - 40px)"
-                 alt="" loading="lazy" decoding="async" width="800" height="1200" />
-          </div>
-          <span class="work-num">03</span>
-          <div class="work-caption" aria-hidden="true"><span class="work-caption-text">TYPE Moscow</span></div>
-        </div>
-
-        <div class="work-item" data-src="/assets/works/DSCF0881.JPG" tabindex="0" role="button" aria-label="Работа 04 TYPE Moscow — открыть фото">
-          <div class="work-item-inner">
-            <img src="/assets/works/DSCF0881.JPG"
-                 srcset="/assets/works/_mobile/DSCF0881.JPG 400w, /assets/works/DSCF0881.JPG 800w"
-                 sizes="(min-width: 961px) 420px, (min-width: 721px) 360px, calc(100vw - 40px)"
-                 alt="" loading="lazy" decoding="async" width="800" height="1200" />
-          </div>
-          <span class="work-num">04</span>
-          <div class="work-caption" aria-hidden="true"><span class="work-caption-text">TYPE Moscow</span></div>
-        </div>
-
-        <div class="work-item" data-src="/assets/works/DSCF1049.JPG" tabindex="0" role="button" aria-label="Работа 05 TYPE Moscow — открыть фото">
-          <div class="work-item-inner">
-            <img src="/assets/works/DSCF1049.JPG"
-                 srcset="/assets/works/_mobile/DSCF1049.JPG 400w, /assets/works/DSCF1049.JPG 800w"
-                 sizes="(min-width: 961px) 420px, (min-width: 721px) 360px, calc(100vw - 40px)"
-                 alt="" loading="lazy" decoding="async" width="800" height="1200" />
-          </div>
-          <span class="work-num">05</span>
-          <div class="work-caption" aria-hidden="true"><span class="work-caption-text">TYPE Moscow</span></div>
-        </div>
-
-        <div class="work-item" data-src="/assets/works/DSCF1208.JPG" tabindex="0" role="button" aria-label="Работа 06 TYPE Moscow — открыть фото">
-          <div class="work-item-inner">
-            <img src="/assets/works/DSCF1208.JPG"
-                 srcset="/assets/works/_mobile/DSCF1208.JPG 400w, /assets/works/DSCF1208.JPG 800w"
-                 sizes="(min-width: 961px) 420px, (min-width: 721px) 360px, calc(100vw - 40px)"
-                 alt="" loading="lazy" decoding="async" width="800" height="1200" />
-          </div>
-          <span class="work-num">06</span>
-          <div class="work-caption" aria-hidden="true"><span class="work-caption-text">TYPE Moscow</span></div>
-        </div>
-
-        <div class="work-item" data-src="/assets/works/DSCF1436.JPG" tabindex="0" role="button" aria-label="Работа 07 TYPE Moscow — открыть фото">
-          <div class="work-item-inner">
-            <img src="/assets/works/DSCF1436.JPG"
-                 srcset="/assets/works/_mobile/DSCF1436.JPG 400w, /assets/works/DSCF1436.JPG 800w"
-                 sizes="(min-width: 961px) 420px, (min-width: 721px) 360px, calc(100vw - 40px)"
-                 alt="" loading="lazy" decoding="async" width="800" height="1200" />
-          </div>
-          <span class="work-num">07</span>
-          <div class="work-caption" aria-hidden="true"><span class="work-caption-text">TYPE Moscow</span></div>
-        </div>
-
+        {works.items.map((item, i) => {
+          const mobileSrc = item.src.replace('/assets/works/', '/assets/works/_mobile/');
+          const isFirst = i === 0;
+          return (
+            <div class="work-item" data-src={item.src} tabindex="0" role="button" aria-label={`Работа ${item.num} TYPE Moscow — открыть фото`}>
+              <div class="work-item-inner">
+                <img src={item.src}
+                     srcset={`${mobileSrc} 400w, ${item.src} 800w`}
+                     sizes="(min-width: 961px) 420px, (min-width: 721px) 360px, calc(100vw - 40px)"
+                     alt=""
+                     loading={isFirst ? 'eager' : 'lazy'}
+                     fetchpriority={isFirst ? 'high' : 'auto'}
+                     decoding="async"
+                     width="800" height="1200" />
+              </div>
+              <span class="work-num">{item.num}</span>
+              <div class="work-caption" aria-hidden="true"><span class="work-caption-text">TYPE Moscow</span></div>
+            </div>
+          );
+        })}
       </div>
     </div>
   </section>
@@ -609,8 +566,8 @@
       <h2 class="works-cta-title">Записаться к мастеру</h2>
       <p class="works-cta-sub">Запись по телефону или через онлайн-сервис. Перезвоним в течение 5 минут и подберём время у нужного мастера.</p>
       <div class="works-cta-buttons">
-        <a href="tel:+79653131315" class="btn btn-primary">Позвонить · +7 965 31 31 31 5</a>
-        <a href="https://n120635.yclients.com/company/93295/personal/select-master?o=" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">Онлайн-запись <span class="arrow"></span></a>
+        <a href={`tel:${contacts.phone.tel}`} class="btn btn-primary">Позвонить · {contacts.phone.display}</a>
+        <a href={contacts.booking.yclients} target="_blank" rel="noopener noreferrer" class="btn btn-ghost">Онлайн-запись <span class="arrow"></span></a>
       </div>
     </div>
   </section>
@@ -625,9 +582,9 @@
       <nav class="footer-links" aria-label="Ссылки">
         <a href="/">Главная</a>
         <a href="/privacy">Политика</a>
-        <a href="https://www.instagram.com/typemoscow/" target="_blank" rel="noopener noreferrer">Instagram</a>
-        <a href="https://t.me/typemoscowtg" target="_blank" rel="noopener noreferrer">Telegram</a>
-        <a href="https://vk.com/typemoscowvk" target="_blank" rel="noopener noreferrer">VK</a>
+        <a href={contacts.social.instagram} target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href={contacts.social.telegram} target="_blank" rel="noopener noreferrer">Telegram</a>
+        <a href={contacts.social.vk} target="_blank" rel="noopener noreferrer">VK</a>
       </nav>
     </div>
   </div>
