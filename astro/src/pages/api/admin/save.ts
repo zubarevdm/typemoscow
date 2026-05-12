@@ -94,7 +94,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       return json({ error: 'github get failed', status: getRes.status, detail }, 502);
     }
     const meta = (await getRes.json()) as { sha: string; content: string };
-    const currentRaw = atob(meta.content.replace(/\n/g, ''));
+    const currentRaw = base64ToUtf8(meta.content.replace(/\n/g, ''));
     const current = JSON.parse(currentRaw);
 
     // 2. Apply patch
@@ -157,6 +157,15 @@ function utf8ToBase64(str: string): string {
   let binary = '';
   for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
   return btoa(binary);
+}
+
+function base64ToUtf8(b64: string): string {
+  // Обратная операция: атоb возвращает «бинарную строку» (по байту на символ),
+  // её нужно явно декодировать как UTF-8, иначе кириллица превращается в mojibake.
+  const binary = atob(b64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return new TextDecoder('utf-8').decode(bytes);
 }
 
 function describeChange(collection: Collection, key: string | undefined, data: any): string {
