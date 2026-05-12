@@ -115,10 +115,20 @@ const collections: Array<{ id: 'services' | 'team' | 'contacts' | 'works'; label
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ collection, key: key || undefined, data }),
         });
-        const body = await res.json();
+        const rawText = await res.text();
+        let body: any = null;
+        try { body = rawText ? JSON.parse(rawText) : null; } catch { /* not json */ }
 
         if (!res.ok) {
-          showToast(`Ошибка ${res.status}: ${body.error || 'unknown'}`, 'error', 6000);
+          const detail = body?.error || (rawText ? rawText.slice(0, 200) : 'пустой ответ');
+          showToast(`HTTP ${res.status}: ${detail}`, 'error', 8000);
+          console.error('save failed', res.status, rawText);
+          return;
+        }
+
+        if (!body) {
+          showToast(`HTTP ${res.status}, но тело пустое. Ответ: ${rawText.slice(0, 200) || '(ничего)'}`, 'error', 8000);
+          console.error('empty body from /api/admin/save', res.status, rawText);
           return;
         }
 
@@ -128,7 +138,8 @@ const collections: Array<{ id: 'services' | 'team' | 'contacts' | 'works'; label
           showToast('Опубликовано. Изменения появятся на сайте через ~1 минуту.', 'success', 5000);
         }
       } catch (err) {
-        showToast(`Сеть/сервер: ${String(err)}`, 'error', 6000);
+        showToast(`Сеть: ${String(err)}`, 'error', 6000);
+        console.error(err);
       } finally {
         if (btn) btn.disabled = false;
       }

@@ -4,11 +4,8 @@
 // prod: коммит в GitHub через REST API. CF Pages передеплоит автоматически.
 
 import type { APIRoute } from 'astro';
-import path from 'node:path';
 
 export const prerender = false;
-
-const CONTENT_DIR = path.resolve(process.cwd(), 'src/content');
 
 // Путь к JSON-файлам в репозитории (относительно root репо).
 const REPO_CONTENT_PATH = 'astro/src/content';
@@ -43,8 +40,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     if (import.meta.env.DEV) {
-      // Локальный режим — пишем в файл напрямую
+      // Локальный режим — пишем в файл напрямую. Динамический импорт,
+      // чтобы node:fs / node:path не попадали в Worker-бандл прода.
       const fs = await import('node:fs/promises');
+      const path = await import('node:path');
+      const CONTENT_DIR = path.resolve(process.cwd(), 'src/content');
       const filePath = path.join(CONTENT_DIR, `${collection}.json`);
       const raw = await fs.readFile(filePath, 'utf-8');
       const current = JSON.parse(raw);
