@@ -1,15 +1,12 @@
 ---
+export const prerender = false;
 import AdminLayout from '../../../layouts/AdminLayout.astro';
 import works from '../../../content/works.json';
 
-export async function getStaticPaths() {
-  return works.items.map((_, i) => ({
-    params: { id: String(i) },
-    props: { idx: i },
-  }));
+const idx = parseInt(Astro.params.id ?? '', 10);
+if (Number.isNaN(idx) || idx < 0 || idx >= works.items.length) {
+  return Astro.redirect('/admin/works');
 }
-
-const { idx } = Astro.props;
 const item = works.items[idx];
 ---
 

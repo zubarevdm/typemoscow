@@ -1,0 +1,220 @@
+---
+export const prerender = false;
+
+const next = Astro.url.searchParams.get('next') || '/admin';
+---
+
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Вход · TYPE CMS</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/type-mark.svg" />
+</head>
+<body class="cms-body">
+
+<main class="login-shell">
+  <div class="login-card">
+    <div class="login-brand">
+      <span class="login-mark">TYPE · CMS</span>
+      <span class="login-sub">est. 2024 · admin</span>
+    </div>
+
+    <h1 class="login-title">Вход в админку</h1>
+    <p class="login-help">Введите пароль, выданный администратором сайта.</p>
+
+    <form id="login-form" autocomplete="off">
+      <input type="hidden" name="next" value={next} />
+      <div class="field">
+        <label class="field-label" for="password">Пароль</label>
+        <input id="password" name="password" type="password" class="input" required autofocus />
+      </div>
+      <button type="submit" class="btn btn-primary login-submit">
+        <span class="dot"></span> Войти
+      </button>
+      <p class="login-error" id="login-error" hidden></p>
+    </form>
+  </div>
+</main>
+
+<script>
+  const form = document.getElementById('login-form') as HTMLFormElement;
+  const errEl = document.getElementById('login-error') as HTMLParagraphElement;
+  const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errEl.hidden = true;
+    submitBtn.disabled = true;
+
+    const fd = new FormData(form);
+    const password = String(fd.get('password') || '');
+    const next = String(fd.get('next') || '/admin');
+
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      const text = await res.text();
+      if (!res.ok) {
+        let detail = text;
+        try { detail = JSON.parse(text).error || text; } catch {}
+        errEl.textContent = res.status === 401 ? 'Неверный пароль' : `Ошибка ${res.status}: ${detail}`;
+        errEl.hidden = false;
+        return;
+      }
+      window.location.href = next.startsWith('/') ? next : '/admin';
+    } catch (err) {
+      errEl.textContent = `Сеть: ${String(err)}`;
+      errEl.hidden = false;
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+</script>
+
+<style is:global>
+  @font-face { font-family: 'Disket Mono'; src: url('/assets/fonts/Disket-Mono-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+  @font-face { font-family: 'Disket Mono'; src: url('/assets/fonts/Disket-Mono-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+  @font-face { font-family: 'Gotham'; src: url('/assets/fonts/gotham_book.otf') format('opentype'); font-weight: 400; font-display: swap; }
+  @font-face { font-family: 'Gotham'; src: url('/assets/fonts/gotham_bold.otf') format('opentype'); font-weight: 700; font-display: swap; }
+
+  :root {
+    --paper: #EBEAE5; --paper-2: #F2F1ED; --paper-d: #DCDAD3;
+    --ink: #0B0B0B; --ink-2: #1F1F1F; --forest: #042615;
+    --ash-d: #595959; --line: rgba(11,11,11,.10); --line-d: rgba(11,11,11,.18);
+    --font-display: 'Disket Mono', monospace;
+    --font-body: 'Gotham', system-ui, sans-serif;
+    --font-mono: 'Disket Mono', ui-monospace, monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body.cms-body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .login-shell {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+  }
+  .login-card {
+    width: 100%;
+    max-width: 380px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 32px 32px 28px;
+  }
+  .login-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .login-mark {
+    font-family: var(--font-mono); font-weight: 700;
+    font-size: 13px; letter-spacing: .12em;
+  }
+  .login-mark::after {
+    content: '';
+    display: inline-block;
+    width: 7px; height: 7px;
+    background: var(--forest);
+    transform: rotate(45deg);
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .login-sub {
+    font-family: var(--font-mono);
+    font-size: 9px; letter-spacing: .2em;
+    color: var(--ash-d);
+    text-transform: uppercase;
+    border-left: 1px solid var(--line-d);
+    padding-left: 12px;
+  }
+
+  .login-title {
+    font-weight: 700;
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+  .login-help {
+    font-size: 13px;
+    color: var(--ash-d);
+    line-height: 1.5;
+    margin-bottom: 22px;
+  }
+  .field { margin-bottom: 16px; }
+  .field-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10px; font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--ash-d);
+    margin-bottom: 6px;
+  }
+  .input {
+    display: block;
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--paper);
+    border: 1px solid var(--line-d);
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: var(--font-body);
+    color: var(--ink);
+    outline: none;
+    transition: border-color .15s, background .15s;
+  }
+  .input:focus {
+    border-color: var(--ink);
+    background: #fff;
+  }
+  .btn {
+    display: inline-flex; align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+    background: transparent;
+    color: var(--ink);
+    -webkit-appearance: none;
+            appearance: none;
+  }
+  .btn-primary { background: var(--ink); color: var(--paper); }
+  .btn-primary:hover { background: var(--forest); border-color: var(--forest); }
+  .btn .dot { width: 7px; height: 7px; background: currentColor; border-radius: 50%; }
+  .login-submit { width: 100%; justify-content: center; padding: 14px 22px; }
+
+  .login-error {
+    margin-top: 14px;
+    padding: 10px 14px;
+    background: rgba(139,29,29,.08);
+    border-left: 3px solid #8b1d1d;
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+    color: #8b1d1d;
+  }
+</style>
+</body>
+</html>

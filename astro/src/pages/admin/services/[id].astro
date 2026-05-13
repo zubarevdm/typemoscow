@@ -1,22 +1,16 @@
 ---
+export const prerender = false;
 import AdminLayout from '../../../layouts/AdminLayout.astro';
 import services from '../../../content/services.json';
 
-export async function getStaticPaths() {
-  const paths: Array<{ params: { id: string }; props: { catId: string; itemIdx: number } }> = [];
-  for (const cat of services.categories) {
-    cat.items.forEach((_, i) => {
-      paths.push({
-        params: { id: `${cat.id}-${i}` },
-        props: { catId: cat.id, itemIdx: i },
-      });
-    });
-  }
-  return paths;
+const idParam = Astro.params.id ?? '';
+const dash = idParam.lastIndexOf('-');
+const catId = dash < 0 ? '' : idParam.slice(0, dash);
+const itemIdx = dash < 0 ? -1 : parseInt(idParam.slice(dash + 1), 10);
+const cat = services.categories.find(c => c.id === catId);
+if (!cat || Number.isNaN(itemIdx) || itemIdx < 0 || itemIdx >= cat.items.length) {
+  return Astro.redirect('/admin/services');
 }
-
-const { catId, itemIdx } = Astro.props;
-const cat = services.categories.find(c => c.id === catId)!;
 const item = cat.items[itemIdx];
 const isPackage = catId === 'packages';
 

@@ -1,15 +1,12 @@
 ---
+export const prerender = false;
 import AdminLayout from '../../../layouts/AdminLayout.astro';
 import team from '../../../content/team.json';
 
-export async function getStaticPaths() {
-  return team.masters.map((_, i) => ({
-    params: { id: String(i) },
-    props: { idx: i },
-  }));
+const idx = parseInt(Astro.params.id ?? '', 10);
+if (Number.isNaN(idx) || idx < 0 || idx >= team.masters.length) {
+  return Astro.redirect('/admin/team');
 }
-
-const { idx } = Astro.props;
 const master = team.masters[idx];
 const masterNum = String(idx + 1).padStart(2, '0');
 ---
