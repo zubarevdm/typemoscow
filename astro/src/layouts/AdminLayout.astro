@@ -1,12 +1,14 @@
 ---
 import services from '../content/services.json';
 import team from '../content/team.json';
-import contacts from '../content/contacts.json';
 import works from '../content/works.json';
+import partners from '../content/partners.json';
+
+type CollectionId = 'services' | 'team' | 'contacts' | 'works' | 'partners' | 'site';
 
 interface Props {
   pageTitle?: string;
-  activeCollection?: 'services' | 'team' | 'contacts' | 'works';
+  activeCollection?: CollectionId;
 }
 
 const { pageTitle = 'CMS', activeCollection } = Astro.props;
@@ -14,15 +16,19 @@ const { pageTitle = 'CMS', activeCollection } = Astro.props;
 const counts = {
   services: services.categories.reduce((s, c) => s + c.items.length, 0),
   team: team.masters.length,
-  contacts: 4, // logical sections: phone/email/address/hours
+  contacts: 4,
   works: works.items.length,
+  partners: partners.partners.length,
+  site: 1,
 };
 
-const collections: Array<{ id: 'services' | 'team' | 'contacts' | 'works'; label: string; count: number; }> = [
+const collections: Array<{ id: CollectionId; label: string; count: number; }> = [
   { id: 'services', label: 'Услуги', count: counts.services },
   { id: 'team', label: 'Команда', count: counts.team },
-  { id: 'contacts', label: 'Контакты', count: counts.contacts },
   { id: 'works', label: 'Работы', count: counts.works },
+  { id: 'partners', label: 'Партнёры', count: counts.partners },
+  { id: 'contacts', label: 'Контакты', count: counts.contacts },
+  { id: 'site', label: 'Сайт', count: counts.site },
 ];
 ---
 <!doctype html>
@@ -193,7 +199,12 @@ const collections: Array<{ id: 'services' | 'team' | 'contacts' | 'works'; label
           }
         }
 
-        const data = Object.fromEntries(new FormData(form).entries());
+        const data: Record<string, unknown> = Object.fromEntries(new FormData(form).entries());
+        // Checkboxes не попадают в FormData когда выключены — выставляем явный boolean.
+        form.querySelectorAll<HTMLInputElement>('input[type="checkbox"][name]').forEach((cb) => {
+          data[cb.name] = cb.checked;
+        });
+
         const { res, body, rawText } = await postSave({
           collection: collection!,
           action: formAction,

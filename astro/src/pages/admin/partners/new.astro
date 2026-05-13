@@ -1,0 +1,62 @@
+---
+export const prerender = false;
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+
+const logoTypes = ['text', 'svg-custom'];
+---
+
+<AdminLayout pageTitle="Новый партнёр" activeCollection="partners">
+  <p class="crumbs">
+    <a href="/admin">Главная</a><span class="sep">·</span>
+    <a href="/admin/partners">Партнёры</a><span class="sep">·</span>
+    Новый
+  </p>
+
+  <div class="title-row">
+    <h1 class="page-title">Новый партнёр</h1>
+    <span class="status-pill status-pill--draft">черновик</span>
+  </div>
+
+  <form class="form-grid" data-edit-form data-collection="partners" data-action="create" data-redirect-to="/admin/partners">
+    <div>
+      <div class="fieldset-2">
+        <div class="field">
+          <label class="field-label" for="id">ID (slug) <span class="required">·</span></label>
+          <input id="id" name="id" type="text" class="input" required placeholder="напр. shevelizm" pattern="[a-z0-9-]+" />
+          <span class="field-hint">Только латиница + дефисы. Используется внутри кода блока — менять потом нельзя.</span>
+        </div>
+        <div class="field">
+          <label class="field-label" for="logoType">Тип логотипа</label>
+          <select id="logoType" name="logoType" class="select">
+            {logoTypes.map(t => <option value={t}>{t}</option>)}
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="name">Название <span class="required">·</span></label>
+        <input id="name" name="name" type="text" class="input" required autofocus placeholder="Напр. «SHEVELIZM»" />
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="text">Описание <span class="required">·</span></label>
+        <textarea id="text" name="text" class="textarea" rows="5" required placeholder="Кто это и какие у нас отношения"></textarea>
+        <span class="field-hint">2–4 предложения. Появится под названием в блоке «Партнёры».</span>
+      </div>
+    </div>
+
+    <aside class="preview">
+      <p class="preview-tag">Как это работает</p>
+      <p class="preview-note">
+        После создания партнёр добавится в конец блока «Партнёры» на главной.
+        Логотип отрисуется по типу <code>logoType</code>: для <code>svg-custom</code>
+        нужно положить SVG-иконку в код блока вручную (это разработка, не CMS).
+      </p>
+    </aside>
+
+    <div class="form-foot" style="grid-column: 1 / -1;">
+      <a class="btn btn-ghost" href="/admin/partners">Отмена</a>
+      <button type="submit" class="btn btn-primary"><span class="dot"></span> Создать</button>
+    </div>
+  </form>
+</AdminLayout>

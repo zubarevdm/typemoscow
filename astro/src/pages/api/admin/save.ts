@@ -200,7 +200,9 @@ function describeChange(collection: Collection, action: Action, key: string | un
     case 'contacts':
       return 'update contacts';
     case 'partners':
-      return `${verb} partner ${key}`;
+      if (action === 'create') return `create partner ${data?.id || ''} — ${data?.name || ''}`.trim();
+      if (action === 'delete') return `delete partner ${key}`;
+      return `update partner ${key}`;
     case 'site':
       return 'update site meta';
     default:
@@ -236,7 +238,8 @@ function applyAction(
       if (action !== 'update') throw new Error('contacts supports only update');
       return patchContacts(current, data);
     case 'partners':
-      if (action !== 'update') throw new Error('partners supports only update');
+      if (action === 'create') return createPartner(current, data);
+      if (action === 'delete') return deletePartner(current, key);
       return patchPartners(current, key, data);
     case 'site':
       if (action !== 'update') throw new Error('site supports only update');
@@ -366,18 +369,27 @@ function patchPartners(current: any, key: string | undefined, data: any) {
   const incoming = data as Record<string, unknown>;
   if (typeof incoming.name === 'string') partner.name = incoming.name.trim();
   if (typeof incoming.text === 'string') partner.text = incoming.text.trim();
+  if (typeof incoming.logoType === 'string') partner.logoType = incoming.logoType;
 
   return current;
 }
 
-// site — то же что contacts, апдейт по плоским ключам
+// site — апдейт по dotted-paths (как contacts), поддерживает вложенный tagline.
 function patchSite(current: any, data: any) {
   const incoming = data as Record<string, unknown>;
-  const next = { ...current };
-  for (const [k, v] of Object.entries(incoming)) {
-    if (k.startsWith('_')) continue;
-    next[k] = v;
+  const next = JSON.parse(JSON.stringify(current));
+
+  for (const [path, value] of Object.entries(incoming)) {
+    if (path.startsWith('_')) continue;
+    const parts = path.split('.');
+    let obj = next;
+    for (let i = 0; i < parts.length - 1; i++) {
+      if (!(parts[i] in obj) || typeof obj[parts[i]] !== 'object') obj[parts[i]] = {};
+      obj = obj[parts[i]];
+    }
+    obj[parts[parts.length - 1]] = value;
   }
+
   return next;
 }
 
@@ -478,6 +490,34 @@ function deleteWork(current: any, key: string | undefined) {
     throw new Error(`works idx out of range: ${idx}`);
   }
   current.items.splice(idx, 1);
+  return current;
+}
+
+function createPartner(current: any, data: any) {
+  const incoming = data as Record<string, unknown>;
+  const id = typeof incoming.id === 'string' ? incoming.id.trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-') : '';
+  if (!id) throw new Error('create partner: id required');
+  if (current.partners.find((p: any) => p.id === id)) {
+    throw new Error(`partner id already exists: ${id}`);
+  }
+  const name = typeof incoming.name === 'string' ? incoming.name.trim() : '';
+  if (!name) throw new Error('create partner: name required');
+
+  const partner: any = {
+    id,
+    name,
+    logoType: typeof incoming.logoType === 'string' ? incoming.logoType : 'text',
+    text: typeof incoming.text === 'string' ? incoming.text.trim() : '',
+  };
+  current.partners.push(partner);
+  return current;
+}
+
+function deletePartner(current: any, key: string | undefined) {
+  if (!key) throw new Error('delete partner: id required');
+  const idx = current.partners.findIndex((p: any) => p.id === key);
+  if (idx < 0) throw new Error(`partner not found: ${key}`);
+  current.partners.splice(idx, 1);
   return current;
 }
 

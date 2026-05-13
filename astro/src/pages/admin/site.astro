@@ -1,0 +1,168 @@
+---
+export const prerender = false;
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import site from '../../content/site.json';
+---
+
+<AdminLayout pageTitle="Сайт" activeCollection="site">
+  <p class="crumbs">
+    <a href="/admin">Главная</a><span class="sep">·</span>Сайт
+  </p>
+
+  <div class="title-row">
+    <h1 class="page-title">Метаданные сайта</h1>
+    {site.stagingNoindex ? (
+      <span class="status-pill status-pill--draft">скрыт от поисковиков</span>
+    ) : (
+      <span class="status-pill">в индексе</span>
+    )}
+  </div>
+
+  <form class="form-grid" data-edit-form data-collection="site">
+    <div>
+      <fieldset class="form-section">
+        <legend>SEO</legend>
+
+        <div class="field">
+          <label class="field-label" for="title">Заголовок страницы (title) <span class="required">·</span></label>
+          <input id="title" name="title" type="text" class="input" value={site.title} required />
+          <span class="field-hint">Не больше 60 символов. Показывается во вкладке браузера и в поиске.</span>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="shortTitle">Краткое название</label>
+          <input id="shortTitle" name="shortTitle" type="text" class="input" value={site.shortTitle} />
+          <span class="field-hint">Для PWA-манифеста и закладок.</span>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="description">Описание (description) <span class="required">·</span></label>
+          <textarea id="description" name="description" class="textarea" rows="3" required>{site.description}</textarea>
+          <span class="field-hint">120–160 символов. Видно под заголовком в поисковой выдаче.</span>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="shortDescription">Краткое описание</label>
+          <textarea id="shortDescription" name="shortDescription" class="textarea" rows="2">{site.shortDescription}</textarea>
+          <span class="field-hint">Используется в Open Graph для соцсетей.</span>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="keywords">Ключевые слова</label>
+          <input id="keywords" name="keywords" type="text" class="input" value={site.keywords} />
+          <span class="field-hint">Через запятую. На большинство поисковиков уже не влияет, но Яндекс ещё учитывает.</span>
+        </div>
+      </fieldset>
+
+      <fieldset class="form-section">
+        <legend>Базовая конфигурация</legend>
+
+        <div class="fieldset-2">
+          <div class="field">
+            <label class="field-label" for="url">Канонический URL</label>
+            <input id="url" name="url" type="url" class="input" value={site.url} />
+            <span class="field-hint">Боевой домен с https. Влияет на canonical и Schema.org. <strong>При переезде на боевой домен поменять здесь.</strong></span>
+          </div>
+          <div class="field">
+            <label class="field-label" for="themeColor">Theme color</label>
+            <input id="themeColor" name="themeColor" type="text" class="input" value={site.themeColor} />
+            <span class="field-hint">Цвет адресной строки на мобиле. Hex с решёткой.</span>
+          </div>
+        </div>
+
+        <div class="fieldset-2">
+          <div class="field">
+            <label class="field-label" for="lang">Язык</label>
+            <input id="lang" name="lang" type="text" class="input" value={site.lang} maxlength="5" />
+          </div>
+          <div class="field">
+            <label class="field-label" for="locale">Locale (Open Graph)</label>
+            <input id="locale" name="locale" type="text" class="input" value={site.locale} placeholder="ru_RU" />
+          </div>
+        </div>
+
+        <div class="fieldset-2">
+          <div class="field">
+            <label class="field-label" for="founded">Год основания</label>
+            <input id="founded" name="founded" type="text" class="input" value={site.founded} maxlength="4" />
+          </div>
+          <div class="field">
+            <label class="field-label" for="videoDuration">Длительность видео</label>
+            <input id="videoDuration" name="videoDuration" type="text" class="input" value={site.videoDuration} />
+            <span class="field-hint">Формат «0:54». Для Schema.org VideoObject.</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="form-section">
+        <legend>Слоган</legend>
+
+        <div class="fieldset-2">
+          <div class="field">
+            <label class="field-label" for="tagline-first">Первая строка</label>
+            <input id="tagline-first" name="tagline.first" type="text" class="input" value={site.tagline.first} />
+          </div>
+          <div class="field">
+            <label class="field-label" for="tagline-second">Вторая строка</label>
+            <input id="tagline-second" name="tagline.second" type="text" class="input" value={site.tagline.second} />
+          </div>
+        </div>
+        <span class="field-hint">Показывается крупным шрифтом в первом экране главной.</span>
+      </fieldset>
+
+      <fieldset class="form-section">
+        <legend>Индексация</legend>
+
+        <div class="field">
+          <label class="checkbox">
+            <input type="checkbox" name="stagingNoindex" checked={site.stagingNoindex} />
+            <span class="box"></span>
+            <span>Скрыть сайт от поисковиков (<code>noindex, nofollow</code> + <code>Disallow: /</code>)</span>
+          </label>
+          <span class="field-hint">Должно быть выключено только после переезда на боевой домен.</span>
+        </div>
+      </fieldset>
+    </div>
+
+    <aside class="preview">
+      <p class="preview-tag">Превью в поисковике</p>
+      <div class="preview-card">
+        <div style="font-size: 11px; color: #1a0dab; font-family: var(--font-body); margin-bottom: 4px;">{site.url}</div>
+        <div style="font-size: 16px; color: #1a0dab; font-weight: 500; line-height: 1.3; margin-bottom: 4px;">{site.title}</div>
+        <div style="font-size: 12px; color: var(--ink-2); line-height: 1.5;">{site.description}</div>
+      </div>
+      <p class="preview-note">
+        Так сниппет выглядит в Google. В Яндексе формат похожий.
+        Изменения попадают в поиск только после переиндексации (несколько дней — недель).
+      </p>
+    </aside>
+
+    <div class="form-foot" style="grid-column: 1 / -1;">
+      <span class="pending" data-pending hidden>Есть несохранённые изменения</span>
+      <button type="submit" class="btn btn-primary"><span class="dot"></span> Опубликовать</button>
+    </div>
+  </form>
+</AdminLayout>
+
+<style is:global>
+  .form-section { border: none; padding: 0; margin: 0 0 32px 0; }
+  .form-section legend {
+    font-family: var(--font-mono);
+    font-size: 10px; font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding: 0 0 12px 0;
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+    width: 100%;
+  }
+  .form-section legend::before {
+    content: '';
+    display: inline-block;
+    width: 16px; height: 1px;
+    background: var(--ink);
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+</style>

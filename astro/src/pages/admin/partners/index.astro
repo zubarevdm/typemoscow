@@ -1,0 +1,30 @@
+---
+export const prerender = false;
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import partners from '../../../content/partners.json';
+---
+
+<AdminLayout pageTitle="Партнёры" activeCollection="partners">
+  <p class="crumbs">
+    <a href="/admin">Главная</a><span class="sep">·</span>Партнёры
+  </p>
+
+  <div class="title-row">
+    <h1 class="page-title">Партнёры и коллаборации</h1>
+    <div class="title-actions">
+      <a class="btn btn-primary" href="/admin/partners/new">+ Добавить партнёра</a>
+    </div>
+  </div>
+
+  <div class="col-list">
+    {partners.partners.map(p => (
+      <a class="col-item" href={`/admin/partners/${p.id}`}>
+        <div class="col-item-head">
+          <span class="col-item-cat">{p.logoType}</span>
+        </div>
+        <div class="col-item-name">{p.name}</div>
+        <div class="col-item-meta">{p.text.length > 90 ? p.text.slice(0, 90) + '…' : p.text}</div>
+      </a>
+    ))}
+  </div>
+</AdminLayout>

@@ -1,0 +1,71 @@
+---
+export const prerender = false;
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import partners from '../../../content/partners.json';
+
+const idParam = Astro.params.id ?? '';
+const partner = partners.partners.find(p => p.id === idParam);
+if (!partner) {
+  return Astro.redirect('/admin/partners');
+}
+const logoTypes = ['text', 'svg-custom'];
+---
+
+<AdminLayout pageTitle={partner.name} activeCollection="partners">
+  <p class="crumbs">
+    <a href="/admin">Главная</a><span class="sep">·</span>
+    <a href="/admin/partners">Партнёры</a><span class="sep">·</span>
+    {partner.name}
+  </p>
+
+  <div class="title-row">
+    <h1 class="page-title">{partner.name}</h1>
+    <span class="status-pill">опубликован</span>
+  </div>
+
+  <form class="form-grid" data-edit-form data-collection="partners" data-key={partner.id}>
+    <div>
+      <div class="fieldset-2">
+        <div class="field">
+          <label class="field-label" for="name">Название <span class="required">·</span></label>
+          <input id="name" name="name" type="text" class="input" value={partner.name} required />
+        </div>
+        <div class="field">
+          <label class="field-label" for="logoType">Тип логотипа</label>
+          <select id="logoType" name="logoType" class="select">
+            {logoTypes.map(t => <option value={t} selected={partner.logoType === t}>{t}</option>)}
+          </select>
+          <span class="field-hint"><code>text</code> — стилизованная надпись; <code>svg-custom</code> — отдельная SVG-иконка.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="text">Описание <span class="required">·</span></label>
+        <textarea id="text" name="text" class="textarea" rows="5" required>{partner.text}</textarea>
+        <span class="field-hint">Появится в блоке «Партнёры» на главной.</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label">ID</label>
+        <input class="input" value={partner.id} disabled />
+        <span class="field-hint">Идентификатор зашит в коде блока. Менять нельзя — удалите и создайте заново.</span>
+      </div>
+    </div>
+
+    <aside class="preview">
+      <p class="preview-tag">Превью карточки</p>
+      <div class="preview-card">
+        <div style="font-family: var(--font-mono); font-weight: 700; font-size: 18px; letter-spacing: .04em; margin-bottom: 8px;">{partner.name}</div>
+        <div style="font-size: 13px; color: var(--ink-2); line-height: 1.6;">{partner.text}</div>
+      </div>
+      <p class="preview-note">На сайте показывается в блоке «Партнёры» вместе с логотипом по типу <code>{partner.logoType}</code>.</p>
+    </aside>
+
+    <div class="form-foot" style="grid-column: 1 / -1;">
+      <span class="pending" data-pending hidden>Есть несохранённые изменения</span>
+      <button type="button" class="btn btn-danger" data-delete data-delete-label={`партнёра «${partner.name}»`} data-delete-redirect="/admin/partners">Удалить</button>
+      <a class="btn btn-ghost" href="/admin/partners">Отмена</a>
+      <button type="submit" class="btn btn-primary"><span class="dot"></span> Опубликовать</button>
+    </div>
+  </form>
+</AdminLayout>
