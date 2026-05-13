@@ -117,16 +117,6 @@
       ],
       "photo": "",
       "available": true
-    },
-    {
-      "name": "F",
-      "initials": "SS",
-      "role": "Мастер",
-      "bio": "123",
-      "tags": [
-        "test"
-      ],
-      "available": true
     }
   ]
 }
