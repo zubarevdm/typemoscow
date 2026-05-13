@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
+import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
@@ -14,6 +15,11 @@ export default defineConfig({
     // (понадобится для доступа к env vars типа GITHUB_TOKEN).
     platformProxy: { enabled: true },
   }),
+  integrations: [
+    sitemap({
+      filter: (page) => !page.includes('/admin') && !page.includes('/api'),
+    }),
+  ],
   build: {
     inlineStylesheets: 'auto',
   },

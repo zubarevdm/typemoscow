@@ -80,12 +80,13 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /api/
-Sitemap: https://домен.ru/sitemap.xml
+Sitemap: https://домен.ru/sitemap-index.xml
 ```
 
-### `astro/public/sitemap.xml`
+### `astro/public/sitemap-index.xml`
 
-Заменить `typemoscowtest.pages.dev` → `домен.ru` во всех `<loc>` тегах.
+Генерируется автоматически через `@astrojs/sitemap` на основе `site:` из `astro.config.mjs`.
+Отдельно править ничего не нужно — после смены `site:` всё пересоберётся.
 
 ### Поиск других хардкодов
 
@@ -100,7 +101,7 @@ grep -rn "typemoscowtest" astro/src astro/public
 ## 5 · Закоммитить и пушнуть
 
 ```bash
-git add astro/astro.config.mjs astro/public/robots.txt astro/public/sitemap.xml
+git add astro/astro.config.mjs astro/public/robots.txt astro/public/sitemap-index.xml
 git commit -m "Cutover to <домен.ru>"
 git push origin main
 ```
@@ -118,7 +119,7 @@ git push origin main
 - [ ] `https://домен.ru/works/` — все работы открываются
 - [ ] `https://домен.ru/privacy/` — политика на месте
 - [ ] `https://домен.ru/robots.txt` — отдаёт новый текст
-- [ ] `https://домен.ru/sitemap.xml` — отдаёт с боевым доменом
+- [ ] `https://домен.ru/sitemap-index.xml` — отдаёт с боевым доменом
 - [ ] `https://домен.ru/admin` — редиректит на login, login работает
 - [ ] Cтарый `typemoscowtest.pages.dev` тоже работает (но обе версии — fine)
 
@@ -130,14 +131,14 @@ git push origin main
 
 1. `webmaster.yandex.ru` → Добавить сайт → `https://домен.ru`
 2. Подтвердить владение (DNS-запись TXT, проще всего)
-3. Раздел **«Файлы Sitemap»** → добавить `https://домен.ru/sitemap.xml`
+3. Раздел **«Файлы Sitemap»** → добавить `https://домен.ru/sitemap-index.xml`
 4. Раздел **«Переобход»** → отправить главную и `/works/`
 
 ### Google Search Console
 
 1. `search.google.com/search-console` → Add property → `https://домен.ru` (Domain-уровень)
 2. Подтвердить через DNS TXT
-3. **Sitemaps** → добавить `sitemap.xml`
+3. **Sitemaps** → добавить `sitemap-index.xml`
 4. **URL Inspection** → запросить индексацию для главной
 
 Индексация занимает от нескольких дней до пары недель — нормально.
