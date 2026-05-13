@@ -1,8 +1,6 @@
 ---
 export const prerender = false;
 import AdminLayout from '../../../layouts/AdminLayout.astro';
-
-const logoTypes = ['text', 'svg-custom'];
 ---
 
 <AdminLayout pageTitle="Новый партнёр" activeCollection="partners">
@@ -19,24 +17,19 @@ const logoTypes = ['text', 'svg-custom'];
 
   <form class="form-grid" data-edit-form data-collection="partners" data-action="create" data-redirect-to="/admin/partners">
     <div>
-      <div class="fieldset-2">
-        <div class="field">
-          <label class="field-label" for="id">ID (slug) <span class="required">·</span></label>
-          <input id="id" name="id" type="text" class="input" required placeholder="напр. shevelizm" pattern="[a-z0-9-]+" />
-          <span class="field-hint">Только латиница + дефисы. Используется внутри кода блока — менять потом нельзя.</span>
-        </div>
-        <div class="field">
-          <label class="field-label" for="logoType">Тип логотипа</label>
-          <select id="logoType" name="logoType" class="select">
-            {logoTypes.map(t => <option value={t}>{t}</option>)}
-          </select>
-        </div>
-      </div>
-
       <div class="field">
         <label class="field-label" for="name">Название <span class="required">·</span></label>
         <input id="name" name="name" type="text" class="input" required autofocus placeholder="Напр. «SHEVELIZM»" />
+        <span class="field-hint">Появится как заголовок партнёра в блоке. Текстовый логотип в моноширинном шрифте.</span>
       </div>
+
+      <div class="field">
+        <label class="field-label" for="id">ID (slug) <span class="required">·</span></label>
+        <input id="id" name="id" type="text" class="input" required placeholder="напр. shevelizm" pattern="[a-z0-9-]+" />
+        <span class="field-hint">Только латиница + дефисы. Внутренний идентификатор — менять потом нельзя.</span>
+      </div>
+
+      <input type="hidden" name="logoType" value="text" />
 
       <div class="field">
         <label class="field-label" for="text">Описание <span class="required">·</span></label>
@@ -49,8 +42,8 @@ const logoTypes = ['text', 'svg-custom'];
       <p class="preview-tag">Как это работает</p>
       <p class="preview-note">
         После создания партнёр добавится в конец блока «Партнёры» на главной.
-        Логотип отрисуется по типу <code>logoType</code>: для <code>svg-custom</code>
-        нужно положить SVG-иконку в код блока вручную (это разработка, не CMS).
+        Логотип отрендерится текстом — название будет показано шрифтом Disket Mono.
+        Если хочется кастомный SVG-логотип, это уже разработка (не CMS) — напишите.
       </p>
     </aside>
 

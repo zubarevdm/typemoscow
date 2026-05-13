@@ -973,6 +973,12 @@ const schemaJsonLd = {
     font-size: 24px; letter-spacing: .12em; line-height: 1;
     color: var(--ink); font-style: italic;
   }
+  .logo-text {
+    font-family: var(--font-mono); font-weight: 700;
+    font-size: 18px; letter-spacing: .04em; line-height: 1;
+    color: var(--ink);
+    text-transform: uppercase;
+  }
 
   .partner-text {
     flex: 1; font-family: var(--font-body);
@@ -1443,49 +1449,34 @@ const schemaJsonLd = {
         </div>
 
         <div class="partners-grid reveal-stagger">
-
-          <!-- «Ш» -->
-          <div class="partner-row">
-            <div class="partner-logo" aria-label="«Ш» — мужской уход">
-              <svg viewBox="0 0 71 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 30.0001V59.9998H7.45272H14.9054V56.6539V53.308L11.2417 53.2853L7.56651 53.2513L7.53237 26.6202L7.50962 0.000413571H3.75481H0V30.0001Z" fill="currentColor"/>
-                <path d="M31.6309 8.44972V16.8995H35.3857H39.1405V8.44972V-0.000101084H35.3857H31.6309V8.44972Z" fill="currentColor"/>
-                <path d="M63.2637 26.6542V53.308L51.237 53.2853L39.1988 53.2513L39.1647 39.0397L39.1419 24.8395H35.3871H31.6323L31.6096 39.0397L31.5754 53.2513L27.2289 53.2853L22.8711 53.308V56.6539V59.9998H46.936H71.0009V30.0001V0.000413571H67.1323H63.2637V26.6542Z" fill="currentColor"/>
-              </svg>
+          {partners.partners.map((p) => (
+            <div class="partner-row">
+              <div class="partner-logo" aria-label={p.name}>
+                {p.id === 'sh' && p.logoType === 'svg-custom' && (
+                  <svg viewBox="0 0 71 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 30.0001V59.9998H7.45272H14.9054V56.6539V53.308L11.2417 53.2853L7.56651 53.2513L7.53237 26.6202L7.50962 0.000413571H3.75481H0V30.0001Z" fill="currentColor"/>
+                    <path d="M31.6309 8.44972V16.8995H35.3857H39.1405V8.44972V-0.000101084H35.3857H31.6309V8.44972Z" fill="currentColor"/>
+                    <path d="M63.2637 26.6542V53.308L51.237 53.2853L39.1988 53.2513L39.1647 39.0397L39.1419 24.8395H35.3871H31.6323L31.6096 39.0397L31.5754 53.2513L27.2289 53.2853L22.8711 53.308V56.6539V59.9998H46.936H71.0009V30.0001V0.000413571H67.1323H63.2637V26.6542Z" fill="currentColor"/>
+                  </svg>
+                )}
+                {p.id === 'shevelizm' && p.logoType === 'svg-custom' && (
+                  <svg viewBox="0 0 80 72" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="40,0 48,16 58,5 57,24 66,12 65,30 40,30"/>
+                    <polygon points="40,0 32,16 22,5 23,24 14,12 15,30 40,30"/>
+                    <rect x="13" y="30" width="54" height="26" rx="3"/>
+                    <rect x="9"  y="54" width="62" height="8"  rx="2"/>
+                    <rect x="5"  y="60" width="70" height="6"  rx="1"/>
+                  </svg>
+                )}
+                {p.id === 'betone' && <span class="logo-betone">BETONE</span>}
+                {p.id === 'takto' && <span class="logo-takto">ta k to</span>}
+                {!['sh', 'shevelizm', 'betone', 'takto'].includes(p.id) && (
+                  <span class="logo-text">{p.name}</span>
+                )}
+              </div>
+              <p class="partner-text">{p.text}</p>
             </div>
-            <p class="partner-text">{partners.partners.find(p => p.id === 'sh')?.text}</p>
-          </div>
-
-          <!-- BETONE -->
-          <div class="partner-row">
-            <div class="partner-logo">
-              <span class="logo-betone" aria-label="Betone">BETONE</span>
-            </div>
-            <p class="partner-text">{partners.partners.find(p => p.id === 'betone')?.text}</p>
-          </div>
-
-          <!-- SHEVELIZM -->
-          <div class="partner-row">
-            <div class="partner-logo" aria-label="Shevelizm">
-              <svg viewBox="0 0 80 72" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <polygon points="40,0 48,16 58,5 57,24 66,12 65,30 40,30"/>
-                <polygon points="40,0 32,16 22,5 23,24 14,12 15,30 40,30"/>
-                <rect x="13" y="30" width="54" height="26" rx="3"/>
-                <rect x="9"  y="54" width="62" height="8"  rx="2"/>
-                <rect x="5"  y="60" width="70" height="6"  rx="1"/>
-              </svg>
-            </div>
-            <p class="partner-text">{partners.partners.find(p => p.id === 'shevelizm')?.text}</p>
-          </div>
-
-          <!-- TAKTO -->
-          <div class="partner-row">
-            <div class="partner-logo">
-              <span class="logo-takto" aria-label="Takto">ta k to</span>
-            </div>
-            <p class="partner-text">{partners.partners.find(p => p.id === 'takto')?.text}</p>
-          </div>
-
+          ))}
         </div>
       </div>
     </section>
