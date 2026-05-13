@@ -4,11 +4,40 @@
     "lede": "Чёрно-белые редакционные снимки. Каждый образ — результат диалога мастера и клиента. Потом работ будет больше."
   },
   "items": [
-    { "num": "01", "src": "/assets/works/DSCF0046.JPG", "alt": "Работа мастеров TYPE — 01" },
-    { "num": "02", "src": "/assets/works/DSCF0079.JPG", "alt": "Работа мастеров TYPE — 02" },
-    { "num": "03", "src": "/assets/works/DSCF0355.JPG", "alt": "Работа мастеров TYPE — 03" },
-    { "num": "04", "src": "/assets/works/DSCF0881.JPG", "alt": "Работа мастеров TYPE — 04" },
-    { "num": "05", "src": "/assets/works/DSCF1049.JPG", "alt": "Работа мастеров TYPE — 05" },
-    { "num": "06", "src": "/assets/works/DSCF1208.JPG", "alt": "Работа мастеров TYPE — 06" }
+    {
+      "num": "01",
+      "src": "/assets/works/DSCF0046.JPG",
+      "alt": "Работа мастеров TYPE — 01"
+    },
+    {
+      "num": "02",
+      "src": "/assets/works/DSCF0079.JPG",
+      "alt": "Работа мастеров TYPE — 02"
+    },
+    {
+      "num": "03",
+      "src": "/assets/works/DSCF0355.JPG",
+      "alt": "Работа мастеров TYPE — 03"
+    },
+    {
+      "num": "04",
+      "src": "/assets/works/DSCF0881.JPG",
+      "alt": "Работа мастеров TYPE — 04"
+    },
+    {
+      "num": "05",
+      "src": "/assets/works/DSCF1049.JPG",
+      "alt": "Работа мастеров TYPE — 05"
+    },
+    {
+      "num": "06",
+      "src": "/assets/works/DSCF1208.JPG",
+      "alt": "Работа мастеров TYPE — 06"
+    },
+    {
+      "num": "07",
+      "src": "/assets/works/photo_2026-05-04_01-34-0-1778709539878.jpg",
+      "alt": "СЛОНЯРА"
+    }
   ]
 }
