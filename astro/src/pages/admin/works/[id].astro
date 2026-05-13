@@ -24,17 +24,23 @@ const item = works.items[idx];
 
   <form class="form-grid" data-edit-form data-collection="works" data-key={idx}>
     <div>
-      <div class="fieldset-2">
-        <div class="field">
-          <label class="field-label" for="num">Номер</label>
-          <input id="num" name="num" type="text" class="input" value={item.num} maxlength="2" />
-          <span class="field-hint">Двузначный, показывается на превью. Например 01, 02 …</span>
-        </div>
-        <div class="field">
-          <label class="field-label" for="src">Путь к файлу <span class="required">·</span></label>
-          <input id="src" name="src" type="text" class="input" value={item.src} required />
-          <span class="field-hint">/assets/works/DSCFxxxx.JPG</span>
-        </div>
+      <div class="field">
+        <label class="field-label" for="num">Номер</label>
+        <input id="num" name="num" type="text" class="input" value={item.num} maxlength="2" />
+        <span class="field-hint">Двузначный, показывается на превью. Например 01, 02 …</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="photo">Заменить фотографию</label>
+        <input id="photo" type="file" accept="image/jpeg,image/png,image/webp" class="file-input" data-upload-target="src" />
+        <span class="field-hint">Оставьте пустым, чтобы сохранить текущий файл. JPG/PNG/WebP, до 8 МБ.</span>
+        <p class="upload-status" data-upload-status hidden></p>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="src">Путь к файлу <span class="required">·</span></label>
+        <input id="src" name="src" type="text" class="input" value={item.src} required readonly />
+        <span class="field-hint">Заполняется автоматически при загрузке нового файла.</span>
       </div>
 
       <div class="field">
@@ -42,20 +48,12 @@ const item = works.items[idx];
         <input id="alt" name="alt" type="text" class="input" value={item.alt} required />
         <span class="field-hint">Описание для поисковиков и читалок экрана. Например «Работа мастеров TYPE — 01».</span>
       </div>
-
-      <div class="field-callout">
-        <span class="field-callout__icon">⚑</span>
-        <div>
-          <strong>Загрузка фото — в следующей версии.</strong><br/>
-          Сейчас файл нужно положить в <code>assets/works/</code> через git/SFTP. Поле «Путь» свяжет его с записью. В Phase&nbsp;3 здесь будет drag-and-drop с автоматической оптимизацией.
-        </div>
-      </div>
     </div>
 
     <aside class="preview">
       <p class="preview-tag">Превью на странице «Работы»</p>
       <div class="work-prev">
-        <img src={item.src} alt={item.alt} />
+        <img data-upload-preview src={item.src} alt={item.alt} />
         <span class="work-prev__num">{item.num}</span>
         <div class="work-prev__caption">TYPE Moscow</div>
       </div>
