@@ -30,6 +30,12 @@
       "name": "1",
       "logoType": "svg-custom",
       "text": "1"
+    },
+    {
+      "id": "-",
+      "name": "афыа",
+      "logoType": "text",
+      "text": "фвыфывфыв"
     }
   ]
 }
