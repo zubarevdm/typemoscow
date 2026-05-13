@@ -1,0 +1,93 @@
+---
+export const prerender = false;
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import works from '../../../content/works.json';
+
+const nextNum = String(works.items.length + 1).padStart(2, '0');
+---
+
+<AdminLayout pageTitle="Новая работа" activeCollection="works">
+  <p class="crumbs">
+    <a href="/admin">Главная</a><span class="sep">·</span>
+    <a href="/admin/works">Работы</a><span class="sep">·</span>
+    Новая
+  </p>
+
+  <div class="title-row">
+    <h1 class="page-title">Новая работа</h1>
+    <span class="status-pill status-pill--draft">черновик</span>
+  </div>
+
+  <form class="form-grid" data-edit-form data-collection="works" data-action="create" data-redirect-to="/admin/works">
+    <div>
+      <div class="fieldset-2">
+        <div class="field">
+          <label class="field-label" for="num">Номер</label>
+          <input id="num" name="num" type="text" class="input" maxlength="2" value={nextNum} />
+          <span class="field-hint">Двузначный. По умолчанию — следующий по порядку ({nextNum}).</span>
+        </div>
+        <div class="field">
+          <label class="field-label" for="src">Путь к файлу <span class="required">·</span></label>
+          <input id="src" name="src" type="text" class="input" required placeholder="/assets/works/DSCFxxxx.JPG" autofocus />
+          <span class="field-hint">Файл нужно положить в репо вручную, в <code>astro/public/assets/works/</code>.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="alt">Альтернативный текст <span class="required">·</span></label>
+        <input id="alt" name="alt" type="text" class="input" required placeholder="Напр. «Работа мастеров TYPE — 07»" />
+        <span class="field-hint">Описание для поисковиков и читалок экрана.</span>
+      </div>
+
+      <div class="field-callout">
+        <span class="field-callout__icon">⚑</span>
+        <div>
+          <strong>Загрузка фото — в следующей версии.</strong><br/>
+          Сейчас файл нужно положить в <code>astro/public/assets/works/</code> через git/SFTP вручную. Поле «Путь» свяжет уже загруженный файл с записью.
+        </div>
+      </div>
+    </div>
+
+    <aside class="preview">
+      <p class="preview-tag">Как это работает</p>
+      <p class="preview-note">
+        После сохранения работа добавится в конец списка <a href="/admin/works">«Работы»</a>
+        и появится на странице портфолио. Если путь к файлу указан некорректно — на сайте
+        отрисуется битая картинка.
+      </p>
+    </aside>
+
+    <div class="form-foot" style="grid-column: 1 / -1;">
+      <a class="btn btn-ghost" href="/admin/works">Отмена</a>
+      <button type="submit" class="btn btn-primary"><span class="dot"></span> Создать</button>
+    </div>
+  </form>
+</AdminLayout>
+
+<style is:global>
+  .field-callout {
+    background: rgba(4, 38, 21, .06);
+    border-left: 3px solid var(--forest);
+    padding: 14px 16px;
+    border-radius: 0 6px 6px 0;
+    display: flex;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--ink-2);
+    line-height: 1.55;
+    margin-top: 24px;
+  }
+  .field-callout__icon {
+    color: var(--forest);
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .field-callout code {
+    background: var(--paper-d);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+</style>

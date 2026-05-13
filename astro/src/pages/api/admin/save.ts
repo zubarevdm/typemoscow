@@ -11,6 +11,7 @@ export const prerender = false;
 const REPO_CONTENT_PATH = 'astro/src/content';
 
 type Collection = 'services' | 'team' | 'contacts' | 'works' | 'partners' | 'site';
+type Action = 'update' | 'create' | 'delete';
 
 const ALLOWED_COLLECTIONS: Record<Collection, true> = {
   services: true,
@@ -21,21 +22,32 @@ const ALLOWED_COLLECTIONS: Record<Collection, true> = {
   site: true,
 };
 
+const ALLOWED_ACTIONS: Record<Action, true> = {
+  update: true,
+  create: true,
+  delete: true,
+};
+
 interface SaveRequest {
   collection: Collection;
+  action?: Action;
   key?: string;
-  data: Record<string, unknown> | unknown[];
+  data?: Record<string, unknown> | unknown[];
 }
 
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const body = (await request.json()) as Partial<SaveRequest>;
     const { collection, key, data } = body;
+    const action: Action = (body.action as Action) || 'update';
 
     if (typeof collection !== 'string' || !ALLOWED_COLLECTIONS[collection as Collection]) {
       return json({ error: 'invalid collection', collection }, 400);
     }
-    if (data === undefined || data === null) {
+    if (!ALLOWED_ACTIONS[action]) {
+      return json({ error: 'invalid action', action }, 400);
+    }
+    if (action !== 'delete' && (data === undefined || data === null)) {
       return json({ error: 'missing data' }, 400);
     }
 
@@ -49,12 +61,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
       const raw = await fs.readFile(filePath, 'utf-8');
       const current = JSON.parse(raw);
 
-      const patched = applyPatch(current, collection as Collection, key, data);
+      const patched = applyAction(current, collection as Collection, action, key, data);
       await fs.writeFile(filePath, JSON.stringify(patched, null, 2) + '\n', 'utf-8');
 
       return json({
         ok: true,
         mode: 'dev',
+        action,
         collection,
         key: key ?? null,
         note: 'JSON-файл обновлён. Astro HMR пересоберёт страницу автоматически.',
@@ -98,16 +111,16 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const current = JSON.parse(currentRaw);
 
     // 2. Apply patch
-    const patched = applyPatch(current, collection as Collection, key, data);
+    const patched = applyAction(current, collection as Collection, action, key, data);
     const newRaw = JSON.stringify(patched, null, 2) + '\n';
 
     // Если содержимое не изменилось — не создаём пустой коммит
     if (newRaw === currentRaw) {
-      return json({ ok: true, mode: 'prod', noChanges: true, collection, key: key ?? null });
+      return json({ ok: true, mode: 'prod', noChanges: true, action, collection, key: key ?? null });
     }
 
     // 3. PUT новый файл (создаёт коммит)
-    const summary = describeChange(collection as Collection, key, data);
+    const summary = describeChange(collection as Collection, action, key, data);
     const putRes = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`,
       {
@@ -130,6 +143,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return json({
       ok: true,
       mode: 'prod',
+      action,
       collection,
       key: key ?? null,
       commit: putBody.commit.sha,
@@ -168,47 +182,64 @@ function base64ToUtf8(b64: string): string {
   return new TextDecoder('utf-8').decode(bytes);
 }
 
-function describeChange(collection: Collection, key: string | undefined, data: any): string {
+function describeChange(collection: Collection, action: Action, key: string | undefined, data: any): string {
+  const verb = action === 'create' ? 'create' : action === 'delete' ? 'delete' : 'update';
   switch (collection) {
     case 'services':
+      if (action === 'create') return `create service ${data?.category || ''} — ${data?.name || ''}`.trim();
+      if (action === 'delete') return `delete service ${key}`;
       return `update service ${key} — ${data?.name || ''}`.trim();
     case 'team':
+      if (action === 'create') return `create master — ${data?.name || ''}`.trim();
+      if (action === 'delete') return `delete master ${key}`;
       return `update master ${key} — ${data?.name || ''}`.trim();
+    case 'works':
+      if (action === 'create') return `create work — ${data?.num || ''}`.trim();
+      if (action === 'delete') return `delete work ${key}`;
+      return `update work ${key} — ${data?.num || ''}`.trim();
     case 'contacts':
       return 'update contacts';
-    case 'works':
-      return `update work ${key} — ${data?.num || ''}`.trim();
     case 'partners':
-      return `update partner ${key}`;
+      return `${verb} partner ${key}`;
     case 'site':
       return 'update site meta';
     default:
-      return `update ${collection}`;
+      return `${verb} ${collection}`;
   }
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
-// Логика патча по коллекциям.
-// На вход: текущий JSON + ключ + новые данные. На выход: обновлённый JSON.
+// Логика мутаций по коллекциям.
+// На вход: текущий JSON + action + ключ + данные. На выход: обновлённый JSON.
 
-function applyPatch(
+function applyAction(
   current: any,
   collection: Collection,
+  action: Action,
   key: string | undefined,
   data: any,
 ): any {
   switch (collection) {
     case 'services':
+      if (action === 'create') return createService(current, data);
+      if (action === 'delete') return deleteService(current, key);
       return patchServices(current, key, data);
     case 'team':
+      if (action === 'create') return createMaster(current, data);
+      if (action === 'delete') return deleteMaster(current, key);
       return patchTeam(current, key, data);
-    case 'contacts':
-      return patchContacts(current, data);
     case 'works':
+      if (action === 'create') return createWork(current, data);
+      if (action === 'delete') return deleteWork(current, key);
       return patchWorks(current, key, data);
+    case 'contacts':
+      if (action !== 'update') throw new Error('contacts supports only update');
+      return patchContacts(current, data);
     case 'partners':
+      if (action !== 'update') throw new Error('partners supports only update');
       return patchPartners(current, key, data);
     case 'site':
+      if (action !== 'update') throw new Error('site supports only update');
       return patchSite(current, data);
     default:
       throw new Error(`patch: unknown collection ${collection}`);
@@ -348,6 +379,106 @@ function patchSite(current: any, data: any) {
     next[k] = v;
   }
   return next;
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// CRUD helpers: create + delete по коллекциям services/team/works.
+
+function createService(current: any, data: any) {
+  const incoming = data as Record<string, unknown>;
+  const catId = typeof incoming.category === 'string' ? incoming.category : '';
+  const cat = current.categories.find((c: any) => c.id === catId);
+  if (!cat) throw new Error(`create service: category not found: ${catId}`);
+
+  const name = typeof incoming.name === 'string' ? incoming.name.trim() : '';
+  if (!name) throw new Error('create service: name required');
+
+  const priceRaw = incoming.price;
+  const price = typeof priceRaw === 'string' ? parseInt(priceRaw, 10) : Number(priceRaw);
+  if (!Number.isFinite(price) || price < 0) throw new Error('create service: invalid price');
+
+  const item: any = {
+    name,
+    price,
+    type: typeof incoming.type === 'string' ? incoming.type : '',
+    available: incoming.available === 'on' || incoming.available === true,
+  };
+  if (typeof incoming.description === 'string' && incoming.description.trim()) {
+    item.description = incoming.description.trim();
+  }
+  cat.items.push(item);
+  return current;
+}
+
+function deleteService(current: any, key: string | undefined) {
+  if (!key) throw new Error('delete service: key required');
+  const dash = key.lastIndexOf('-');
+  if (dash < 0) throw new Error(`bad services key: ${key}`);
+  const catId = key.slice(0, dash);
+  const itemIdx = parseInt(key.slice(dash + 1), 10);
+  const cat = current.categories.find((c: any) => c.id === catId);
+  if (!cat) throw new Error(`category not found: ${catId}`);
+  if (Number.isNaN(itemIdx) || itemIdx < 0 || itemIdx >= cat.items.length) {
+    throw new Error(`item idx out of range: ${itemIdx}`);
+  }
+  cat.items.splice(itemIdx, 1);
+  return current;
+}
+
+function createMaster(current: any, data: any) {
+  const incoming = data as Record<string, unknown>;
+  const name = typeof incoming.name === 'string' ? incoming.name.trim() : '';
+  if (!name) throw new Error('create master: name required');
+
+  const tags = typeof incoming.tags === 'string'
+    ? incoming.tags.split(',').map((t) => t.trim()).filter(Boolean)
+    : [];
+
+  const master: any = {
+    name,
+    initials: typeof incoming.initials === 'string' ? incoming.initials.trim().toUpperCase() : '',
+    role: typeof incoming.role === 'string' && incoming.role.trim() ? incoming.role.trim() : 'Мастер',
+    bio: typeof incoming.bio === 'string' ? incoming.bio.trim() : '',
+    tags,
+    available: incoming.available === 'on' || incoming.available === true,
+  };
+  current.masters.push(master);
+  return current;
+}
+
+function deleteMaster(current: any, key: string | undefined) {
+  if (!key) throw new Error('delete master: key required');
+  const idx = parseInt(key, 10);
+  if (Number.isNaN(idx) || idx < 0 || idx >= current.masters.length) {
+    throw new Error(`team idx out of range: ${idx}`);
+  }
+  current.masters.splice(idx, 1);
+  return current;
+}
+
+function createWork(current: any, data: any) {
+  const incoming = data as Record<string, unknown>;
+  const src = typeof incoming.src === 'string' ? incoming.src.trim() : '';
+  const alt = typeof incoming.alt === 'string' ? incoming.alt.trim() : '';
+  if (!src) throw new Error('create work: src required');
+  if (!alt) throw new Error('create work: alt required');
+
+  // Если num не задан — берём следующий по списку (двузначный).
+  let num = typeof incoming.num === 'string' ? incoming.num.trim() : '';
+  if (!num) num = String(current.items.length + 1).padStart(2, '0');
+
+  current.items.push({ num, src, alt });
+  return current;
+}
+
+function deleteWork(current: any, key: string | undefined) {
+  if (!key) throw new Error('delete work: key required');
+  const idx = parseInt(key, 10);
+  if (Number.isNaN(idx) || idx < 0 || idx >= current.items.length) {
+    throw new Error(`works idx out of range: ${idx}`);
+  }
+  current.items.splice(idx, 1);
+  return current;
 }
 
 function json(body: unknown, status = 200) {

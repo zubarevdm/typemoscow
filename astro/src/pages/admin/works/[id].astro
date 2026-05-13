@@ -64,6 +64,7 @@ const item = works.items[idx];
 
     <div class="form-foot" style="grid-column: 1 / -1;">
       <span class="pending" data-pending hidden>Есть несохранённые изменения</span>
+      <button type="button" class="btn btn-danger" data-delete data-delete-label={`работу «${item.num}»`} data-delete-redirect="/admin/works">Удалить</button>
       <a class="btn btn-ghost" href="/admin/works">Отмена</a>
       <button type="button" class="btn btn-ghost" data-save="draft">Сохранить черновик</button>
       <button type="submit" class="btn btn-primary"><span class="dot"></span> Опубликовать</button>

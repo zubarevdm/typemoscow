@@ -89,9 +89,25 @@ const collections: Array<{ id: 'services' | 'team' | 'contacts' | 'works'; label
     (toast as any)._t = window.setTimeout(() => { toast.hidden = true; }, ms);
   }
 
+  type SaveAction = 'update' | 'create' | 'delete';
+
+  async function postSave(payload: { collection: string; action: SaveAction; key?: string; data?: Record<string, unknown> }) {
+    const res = await fetch('/api/admin/save', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const rawText = await res.text();
+    let body: any = null;
+    try { body = rawText ? JSON.parse(rawText) : null; } catch { /* not json */ }
+    return { res, body, rawText };
+  }
+
   document.querySelectorAll<HTMLFormElement>('form[data-edit-form]').forEach((form) => {
     const collection = form.dataset.collection;
     const key = form.dataset.key;
+    const formAction = (form.dataset.action as SaveAction) || 'update';
+    const redirectTo = form.dataset.redirectTo;
     if (!collection) return;
 
     const pending = form.querySelector<HTMLElement>('[data-pending]');
@@ -110,14 +126,12 @@ const collections: Array<{ id: 'services' | 'team' | 'contacts' | 'works'; label
       if (btn) btn.disabled = true;
 
       try {
-        const res = await fetch('/api/admin/save', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ collection, key: key || undefined, data }),
+        const { res, body, rawText } = await postSave({
+          collection: collection!,
+          action: formAction,
+          key: key || undefined,
+          data,
         });
-        const rawText = await res.text();
-        let body: any = null;
-        try { body = rawText ? JSON.parse(rawText) : null; } catch { /* not json */ }
 
         if (!res.ok) {
           const detail = body?.error || (rawText ? rawText.slice(0, 200) : 'пустой ответ');
@@ -125,17 +139,20 @@ const collections: Array<{ id: 'services' | 'team' | 'contacts' | 'works'; label
           console.error('save failed', res.status, rawText);
           return;
         }
-
         if (!body) {
-          showToast(`HTTP ${res.status}, но тело пустое. Ответ: ${rawText.slice(0, 200) || '(ничего)'}`, 'error', 8000);
-          console.error('empty body from /api/admin/save', res.status, rawText);
+          showToast(`HTTP ${res.status}, но тело пустое.`, 'error', 8000);
           return;
         }
 
+        const verb = formAction === 'create' ? 'Создано' : 'Опубликовано';
         if (body.mode === 'dev') {
-          showToast('Сохранено локально. Чтобы выкатить на прод — закоммитьте JSON.', 'success', 5000);
+          showToast(`${verb} локально. Чтобы выкатить на прод — закоммитьте JSON.`, 'success', 5000);
         } else {
-          showToast('Опубликовано. Изменения появятся на сайте через ~1 минуту.', 'success', 5000);
+          showToast(`${verb}. Изменения появятся на сайте через ~1 минуту.`, 'success', 5000);
+        }
+
+        if (redirectTo) {
+          window.setTimeout(() => { window.location.href = redirectTo; }, 800);
         }
       } catch (err) {
         showToast(`Сеть: ${String(err)}`, 'error', 6000);
@@ -145,8 +162,38 @@ const collections: Array<{ id: 'services' | 'team' | 'contacts' | 'works'; label
       }
     }
 
+    async function deleteEntry(btn: HTMLButtonElement) {
+      if (!key) return;
+      const label = btn.dataset.deleteLabel || 'элемент';
+      if (!window.confirm(`Удалить ${label}? Действие нельзя отменить из админки.`)) return;
+      btn.disabled = true;
+
+      try {
+        const { res, body, rawText } = await postSave({
+          collection: collection!,
+          action: 'delete',
+          key,
+        });
+        if (!res.ok) {
+          const detail = body?.error || (rawText ? rawText.slice(0, 200) : 'пустой ответ');
+          showToast(`HTTP ${res.status}: ${detail}`, 'error', 8000);
+          return;
+        }
+        showToast('Удалено. Изменения появятся на сайте через ~1 минуту.', 'success', 5000);
+        const back = btn.dataset.deleteRedirect || `/admin/${collection}`;
+        window.setTimeout(() => { window.location.href = back; }, 800);
+      } catch (err) {
+        showToast(`Сеть: ${String(err)}`, 'error', 6000);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
     form.addEventListener('submit', (e) => { e.preventDefault(); save(true); });
     form.querySelector('[data-save="draft"]')?.addEventListener('click', () => save(false));
+    form.querySelectorAll<HTMLButtonElement>('[data-delete]').forEach((btn) => {
+      btn.addEventListener('click', (e) => { e.preventDefault(); deleteEntry(btn); });
+    });
   });
 </script>
 
@@ -407,6 +454,8 @@ const collections: Array<{ id: 'services' | 'team' | 'contacts' | 'works'; label
   body.cms-body a.btn-primary, body.cms-body button.btn-primary { background: var(--ink); color: var(--paper); }
   body.cms-body a.btn-primary:hover, body.cms-body button.btn-primary:hover { background: var(--forest); border-color: var(--forest); }
   body.cms-body a.btn-ghost:hover, body.cms-body button.btn-ghost:hover { background: var(--ink); color: var(--paper); }
+  body.cms-body button.btn-danger { border-color: #8b1d1d; color: #8b1d1d; background: transparent; }
+  body.cms-body button.btn-danger:hover { background: #8b1d1d; border-color: #8b1d1d; color: var(--paper); }
   .btn .dot {
     width: 8px; height: 8px;
     background: currentColor;

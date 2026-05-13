@@ -110,6 +110,7 @@ const siblings = cat.items.slice(0, 4);
 
     <div class="form-foot" style="grid-column: 1 / -1;">
       <span class="pending" data-pending hidden>Есть несохранённые изменения</span>
+      <button type="button" class="btn btn-danger" data-delete data-delete-label={`услугу «${item.name}»`} data-delete-redirect="/admin/services">Удалить</button>
       <a class="btn btn-ghost" href="/admin/services">Отмена</a>
       <button type="button" class="btn btn-ghost" data-save="draft">Сохранить черновик</button>
       <button type="submit" class="btn btn-primary"><span class="dot"></span> Опубликовать</button>

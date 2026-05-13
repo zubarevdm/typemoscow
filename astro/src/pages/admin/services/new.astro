@@ -1,0 +1,83 @@
+---
+export const prerender = false;
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import services from '../../../content/services.json';
+
+const types = ['Стрижка', 'Оформление бороды', 'Бритьё', 'Стрижка и борода', 'Уход', 'Окрашивание', 'Стайлинг', 'Комплекс услуг'];
+---
+
+<AdminLayout pageTitle="Новая услуга" activeCollection="services">
+  <p class="crumbs">
+    <a href="/admin">Главная</a><span class="sep">·</span>
+    <a href="/admin/services">Услуги</a><span class="sep">·</span>
+    Новая
+  </p>
+
+  <div class="title-row">
+    <h1 class="page-title">Новая услуга</h1>
+    <span class="status-pill status-pill--draft">черновик</span>
+  </div>
+
+  <form class="form-grid" data-edit-form data-collection="services" data-action="create" data-redirect-to="/admin/services">
+    <div>
+      <div class="field">
+        <label class="field-label" for="name">Название услуги <span class="required">·</span></label>
+        <input id="name" name="name" type="text" class="input" required autofocus placeholder="Напр. «Мужская стрижка»" />
+      </div>
+
+      <div class="fieldset-2">
+        <div class="field">
+          <label class="field-label" for="price">Цена <span class="required">·</span></label>
+          <div class="input-with-suffix">
+            <input id="price" name="price" type="number" min="0" step="100" class="input price" required placeholder="3500" />
+            <span class="suffix">₽</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="type">Тип</label>
+          <select id="type" name="type" class="select">
+            {types.map(t => <option value={t}>{t}</option>)}
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="category">Категория <span class="required">·</span></label>
+        <select id="category" name="category" class="select" required>
+          <option value="" disabled selected hidden>Выберите категорию</option>
+          {services.categories.map(c => <option value={c.id}>{c.name}</option>)}
+        </select>
+        <span class="field-hint">Куда добавить услугу — в «Основные», «Дополнительные» или «Комплексы».</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="description">Описание (опционально)</label>
+        <textarea id="description" name="description" class="textarea" placeholder="Что входит, если это комплекс"></textarea>
+        <span class="field-hint">Появится мелким текстом под названием. Имеет смысл только для комплексов.</span>
+      </div>
+
+      <div class="field">
+        <label class="checkbox">
+          <input type="checkbox" name="available" checked />
+          <span class="box"></span>
+          <span>Доступно для записи (показывать на сайте)</span>
+        </label>
+      </div>
+    </div>
+
+    <aside class="preview">
+      <p class="preview-tag">Как это работает</p>
+      <p class="preview-note">
+        После сохранения услуга добавится в конец выбранной категории. Дальше её можно
+        отредактировать через список <a href="/admin/services">«Услуги»</a> — поменять
+        порядок пока нельзя, делается через ручное редактирование JSON.
+      </p>
+    </aside>
+
+    <div class="form-foot" style="grid-column: 1 / -1;">
+      <a class="btn btn-ghost" href="/admin/services">Отмена</a>
+      <button type="submit" class="btn btn-primary"><span class="dot"></span> Создать</button>
+    </div>
+  </form>
+</AdminLayout>
