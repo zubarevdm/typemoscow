@@ -285,7 +285,12 @@ const collections: Array<{ id: CollectionId; label: string; count: number; }> = 
   // Drag-and-drop reorder для listing-страниц.
   document.querySelectorAll<HTMLElement>('[data-reorder-collection]').forEach((list) => {
     const collection = list.dataset.reorderCollection!;
-    const items = Array.from(list.querySelectorAll<HTMLElement>('[data-reorder-idx]'));
+    // Опциональный ключ — например catId для services, чтобы reorder работал
+    // в пределах одной категории.
+    const reorderKey = list.dataset.reorderKey;
+    // Берём только прямых детей: один контейнер может содержать вложенные списки.
+    const items = Array.from(list.querySelectorAll<HTMLElement>('[data-reorder-idx]'))
+      .filter((el) => el.parentElement === list);
     let dragEl: HTMLElement | null = null;
 
     items.forEach((item) => {
@@ -334,7 +339,12 @@ const collections: Array<{ id: CollectionId; label: string; count: number; }> = 
           const res = await fetch('/api/admin/save', {
             method: 'POST',
             headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({ collection, action: 'reorder', data: { order } }),
+            body: JSON.stringify({
+              collection,
+              action: 'reorder',
+              key: reorderKey || undefined,
+              data: { order },
+            }),
           });
           const body = await res.json().catch(() => null);
           if (!res.ok || !body?.ok) {

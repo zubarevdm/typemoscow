@@ -189,6 +189,7 @@ function describeChange(collection: Collection, action: Action, key: string | un
     case 'services':
       if (action === 'create') return `create service ${data?.category || ''} — ${data?.name || ''}`.trim();
       if (action === 'delete') return `delete service ${key}`;
+      if (action === 'reorder') return `reorder services in ${key}`;
       return `update service ${key} — ${data?.name || ''}`.trim();
     case 'team':
       if (action === 'create') return `create master — ${data?.name || ''}`.trim();
@@ -229,6 +230,7 @@ function applyAction(
     case 'services':
       if (action === 'create') return createService(current, data);
       if (action === 'delete') return deleteService(current, key);
+      if (action === 'reorder') return reorderServicesCategory(current, key, data);
       return patchServices(current, key, data);
     case 'team':
       if (action === 'create') return createMaster(current, data);
@@ -527,6 +529,29 @@ function deletePartner(current: any, key: string | undefined) {
   const idx = current.partners.findIndex((p: any) => p.id === key);
   if (idx < 0) throw new Error(`partner not found: ${key}`);
   current.partners.splice(idx, 1);
+  return current;
+}
+
+// Reorder услуг внутри конкретной категории. key = catId.
+function reorderServicesCategory(current: any, key: string | undefined, data: any) {
+  if (!key) throw new Error('reorder services: category id required as key');
+  const cat = current.categories.find((c: any) => c.id === key);
+  if (!cat) throw new Error(`category not found: ${key}`);
+  const order = data?.order;
+  if (!Array.isArray(order)) throw new Error('reorder services: missing order array');
+  if (order.length !== cat.items.length) {
+    throw new Error(`reorder: order length ${order.length} ≠ items length ${cat.items.length}`);
+  }
+  const seen = new Set<number>();
+  for (const i of order) {
+    const idx = typeof i === 'number' ? i : parseInt(String(i), 10);
+    if (Number.isNaN(idx) || idx < 0 || idx >= cat.items.length) {
+      throw new Error(`reorder services: invalid idx ${i}`);
+    }
+    if (seen.has(idx)) throw new Error(`reorder services: duplicate idx ${idx}`);
+    seen.add(idx);
+  }
+  cat.items = order.map((i: any) => cat.items[typeof i === 'number' ? i : parseInt(String(i), 10)]);
   return current;
 }
 

@@ -18,6 +18,8 @@ const fmtPrice = (n: number) => n.toLocaleString('ru-RU').replace(/,/g, ' ') + '
     </div>
   </div>
 
+  <p class="reorder-hint">Перетаскивайте услуги внутри своей категории чтобы поменять порядок.</p>
+
   {services.categories.map((cat, catIdx) => (
     <section class="col-group">
       <div class="col-group-title">
@@ -25,9 +27,9 @@ const fmtPrice = (n: number) => n.toLocaleString('ru-RU').replace(/,/g, ' ') + '
         <span class="count">{String(cat.items.length).padStart(2, '0')} {cat.items.length === 1 ? 'услуга' : 'услуг'}</span>
       </div>
 
-      <div class="col-list">
+      <div class="col-list" data-reorder-collection="services" data-reorder-key={cat.id}>
         {cat.items.map((item, itemIdx) => (
-          <a class="col-item" href={`/admin/services/${cat.id}-${itemIdx}`}>
+          <a class="col-item" href={`/admin/services/${cat.id}-${itemIdx}`} data-reorder-idx={itemIdx}>
             <div class="col-item-head">
               <span class="col-item-cat">{item.type || cat.name}</span>
               <span class="col-item-price">{fmtPrice(item.price)}</span>
@@ -46,3 +48,18 @@ const fmtPrice = (n: number) => n.toLocaleString('ru-RU').replace(/,/g, ' ') + '
     </section>
   ))}
 </AdminLayout>
+
+<style is:global>
+  .reorder-hint {
+    font-size: 12px;
+    color: var(--ash-d);
+    margin-bottom: 16px;
+    font-family: var(--font-mono);
+    letter-spacing: .04em;
+  }
+  .reorder-hint::before {
+    content: '↕ ';
+    color: var(--forest);
+    font-weight: 700;
+  }
+</style>
