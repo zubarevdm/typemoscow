@@ -16,9 +16,11 @@ import partners from '../../../content/partners.json';
     </div>
   </div>
 
-  <div class="col-list">
-    {partners.partners.map(p => (
-      <a class="col-item" href={`/admin/partners/${p.id}`}>
+  <p class="reorder-hint">Перетаскивайте карточки чтобы поменять порядок партнёров.</p>
+
+  <div class="col-list" data-reorder-collection="partners">
+    {partners.partners.map((p, i) => (
+      <a class="col-item" href={`/admin/partners/${p.id}`} data-reorder-idx={i}>
         <div class="col-item-head">
           <span class="col-item-cat">{p.logoType}</span>
         </div>

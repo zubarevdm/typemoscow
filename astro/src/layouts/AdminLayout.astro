@@ -68,6 +68,12 @@ const collections: Array<{ id: CollectionId; label: string; count: number; }> = 
       ))}
     </ul>
 
+    <div class="sidebar-divider"></div>
+    <h4>Сервис</h4>
+    <ul>
+      <li><a href="/admin/history">История <span class="count">↩</span></a></li>
+    </ul>
+
     <slot name="sidebar-extra" />
   </aside>
 
@@ -273,6 +279,78 @@ const collections: Array<{ id: CollectionId; label: string; count: number; }> = 
     form.querySelector('[data-save="draft"]')?.addEventListener('click', () => save(false));
     form.querySelectorAll<HTMLButtonElement>('[data-delete]').forEach((btn) => {
       btn.addEventListener('click', (e) => { e.preventDefault(); deleteEntry(btn); });
+    });
+  });
+
+  // Drag-and-drop reorder для listing-страниц.
+  document.querySelectorAll<HTMLElement>('[data-reorder-collection]').forEach((list) => {
+    const collection = list.dataset.reorderCollection!;
+    const items = Array.from(list.querySelectorAll<HTMLElement>('[data-reorder-idx]'));
+    let dragEl: HTMLElement | null = null;
+
+    items.forEach((item) => {
+      item.setAttribute('draggable', 'true');
+
+      item.addEventListener('dragstart', (e) => {
+        dragEl = item;
+        item.classList.add('reorder-dragging');
+        // Лёгкий ghost — Firefox требует setData чтобы drag начался
+        e.dataTransfer?.setData('text/plain', item.dataset.reorderIdx || '');
+        if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move';
+      });
+
+      item.addEventListener('dragend', () => {
+        item.classList.remove('reorder-dragging');
+        items.forEach((el) => el.classList.remove('reorder-over'));
+        dragEl = null;
+      });
+
+      item.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+        if (item !== dragEl) item.classList.add('reorder-over');
+      });
+
+      item.addEventListener('dragleave', () => item.classList.remove('reorder-over'));
+
+      item.addEventListener('drop', async (e) => {
+        e.preventDefault();
+        item.classList.remove('reorder-over');
+        if (!dragEl || dragEl === item) return;
+
+        const dragIdx = parseInt(dragEl.dataset.reorderIdx || '-1', 10);
+        const dropIdx = parseInt(item.dataset.reorderIdx || '-1', 10);
+        if (Number.isNaN(dragIdx) || Number.isNaN(dropIdx)) return;
+
+        const order = items.map((el) => parseInt(el.dataset.reorderIdx || '0', 10));
+        const [moved] = order.splice(dragIdx, 1);
+        order.splice(dropIdx, 0, moved);
+
+        // Сразу переставляем DOM чтобы пользователь видел результат
+        const before = dragIdx < dropIdx ? item.nextSibling : item;
+        list.insertBefore(dragEl, before);
+
+        try {
+          const res = await fetch('/api/admin/save', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ collection, action: 'reorder', data: { order } }),
+          });
+          const body = await res.json().catch(() => null);
+          if (!res.ok || !body?.ok) {
+            showToast(`Не удалось сохранить порядок: ${body?.error || res.status}`, 'error', 6000);
+            // Откатываем DOM-перестановку через перезагрузку
+            window.setTimeout(() => location.reload(), 1500);
+            return;
+          }
+          showToast('Порядок сохранён.', 'success', 3500);
+          // После успеха — обновим страницу, чтобы data-reorder-idx пересчитались
+          window.setTimeout(() => location.reload(), 1000);
+        } catch (err) {
+          showToast(`Сеть: ${String(err)}`, 'error', 6000);
+          window.setTimeout(() => location.reload(), 1500);
+        }
+      });
     });
   });
 </script>
@@ -574,6 +652,12 @@ const collections: Array<{ id: CollectionId; label: string; count: number; }> = 
   .upload-status[data-state="loading"] { color: var(--ink); }
   .upload-status[data-state="success"] { color: var(--forest); }
   .upload-status[data-state="error"] { color: #8b1d1d; }
+
+  /* Drag-and-drop reorder */
+  [data-reorder-idx] { cursor: grab; }
+  [data-reorder-idx]:active { cursor: grabbing; }
+  .reorder-dragging { opacity: .35; }
+  .reorder-over { box-shadow: 0 0 0 2px var(--forest) inset; }
   .btn .dot {
     width: 8px; height: 8px;
     background: currentColor;

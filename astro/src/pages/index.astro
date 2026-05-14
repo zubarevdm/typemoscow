@@ -4,6 +4,7 @@ import team from '../content/team.json';
 import contacts from '../content/contacts.json';
 import partners from '../content/partners.json';
 import site from '../content/site.json';
+import CookieBanner from '../components/CookieBanner.astro';
 
 // Форматирование цены: 6000 -> "6 000 ₽"
 const fmtPrice = (n: number) => n.toLocaleString('ru-RU').replace(/,/g, ' ') + ' ₽';
@@ -64,15 +65,29 @@ const schemaJsonLd = {
     itemListElement: services.categories.flatMap(cat =>
       cat.items.filter(it => it.available !== false).map(item => ({
         '@type': 'Offer',
+        url: `${site.url}/#services`,
         itemOffered: {
           '@type': 'Service',
           name: item.name,
           ...(item.description ? { description: item.description } : {}),
           serviceType: item.type || cat.name,
+          category: cat.name,
+          provider: {
+            '@type': 'HairSalon',
+            name: site.shortTitle,
+            url: site.url,
+          },
         },
         price: String(item.price),
         priceCurrency: 'RUB',
+        priceSpecification: {
+          '@type': 'UnitPriceSpecification',
+          price: item.price,
+          priceCurrency: 'RUB',
+          valueAddedTaxIncluded: true,
+        },
         availability: 'https://schema.org/InStock',
+        businessFunction: 'http://purl.org/goodrelations/v1#Sell',
       }))
     ),
   },
@@ -1667,5 +1682,7 @@ const schemaJsonLd = {
 
   })();
   </script>
+
+  <CookieBanner />
 </body>
 </html>

@@ -11,7 +11,7 @@ export const prerender = false;
 const REPO_CONTENT_PATH = 'astro/src/content';
 
 type Collection = 'services' | 'team' | 'contacts' | 'works' | 'partners' | 'site';
-type Action = 'update' | 'create' | 'delete';
+type Action = 'update' | 'create' | 'delete' | 'reorder';
 
 const ALLOWED_COLLECTIONS: Record<Collection, true> = {
   services: true,
@@ -26,6 +26,7 @@ const ALLOWED_ACTIONS: Record<Action, true> = {
   update: true,
   create: true,
   delete: true,
+  reorder: true,
 };
 
 interface SaveRequest {
@@ -192,16 +193,19 @@ function describeChange(collection: Collection, action: Action, key: string | un
     case 'team':
       if (action === 'create') return `create master — ${data?.name || ''}`.trim();
       if (action === 'delete') return `delete master ${key}`;
+      if (action === 'reorder') return 'reorder masters';
       return `update master ${key} — ${data?.name || ''}`.trim();
     case 'works':
       if (action === 'create') return `create work — ${data?.num || ''}`.trim();
       if (action === 'delete') return `delete work ${key}`;
+      if (action === 'reorder') return 'reorder works';
       return `update work ${key} — ${data?.num || ''}`.trim();
     case 'contacts':
       return 'update contacts';
     case 'partners':
       if (action === 'create') return `create partner ${data?.id || ''} — ${data?.name || ''}`.trim();
       if (action === 'delete') return `delete partner ${key}`;
+      if (action === 'reorder') return 'reorder partners';
       return `update partner ${key}`;
     case 'site':
       return 'update site meta';
@@ -229,10 +233,12 @@ function applyAction(
     case 'team':
       if (action === 'create') return createMaster(current, data);
       if (action === 'delete') return deleteMaster(current, key);
+      if (action === 'reorder') return reorderArray(current, 'masters', data);
       return patchTeam(current, key, data);
     case 'works':
       if (action === 'create') return createWork(current, data);
       if (action === 'delete') return deleteWork(current, key);
+      if (action === 'reorder') return reorderArray(current, 'items', data);
       return patchWorks(current, key, data);
     case 'contacts':
       if (action !== 'update') throw new Error('contacts supports only update');
@@ -240,6 +246,7 @@ function applyAction(
     case 'partners':
       if (action === 'create') return createPartner(current, data);
       if (action === 'delete') return deletePartner(current, key);
+      if (action === 'reorder') return reorderArray(current, 'partners', data);
       return patchPartners(current, key, data);
     case 'site':
       if (action !== 'update') throw new Error('site supports only update');
@@ -520,6 +527,30 @@ function deletePartner(current: any, key: string | undefined) {
   const idx = current.partners.findIndex((p: any) => p.id === key);
   if (idx < 0) throw new Error(`partner not found: ${key}`);
   current.partners.splice(idx, 1);
+  return current;
+}
+
+// Универсальный reorder для плоского массива внутри коллекции.
+// data.order = массив новых индексов, например [3, 0, 1, 2] — перенесли
+// четвёртый элемент в начало. Длина должна совпадать с массивом.
+function reorderArray(current: any, arrayKey: string, data: any) {
+  const arr = current[arrayKey];
+  if (!Array.isArray(arr)) throw new Error(`reorder: ${arrayKey} is not an array`);
+  const order = data?.order;
+  if (!Array.isArray(order)) throw new Error('reorder: missing order array');
+  if (order.length !== arr.length) {
+    throw new Error(`reorder: order length ${order.length} ≠ array length ${arr.length}`);
+  }
+  const seen = new Set<number>();
+  for (const i of order) {
+    const idx = typeof i === 'number' ? i : parseInt(String(i), 10);
+    if (Number.isNaN(idx) || idx < 0 || idx >= arr.length) {
+      throw new Error(`reorder: invalid idx ${i}`);
+    }
+    if (seen.has(idx)) throw new Error(`reorder: duplicate idx ${idx}`);
+    seen.add(idx);
+  }
+  current[arrayKey] = order.map((i: any) => arr[typeof i === 'number' ? i : parseInt(String(i), 10)]);
   return current;
 }
 

@@ -1,0 +1,183 @@
+---
+export const prerender = false;
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+
+<AdminLayout pageTitle="История" activeCollection={undefined}>
+  <p class="crumbs">
+    <a href="/admin">Главная</a><span class="sep">·</span>История
+  </p>
+
+  <div class="title-row">
+    <h1 class="page-title">История изменений</h1>
+    <span class="status-pill">последние 30 коммитов</span>
+  </div>
+
+  <p class="history-intro">
+    Каждая правка через админку — отдельный коммит в GitHub. Нажмите «Откатить» рядом с записью,
+    чтобы вернуть содержимое к&nbsp;состоянию до этой правки. Откат создаёт новый коммит — историю он не&nbsp;затирает.
+  </p>
+
+  <div class="history-list" data-history>
+    <div class="history-loading">Загружаю историю…</div>
+  </div>
+</AdminLayout>
+
+<script>
+  interface Item { sha: string; shortSha: string; summary: string; author: string; date: string; url: string; }
+
+  const root = document.querySelector<HTMLElement>('[data-history]')!;
+
+  function fmtDate(iso: string) {
+    try {
+      const d = new Date(iso);
+      return d.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    } catch { return iso; }
+  }
+
+  function toast(text: string, kind: 'success' | 'error' | 'info' = 'info', ms = 5000) {
+    const t = document.querySelector<HTMLElement>('[data-admin-toast]');
+    if (!t) { alert(text); return; }
+    t.textContent = text;
+    t.dataset.kind = kind;
+    t.hidden = false;
+    window.clearTimeout((t as any)._t);
+    (t as any)._t = window.setTimeout(() => { t.hidden = true; }, ms);
+  }
+
+  async function load() {
+    root.innerHTML = '<div class="history-loading">Загружаю историю…</div>';
+    const res = await fetch('/api/admin/history');
+    const body = await res.json().catch(() => null);
+    if (!res.ok || !body?.ok) {
+      root.innerHTML = `<div class="history-error">Не удалось загрузить историю: ${body?.error || res.status}</div>`;
+      return;
+    }
+    if (!body.items.length) {
+      root.innerHTML = '<div class="history-empty">Пока нет правок через админку.</div>';
+      return;
+    }
+    root.innerHTML = '';
+    for (const it of body.items as Item[]) {
+      const row = document.createElement('div');
+      row.className = 'history-row';
+      row.innerHTML = `
+        <div class="history-row__main">
+          <div class="history-row__summary">${escapeHtml(it.summary)}</div>
+          <div class="history-row__meta">
+            <span>${escapeHtml(it.author)}</span>
+            <span>·</span>
+            <span>${fmtDate(it.date)}</span>
+            <span>·</span>
+            <a href="${it.url}" target="_blank" rel="noopener">${it.shortSha}</a>
+          </div>
+        </div>
+        <button type="button" class="btn btn-danger history-row__btn" data-revert="${it.sha}" data-summary="${escapeHtml(it.summary)}">Откатить</button>
+      `;
+      root.appendChild(row);
+    }
+
+    root.querySelectorAll<HTMLButtonElement>('[data-revert]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const sha = btn.dataset.revert!;
+        const summary = btn.dataset.summary || '';
+        if (!confirm(`Откатить изменение «${summary}»? Будет создан коммит-обратка.`)) return;
+        btn.disabled = true;
+        btn.textContent = 'Откатываю…';
+        try {
+          const res = await fetch('/api/admin/history', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ sha }),
+          });
+          const body = await res.json().catch(() => null);
+          if (!res.ok || !body?.ok) {
+            toast(`Ошибка: ${body?.error || res.status}`, 'error', 8000);
+            btn.disabled = false;
+            btn.textContent = 'Откатить';
+            return;
+          }
+          toast('Откат создан. Сайт обновится за ~1 минуту.', 'success', 5000);
+          window.setTimeout(load, 1500);
+        } catch (err) {
+          toast(`Сеть: ${String(err)}`, 'error', 8000);
+          btn.disabled = false;
+          btn.textContent = 'Откатить';
+        }
+      });
+    });
+  }
+
+  function escapeHtml(s: string) {
+    return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
+  }
+
+  load();
+</script>
+
+<style is:global>
+  .history-intro {
+    font-size: 13px;
+    color: var(--ash-d);
+    line-height: 1.55;
+    max-width: 720px;
+    margin-bottom: 28px;
+  }
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .history-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    transition: border-color .15s;
+  }
+  .history-row:hover { border-color: var(--ink); }
+  .history-row__main { flex: 1; min-width: 0; }
+  .history-row__summary {
+    font-size: 14px;
+    color: var(--ink);
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .history-row__meta {
+    display: flex;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .08em;
+    color: var(--ash-d);
+    align-items: center;
+  }
+  .history-row__meta a {
+    color: var(--ash-d);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .history-row__meta a:hover { color: var(--ink); }
+  .history-row__btn {
+    flex-shrink: 0;
+    min-height: 0;
+    padding: 8px 16px !important;
+    font-size: 10px !important;
+  }
+  .history-loading, .history-error, .history-empty {
+    padding: 24px;
+    text-align: center;
+    color: var(--ash-d);
+    font-size: 13px;
+    background: var(--paper-2);
+    border: 1px dashed var(--line-d);
+    border-radius: 10px;
+  }
+  .history-error { color: #8b1d1d; border-color: rgba(139,29,29,.3); }
+</style>

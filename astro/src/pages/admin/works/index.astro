@@ -17,10 +17,11 @@ import works from '../../../content/works.json';
   </div>
 
   <p class="works-intro-meta">{works.intro.lede}</p>
+  <p class="reorder-hint">Перетаскивайте карточки чтобы поменять порядок работ.</p>
 
-  <div class="works-list">
+  <div class="works-list" data-reorder-collection="works">
     {works.items.map((item, i) => (
-      <a class="works-list__item" href={`/admin/works/${i}`}>
+      <a class="works-list__item" href={`/admin/works/${i}`} data-reorder-idx={i}>
         <div class="works-list__thumb">
           <img src={item.src} alt={item.alt} loading="lazy" />
           <span class="works-list__num">{item.num}</span>
