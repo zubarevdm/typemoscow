@@ -37,8 +37,21 @@ const masterNum = String(idx + 1).padStart(2, '0');
         <div class="field">
           <label class="field-label" for="initials">Инициалы для аватара</label>
           <input id="initials" name="initials" type="text" class="input" value={master.initials} maxlength="3" />
-          <span class="field-hint">1–2 буквы. Например ШЮ, АК.</span>
+          <span class="field-hint">Запасной вариант, если фото нет.</span>
         </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="photo-file">Фотография</label>
+        <input id="photo-file" type="file" accept="image/jpeg,image/png,image/webp" class="file-input" data-upload-target="photo" data-upload-folder="team" />
+        <span class="field-hint">JPG/PNG/WebP, до 8 МБ. Оставьте пустым, чтобы сохранить текущее фото.</span>
+        <p class="upload-status" data-upload-status hidden></p>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="photo">Путь к фото</label>
+        <input id="photo" name="photo" type="text" class="input" value={master.photo || ''} readonly placeholder="Заполнится автоматически после загрузки файла" />
+        <span class="field-hint">Если пусто — на сайте показываются инициалы.</span>
       </div>
 
       <div class="field">
@@ -76,7 +89,10 @@ const masterNum = String(idx + 1).padStart(2, '0');
           <span class="master-card-preview__num">{masterNum}</span>
           <span class="master-card-preview__role">{master.role}</span>
         </div>
-        <div class="master-card-preview__photo" aria-hidden="true">{master.initials}</div>
+        <div class="master-card-preview__photo" aria-hidden="true">
+          <img data-upload-preview src={master.photo || ''} alt="" hidden={!master.photo} />
+          <span class="master-card-preview__initials">{master.initials}</span>
+        </div>
         <div class="master-card-preview__name">{master.name}</div>
         <div class="master-card-preview__bio">{master.bio}</div>
         <div class="master-card-preview__tags">
@@ -130,6 +146,14 @@ const masterNum = String(idx + 1).padStart(2, '0');
     font-size: 24px;
     letter-spacing: .02em;
     margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .master-card-preview__photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
   }
   .master-card-preview__name {
     font-weight: 700;

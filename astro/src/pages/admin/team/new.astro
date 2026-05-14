@@ -48,6 +48,15 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
       </div>
 
       <div class="field">
+        <label class="field-label" for="photo-file">Фотография</label>
+        <input id="photo-file" type="file" accept="image/jpeg,image/png,image/webp" class="file-input" data-upload-target="photo" data-upload-folder="team" />
+        <span class="field-hint">JPG/PNG/WebP, до 8 МБ. Опционально — без фото покажутся инициалы.</span>
+        <p class="upload-status" data-upload-status hidden></p>
+      </div>
+
+      <input type="hidden" name="photo" value="" />
+
+      <div class="field">
         <label class="checkbox">
           <input type="checkbox" name="available" checked />
           <span class="box"></span>

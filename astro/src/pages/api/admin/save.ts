@@ -316,6 +316,7 @@ function patchTeam(current: any, key: string | undefined, data: any) {
       .map((t) => t.trim())
       .filter(Boolean);
   }
+  if (typeof incoming.photo === 'string') next.photo = incoming.photo.trim();
   next.available = incoming.available === 'on' || incoming.available === true;
 
   current.masters[idx] = next;
@@ -452,6 +453,7 @@ function createMaster(current: any, data: any) {
     role: typeof incoming.role === 'string' && incoming.role.trim() ? incoming.role.trim() : 'Мастер',
     bio: typeof incoming.bio === 'string' ? incoming.bio.trim() : '',
     tags,
+    photo: typeof incoming.photo === 'string' ? incoming.photo.trim() : '',
     available: incoming.available === 'on' || incoming.available === true,
   };
   current.masters.push(master);

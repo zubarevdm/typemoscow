@@ -1335,7 +1335,9 @@ const schemaJsonLd = {
                 <span class="num">{String(i + 1).padStart(2, '0')}</span>
                 <span class="role">{master.role}</span>
               </div>
-              <div class="master-photo" data-init={master.initials} aria-label={`${master.name} — фото`}></div>
+              <div class="master-photo" data-init={master.initials} aria-label={`${master.name} — фото`}>
+                {master.photo && <img src={master.photo} alt={master.name} loading="lazy" />}
+              </div>
               <h3 class="master-name">{master.name}</h3>
               <p class="master-bio">{master.bio}</p>
               <div class="master-tags">

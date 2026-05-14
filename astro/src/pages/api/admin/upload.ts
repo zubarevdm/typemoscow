@@ -7,9 +7,13 @@ import type { APIRoute } from 'astro';
 
 export const prerender = false;
 
-const REPO_UPLOAD_PATH = 'astro/public/assets/works';
-const PUBLIC_URL_PREFIX = '/assets/works';
 const MAX_BYTES = 8 * 1024 * 1024; // 8 МБ — фотки портфолио
+
+type UploadTarget = 'works' | 'team';
+const TARGET_PATHS: Record<UploadTarget, { repoDir: string; publicPrefix: string }> = {
+  works: { repoDir: 'astro/public/assets/works', publicPrefix: '/assets/works' },
+  team:  { repoDir: 'astro/public/assets/team',  publicPrefix: '/assets/team'  },
+};
 
 const ALLOWED_EXT: Record<string, true> = {
   jpg: true, jpeg: true, png: true, webp: true, JPG: true, JPEG: true, PNG: true, WEBP: true,
@@ -18,19 +22,25 @@ const ALLOWED_EXT: Record<string, true> = {
 interface UploadRequest {
   filename: string;
   contentBase64: string; // без префикса data:...
+  target?: UploadTarget; // куда положить файл; default — works
 }
 
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const body = (await request.json()) as Partial<UploadRequest>;
     const { filename, contentBase64 } = body;
+    const target: UploadTarget = (body.target as UploadTarget) || 'works';
 
+    if (!TARGET_PATHS[target]) {
+      return json({ error: `invalid target: ${target}` }, 400);
+    }
     if (typeof filename !== 'string' || !filename) {
       return json({ error: 'missing filename' }, 400);
     }
     if (typeof contentBase64 !== 'string' || !contentBase64) {
       return json({ error: 'missing contentBase64' }, 400);
     }
+    const { repoDir: REPO_UPLOAD_PATH, publicPrefix: PUBLIC_URL_PREFIX } = TARGET_PATHS[target];
 
     const ext = filename.split('.').pop() || '';
     if (!ALLOWED_EXT[ext]) {
@@ -49,10 +59,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const finalName = `${safe}-${Date.now()}.${ext.toLowerCase()}`;
 
     if (import.meta.env.DEV) {
-      // Локальный режим: пишем в public/assets/works/
+      // Локальный режим: пишем в public/assets/{target}/
       const fs = await import('node:fs/promises');
       const path = await import('node:path');
-      const dir = path.resolve(process.cwd(), 'public/assets/works');
+      const dir = path.resolve(process.cwd(), `public/assets/${target}`);
       await fs.mkdir(dir, { recursive: true });
       const fileBytes = base64ToBytes(contentBase64);
       await fs.writeFile(path.join(dir, finalName), fileBytes);
@@ -91,7 +101,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: `CMS: upload work photo ${finalName}\n\nedited by ${editorEmail}`,
+          message: `CMS: upload ${target} photo ${finalName}\n\nedited by ${editorEmail}`,
           content: contentBase64,
           branch,
         }),
