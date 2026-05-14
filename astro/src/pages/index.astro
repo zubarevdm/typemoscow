@@ -89,7 +89,7 @@ const schemaJsonLd = {
   <meta name="author" content="TYPE Moscow" />
   <!-- STAGING-NOINDEX: на боевом домене заменить на content="index, follow" -->
   <meta name="robots" content="noindex, nofollow" />
-  <link rel="canonical" href="https://typemoscowtest.pages.dev/" />
+  <link rel="canonical" href={`${site.url}/`} />
   <title>TYPE Moscow — Мужская парикмахерская на Остоженке 47</title>
 
   <!-- Open Graph / Facebook / Telegram / VK -->
@@ -97,8 +97,8 @@ const schemaJsonLd = {
   <meta property="og:site_name" content="TYPE Moscow" />
   <meta property="og:title" content="TYPE Moscow — Мужская парикмахерская на Остоженке 47" />
   <meta property="og:description" content="Стрижки, оформление бороды, классическое бритьё. Команда мастеров мужского сервиса. Москва, Остоженка 47. Запись +7 965 31 31 31 5." />
-  <meta property="og:url" content="https://typemoscowtest.pages.dev/" />
-  <meta property="og:image" content="https://typemoscowtest.pages.dev/assets/og-image.jpg" />
+  <meta property="og:url" content={`${site.url}/`} />
+  <meta property="og:image" content={`${site.url}/assets/og-image.jpg`} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="TYPE Moscow — мужская парикмахерская на Остоженке 47" />
@@ -108,7 +108,7 @@ const schemaJsonLd = {
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="TYPE Moscow — Мужская парикмахерская на Остоженке 47" />
   <meta name="twitter:description" content="Стрижки, оформление бороды, классическое бритьё. Москва, Остоженка 47." />
-  <meta name="twitter:image" content="https://typemoscowtest.pages.dev/assets/og-image.jpg" />
+  <meta name="twitter:image" content={`${site.url}/assets/og-image.jpg`} />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -762,26 +762,16 @@ const schemaJsonLd = {
   .master-bio {
     font-family: var(--font-body); font-size: 13.5px; line-height: 1.55;
     color: var(--ink-2);
-    display: -webkit-box;
-    -webkit-line-clamp: 5;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    min-height: calc(13.5px * 1.55 * 5);
-  }
-  @media (max-width: 760px) {
-    .master-bio {
-      display: block;
-      -webkit-line-clamp: unset;
-      overflow: visible;
-      min-height: 0;
-    }
+    /* Раньше тут был -webkit-line-clamp:5 — обрезалось био у спикеров
+       на десктопе в средней ширине окна. Теперь карточка растёт до
+       полного текста, grid выравнивает их по высоте самой длинной. */
   }
   .master-tags {
     display: flex; flex-wrap: wrap; gap: 6px;
     min-height: 28px;
   }
   .master-tag {
-    font-family: var(--font-mono); font-weight: 500;
+    font-family: var(--font-mono); font-weight: 700;
     font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
     color: var(--ink); background: var(--paper);
     border: 1px solid var(--line-d); border-radius: 999px;

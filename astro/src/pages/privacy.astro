@@ -1,5 +1,8 @@
+---
+import site from '../content/site.json';
+---
 <!doctype html>
-<html lang="ru">
+<html lang={site.lang}>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -7,13 +10,13 @@
   <meta name="description" content="Политика конфиденциальности TYPE Moscow — мужская парикмахерская, Москва, Остоженка 47." />
   <!-- STAGING-NOINDEX: на боевом домене заменить на content="index, follow" -->
   <meta name="robots" content="noindex, nofollow" />
-  <link rel="canonical" href="https://typemoscowtest.pages.dev/privacy" />
+  <link rel="canonical" href={`${site.url}/privacy/`} />
   <title>Политика конфиденциальности — TYPE Moscow</title>
 
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="TYPE Moscow" />
   <meta property="og:title" content="Политика конфиденциальности — TYPE Moscow" />
-  <meta property="og:url" content="https://typemoscowtest.pages.dev/privacy" />
+  <meta property="og:url" content={`${site.url}/privacy/`} />
   <meta property="og:locale" content="ru_RU" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />

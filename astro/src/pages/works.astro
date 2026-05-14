@@ -22,22 +22,22 @@ const worksLabel = `${worksCount} ${wordForms(worksCount, ['работа', 'ра
   <meta name="description" content="Работы мастеров TYPE Moscow — чёрно-белые редакционные снимки. Мужская парикмахерская на Остоженке 47." />
   <!-- STAGING-NOINDEX: на боевом домене заменить на content="index, follow" -->
   <meta name="robots" content="noindex, nofollow" />
-  <link rel="canonical" href="https://typemoscowtest.pages.dev/works.html" />
+  <link rel="canonical" href={`${site.url}/works/`} />
   <title>Работы мастеров — TYPE Moscow</title>
 
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="TYPE Moscow" />
   <meta property="og:title" content="Работы мастеров TYPE Moscow" />
   <meta property="og:description" content="Чёрно-белые редакционные снимки. Каждый образ — результат диалога мастера и клиента." />
-  <meta property="og:url" content="https://typemoscowtest.pages.dev/works.html" />
-  <meta property="og:image" content="https://typemoscowtest.pages.dev/assets/og-image.jpg" />
+  <meta property="og:url" content={`${site.url}/works/`} />
+  <meta property="og:image" content={`${site.url}/assets/og-image.jpg`} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:locale" content="ru_RU" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Работы мастеров TYPE Moscow" />
-  <meta name="twitter:image" content="https://typemoscowtest.pages.dev/assets/og-image.jpg" />
+  <meta name="twitter:image" content={`${site.url}/assets/og-image.jpg`} />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
