@@ -867,7 +867,15 @@ const schemaJsonLd = {
   .contacts-list-item dd a { color: var(--ink); border-bottom: 1px solid var(--line-d); padding-bottom: 1px; }
   .contacts-list-item dd a:hover { color: var(--forest); border-color: var(--forest); }
   .contacts-list-item dd .muted { color: var(--ash-d); display: block; font-size: 14px; margin-top: 2px; }
-  .contacts-list-item dd .phone { font-family: var(--font-mono); font-weight: 700; font-size: 22px; letter-spacing: .04em; font-variant-numeric: tabular-nums; transition: color var(--dur-fast); }
+  .contacts-list-item dd .phone {
+    font-family: var(--font-mono); font-weight: 700;
+    font-size: clamp(16px, 5.2vw, 22px);
+    letter-spacing: .04em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    display: inline-block;
+    transition: color var(--dur-fast);
+  }
   .contacts-list-item dd a.phone:hover { color: var(--forest); }
 
   .map-frame {
@@ -1083,6 +1091,21 @@ const schemaJsonLd = {
     border-top: 1px solid var(--line-d);
   }
   .sticky-cta .btn { width: 100%; }
+  .sticky-cta .btn-primary {
+    background: var(--forest);
+    border-color: var(--forest);
+    color: var(--paper);
+    font-size: 12px;
+    padding: 16px 22px;
+    box-shadow: 0 8px 24px rgba(4, 38, 21, .35), 0 2px 6px rgba(4, 38, 21, .2);
+    letter-spacing: .18em;
+  }
+  .sticky-cta .btn-primary:hover,
+  .sticky-cta .btn-primary:active {
+    background: #063b21;
+    border-color: #063b21;
+    box-shadow: 0 6px 18px rgba(4, 38, 21, .45);
+  }
   @media (max-width: 720px) {
     .sticky-cta.is-shown { display: block; }
     .site-footer { padding-bottom: 88px; }
@@ -1192,7 +1215,7 @@ const schemaJsonLd = {
         <ul>
           <li><a href="#services">Услуги</a></li>
           <li><a href="#team">Команда</a></li>
-          <li><a href="/works">Работы</a></li>
+          <li><a href="/works/">Работы</a></li>
           <li><a href="#interior">Интерьер</a></li>
           <li><a href="#contacts">Контакты</a></li>
         </ul>
@@ -1214,7 +1237,7 @@ const schemaJsonLd = {
       <ul>
         <li><a href="#services">Услуги</a></li>
         <li><a href="#team">Команда</a></li>
-        <li><a href="/works">Работы</a></li>
+        <li><a href="/works/">Работы</a></li>
         <li><a href="#interior">Интерьер</a></li>
         <li><a href="#contacts">Контакты</a></li>
         <li><a href="#partners">Партнёры</a></li>
@@ -1522,7 +1545,7 @@ const schemaJsonLd = {
           <ul>
             <li><a href="#services">Услуги</a></li>
             <li><a href="#team">Команда</a></li>
-            <li><a href="/works">Работы</a></li>
+            <li><a href="/works/">Работы</a></li>
             <li><a href="#interior">Интерьер</a></li>
             <li><a href="#cta">Записаться</a></li>
             <li><a href="#contacts">Контакты</a></li>
@@ -1550,7 +1573,7 @@ const schemaJsonLd = {
 
       <div class="footer-bottom">
         <span>© 2024 — 2026 · TYPE Moscow</span>
-        <span><a href="/privacy" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Политика конфиденциальности</a></span>
+        <span><a href="/privacy/" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Политика конфиденциальности</a></span>
         <span>Сделано с уважением к&nbsp;ремеслу</span>
       </div>
     </div>

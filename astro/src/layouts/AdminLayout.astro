@@ -45,15 +45,20 @@ const collections: Array<{ id: CollectionId; label: string; count: number; }> = 
 <div class="cms">
 
   <header class="topbar">
+    <button type="button" class="mobile-menu-btn" data-toggle-sidebar aria-label="Меню" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
     <div class="brand">
       <span class="brand-mark">TYPE · CMS</span>
       <span class="brand-sub">est. 2024 · admin</span>
     </div>
     <div class="user-meta">
-      <span><strong>admin</strong> · менеджер</span>
+      <span class="user-meta__role"><strong>admin</strong> · менеджер</span>
       <a class="logout" href="/admin/logout">Выйти</a>
     </div>
   </header>
+
+  <div class="sidebar-backdrop" data-sidebar-backdrop hidden></div>
 
   <aside class="sidebar">
     <h4>Коллекции</h4>
@@ -91,6 +96,24 @@ const collections: Array<{ id: CollectionId; label: string; count: number; }> = 
 <script>
   type ToastKind = 'info' | 'success' | 'error';
   const toast = document.querySelector<HTMLElement>('[data-admin-toast]');
+
+  // Mobile sidebar toggle
+  const sidebarBtn = document.querySelector<HTMLButtonElement>('[data-toggle-sidebar]');
+  const sidebarBackdrop = document.querySelector<HTMLElement>('[data-sidebar-backdrop]');
+  function closeSidebar() {
+    document.body.classList.remove('cms-sidebar-open');
+    sidebarBtn?.setAttribute('aria-expanded', 'false');
+  }
+  sidebarBtn?.addEventListener('click', () => {
+    const open = document.body.classList.toggle('cms-sidebar-open');
+    sidebarBtn.setAttribute('aria-expanded', String(open));
+  });
+  sidebarBackdrop?.addEventListener('click', closeSidebar);
+  // Закрывать при клике по любой ссылке в сайдбаре — переход и так перерисует страницу,
+  // но если ссылка на якорь — без этого sidebar останется открытым.
+  document.querySelectorAll<HTMLElement>('.sidebar a').forEach((a) => {
+    a.addEventListener('click', () => closeSidebar());
+  });
 
   function showToast(text: string, kind: ToastKind = 'info', ms = 4000) {
     if (!toast) { alert(text); return; }
@@ -668,6 +691,63 @@ const collections: Array<{ id: CollectionId; label: string; count: number; }> = 
   [data-reorder-idx]:active { cursor: grabbing; }
   .reorder-dragging { opacity: .35; }
   .reorder-over { box-shadow: 0 0 0 2px var(--forest) inset; }
+
+  /* ── Mobile: hamburger + collapsible sidebar ──────────────── */
+  .mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    padding: 8px;
+    margin-right: 4px;
+    cursor: pointer;
+    flex-direction: column;
+    gap: 4px;
+    align-items: stretch;
+    width: 36px;
+  }
+  .mobile-menu-btn span {
+    height: 2px;
+    background: var(--ink);
+    border-radius: 1px;
+    transition: transform .2s, opacity .2s;
+  }
+  .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 56px 0 0 0;
+    background: rgba(11,11,11,.45);
+    z-index: 8;
+    backdrop-filter: blur(2px);
+  }
+  .sidebar-backdrop[hidden] { display: none; }
+
+  @media (max-width: 760px) {
+    .cms { grid-template-columns: 1fr; }
+    .topbar { padding: 0 16px; }
+    .mobile-menu-btn { display: inline-flex; }
+    .user-meta__role { display: none; }
+    .user-meta { gap: 10px; }
+    .brand-sub { display: none; }
+    .main { padding: 24px 16px; }
+
+    .sidebar {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      width: 280px;
+      max-width: 85vw;
+      height: calc(100vh - 56px);
+      z-index: 9;
+      transform: translateX(-100%);
+      transition: transform .25s cubic-bezier(.2,.7,.3,1);
+      box-shadow: 4px 0 24px rgba(0,0,0,.12);
+    }
+    body.cms-sidebar-open .sidebar { transform: translateX(0); }
+    body.cms-sidebar-open .sidebar-backdrop { display: block; }
+    body.cms-sidebar-open .mobile-menu-btn span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    body.cms-sidebar-open .mobile-menu-btn span:nth-child(2) { opacity: 0; }
+    body.cms-sidebar-open .mobile-menu-btn span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+  }
   .btn .dot {
     width: 8px; height: 8px;
     background: currentColor;
