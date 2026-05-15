@@ -992,6 +992,19 @@ const schemaJsonLd = {
     color: var(--ink);
     text-transform: uppercase;
   }
+  /* Логотипы-картинки: filter:brightness(0) делает любой src чёрным
+     силуэтом, сохраняя прозрачность. Все 9 партнёров рендерятся одним
+     визуальным стилем независимо от исходного цвета файла. */
+  .partner-logo-img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto; height: auto;
+    object-fit: contain;
+    filter: brightness(0);
+    opacity: .82;
+    transition: opacity .2s;
+  }
+  .partner-row:hover .partner-logo-img { opacity: 1; }
 
   .partner-text {
     flex: 1; font-family: var(--font-body);
@@ -1498,9 +1511,11 @@ const schemaJsonLd = {
                     <rect x="5"  y="60" width="70" height="6"  rx="1"/>
                   </svg>
                 )}
-                {p.id === 'betone' && <span class="logo-betone">BETONE</span>}
-                {p.id === 'takto' && <span class="logo-takto">ta k to</span>}
-                {!['sh', 'shevelizm', 'betone', 'takto'].includes(p.id) && (
+                {p.logoType === 'image' && p.logoFile && (
+                  <img class="partner-logo-img" src={p.logoFile} alt={p.name} loading="lazy" />
+                )}
+                {p.logoType === 'text' && p.id === 'betone' && <span class="logo-betone">BETONE</span>}
+                {p.logoType === 'text' && p.id !== 'betone' && (
                   <span class="logo-text">{p.name}</span>
                 )}
               </div>

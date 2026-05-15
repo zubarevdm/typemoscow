@@ -16,43 +16,50 @@
     {
       "id": "shevelizm",
       "name": "SHEVELIZM",
-      "logoType": "svg-custom",
+      "logoType": "image",
+      "logoFile": "/assets/partners/shevelizm.svg",
       "text": "Творческое объединение SHEVELIZM, которое специализируется на образовании мастеров стран СНГ. Учебники, инструмент, образовательные курсы."
     },
     {
       "id": "takto",
       "name": "ta k to",
-      "logoType": "text",
+      "logoType": "image",
+      "logoFile": "/assets/partners/takto.png",
       "text": "Российский, прогрессивный бренд одежды с ностальгическими мотивами из прошлого нашей необъятной."
     },
     {
       "id": "yandex",
       "name": "Яндекс",
-      "logoType": "text",
+      "logoType": "image",
+      "logoFile": "/assets/partners/yandex.svg",
       "text": "Описание партнёрства с Яндексом — отредактируйте через админку."
     },
     {
       "id": "vk",
       "name": "VK",
-      "logoType": "text",
+      "logoType": "image",
+      "logoFile": "/assets/partners/vk.svg",
       "text": "Описание партнёрства с VK — отредактируйте через админку."
     },
     {
       "id": "sber",
       "name": "Сбер",
-      "logoType": "text",
+      "logoType": "image",
+      "logoFile": "/assets/partners/sber.png",
       "text": "Описание партнёрства со Сбером — отредактируйте через админку."
     },
     {
       "id": "mastersuite",
       "name": "Мастерсьют",
-      "logoType": "text",
+      "logoType": "image",
+      "logoFile": "/assets/partners/mastersuite.png",
       "text": "Описание партнёрства с Мастерсьют — отредактируйте через админку."
     },
     {
       "id": "skolkovo",
       "name": "Сколково",
-      "logoType": "text",
+      "logoType": "image",
+      "logoFile": "/assets/partners/skolkovo.svg",
       "text": "Описание партнёрства со Сколково — отредактируйте через админку."
     }
   ]
