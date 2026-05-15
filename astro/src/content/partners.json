@@ -17,7 +17,7 @@
       "id": "shevelizm",
       "name": "SHEVELIZM",
       "logoType": "image",
-      "logoFile": "/assets/partners/shevelizm.svg",
+      "logoFile": "/assets/partners/shevelizm.png",
       "text": "Творческое объединение SHEVELIZM, которое специализируется на образовании мастеров стран СНГ. Учебники, инструмент, образовательные курсы."
     },
     {
@@ -31,14 +31,14 @@
       "id": "yandex",
       "name": "Яндекс",
       "logoType": "image",
-      "logoFile": "/assets/partners/yandex.svg",
+      "logoFile": "/assets/partners/yandex.png",
       "text": "Описание партнёрства с Яндексом — отредактируйте через админку."
     },
     {
       "id": "vk",
       "name": "VK",
       "logoType": "image",
-      "logoFile": "/assets/partners/vk.svg",
+      "logoFile": "/assets/partners/vk.png",
       "text": "Описание партнёрства с VK — отредактируйте через админку."
     },
     {
@@ -59,7 +59,7 @@
       "id": "skolkovo",
       "name": "Сколково",
       "logoType": "image",
-      "logoFile": "/assets/partners/skolkovo.svg",
+      "logoFile": "/assets/partners/skolkovo.png",
       "text": "Описание партнёрства со Сколково — отредактируйте через админку."
     }
   ]
