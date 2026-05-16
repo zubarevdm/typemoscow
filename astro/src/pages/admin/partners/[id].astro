@@ -8,7 +8,6 @@ const partner = partners.partners.find(p => p.id === idParam);
 if (!partner) {
   return Astro.redirect('/admin/partners');
 }
-const logoTypes = ['text', 'svg-custom'];
 ---
 
 <AdminLayout pageTitle={partner.name} activeCollection="partners">
@@ -25,19 +24,16 @@ const logoTypes = ['text', 'svg-custom'];
 
   <form class="form-grid" data-edit-form data-collection="partners" data-key={partner.id}>
     <div>
-      <div class="fieldset-2">
-        <div class="field">
-          <label class="field-label" for="name">Название <span class="required">·</span></label>
-          <input id="name" name="name" type="text" class="input" value={partner.name} required />
-        </div>
-        <div class="field">
-          <label class="field-label" for="logoType">Тип логотипа</label>
-          <select id="logoType" name="logoType" class="select">
-            {logoTypes.map(t => <option value={t} selected={partner.logoType === t}>{t}</option>)}
-          </select>
-          <span class="field-hint"><code>text</code> — стилизованная надпись; <code>svg-custom</code> — отдельная SVG-иконка.</span>
-        </div>
+      <div class="field">
+        <label class="field-label" for="name">Название <span class="required">·</span></label>
+        <input id="name" name="name" type="text" class="input" value={partner.name} required />
       </div>
+
+      {/* logoType — техническое поле (image/text/svg-custom).
+          В CMS его не редактируют, только передаём как hidden чтобы
+          patchPartners сохранил текущее значение, иначе при save оно
+          сбрасывалось на дефолт и логотип-картинка терялась. */}
+      <input type="hidden" name="logoType" value={partner.logoType} />
 
       <div class="field">
         <label class="field-label" for="text">Описание <span class="required">·</span></label>
