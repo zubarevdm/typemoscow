@@ -23,6 +23,13 @@
       "text": "Творческое объединение SHEVELIZM, которое специализируется на образовании мастеров стран СНГ. Учебники, инструмент, образовательные курсы."
     },
     {
+      "id": "mastersuite",
+      "name": "Мастерсьют",
+      "logoType": "image",
+      "logoFile": "/assets/partners/mastersuite.png",
+      "text": "Описание партнёрства с Мастерсьют — отредактируйте через админку."
+    },
+    {
       "id": "takto",
       "name": "ta k to",
       "logoType": "image",
@@ -56,13 +63,6 @@
       "logoType": "image",
       "logoFile": "/assets/partners/yandex.png",
       "text": "Описание партнёрства с Яндексом — отредактируйте через админку."
-    },
-    {
-      "id": "mastersuite",
-      "name": "Мастерсьют",
-      "logoType": "image",
-      "logoFile": "/assets/partners/mastersuite.png",
-      "text": "Описание партнёрства с Мастерсьют — отредактируйте через админку."
     }
   ]
 }
