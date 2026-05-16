@@ -9,6 +9,20 @@
       "text": "Наши финансовые партнёры — Сбер. Эквайринг, программы лояльности и быстрые платежи для гостей TYPE."
     },
     {
+      "id": "shevelizm",
+      "name": "SHEVELIZM",
+      "logoType": "image",
+      "logoFile": "/assets/partners/shevelizm.png",
+      "text": "Творческое объединение SHEVELIZM, которое специализируется на образовании мастеров стран СНГ. Учебники, инструмент, образовательные курсы."
+    },
+    {
+      "id": "yandex",
+      "name": "Яндекс",
+      "logoType": "image",
+      "logoFile": "/assets/partners/yandex.png",
+      "text": "Наши партнёры по цифровому присутствию — Яндекс. Карты, поиск, Бизнес — благодаря им клиенту легко найти TYPE на Остоженке."
+    },
+    {
       "id": "vk",
       "name": "VK",
       "logoType": "image",
@@ -28,20 +42,6 @@
       "logoType": "image",
       "logoFile": "/assets/partners/betone.png",
       "text": "Наши важные партнёры — сеть авторских барбершопов и салонов BETONE. Эко-система, частью которой мы являемся."
-    },
-    {
-      "id": "shevelizm",
-      "name": "SHEVELIZM",
-      "logoType": "image",
-      "logoFile": "/assets/partners/shevelizm.png",
-      "text": "Творческое объединение SHEVELIZM, которое специализируется на образовании мастеров стран СНГ. Учебники, инструмент, образовательные курсы."
-    },
-    {
-      "id": "yandex",
-      "name": "Яндекс",
-      "logoType": "image",
-      "logoFile": "/assets/partners/yandex.png",
-      "text": "Наши партнёры по цифровому присутствию — Яндекс. Карты, поиск, Бизнес — благодаря им клиенту легко найти TYPE на Остоженке."
     },
     {
       "id": "skolkovo",
