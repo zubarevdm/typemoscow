@@ -51,18 +51,18 @@
       "text": "Описание партнёрства со Сбером — отредактируйте через админку."
     },
     {
-      "id": "skolkovo",
-      "name": "Сколково",
-      "logoType": "image",
-      "logoFile": "/assets/partners/skolkovo.png",
-      "text": "Описание партнёрства со Сколково — отредактируйте через админку."
-    },
-    {
       "id": "mastersuite",
       "name": "Мастерсьют",
       "logoType": "image",
       "logoFile": "/assets/partners/mastersuite.png",
       "text": "Описание партнёрства с Мастерсьют — отредактируйте через админку."
+    },
+    {
+      "id": "skolkovo",
+      "name": "Сколково",
+      "logoType": "image",
+      "logoFile": "/assets/partners/skolkovo.png",
+      "text": "Описание партнёрства со Сколково — отредактируйте через админку."
     }
   ]
 }
