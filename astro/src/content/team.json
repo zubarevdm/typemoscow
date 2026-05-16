@@ -91,6 +91,19 @@
       ],
       "photo": "",
       "available": true
+    },
+    {
+      "name": "Виктор",
+      "initials": "В",
+      "role": "Мастер",
+      "bio": "Заполнить описание",
+      "tags": [
+        "Тег1",
+        "тег2",
+        "тЕг3"
+      ],
+      "photo": "",
+      "available": true
     }
   ]
 }
