@@ -60,7 +60,7 @@
     {
       "id": "mastersuite",
       "name": "Мастерсьют",
-      "logoType": "text",
+      "logoType": "image",
       "logoFile": "/assets/partners/mastersuite.png",
       "text": "Индивидуальный пошив изделий из премиальных тканей. Костюмы, куртки, одежда, аксессуары и обувь. А также, изделия из кожи крокодила."
     }
