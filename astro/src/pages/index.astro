@@ -974,6 +974,12 @@ const schemaJsonLd = {
     /* Если последний партнёр оказался один в строке слева (без правого
        соседа в обычной grid-сетке) — у него убираем боковую линию. */
     .partner-row:last-child:nth-child(odd) { border-right: none; }
+    /* Force-линия для предпоследних двух партнёров (та пара что
+       непосредственно над акцентной full-width строкой) — на случай
+       если какой-то предыдущий браузерный кэш или specificity их
+       перебивает. */
+    .partner-row:nth-last-child(2),
+    .partner-row:nth-last-child(3) { border-bottom: 1px solid var(--line-d); }
   }
 
   .partner-logo {
