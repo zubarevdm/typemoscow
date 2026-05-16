@@ -23,13 +23,6 @@
       "text": "Творческое объединение SHEVELIZM, которое специализируется на образовании мастеров стран СНГ. Учебники, инструмент, образовательные курсы."
     },
     {
-      "id": "yandex",
-      "name": "Яндекс",
-      "logoType": "image",
-      "logoFile": "/assets/partners/yandex.png",
-      "text": "Описание партнёрства с Яндексом — отредактируйте через админку."
-    },
-    {
       "id": "vk",
       "name": "VK",
       "logoType": "image",
@@ -56,6 +49,13 @@
       "logoType": "image",
       "logoFile": "/assets/partners/skolkovo.png",
       "text": "Описание партнёрства со Сколково — отредактируйте через админку."
+    },
+    {
+      "id": "yandex",
+      "name": "Яндекс",
+      "logoType": "image",
+      "logoFile": "/assets/partners/yandex.png",
+      "text": "Описание партнёрства с Яндексом — отредактируйте через админку."
     },
     {
       "id": "takto",
