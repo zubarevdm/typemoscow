@@ -346,17 +346,21 @@ const collections: Array<{ id: CollectionId; label: string; count: number; }> = 
         item.classList.remove('reorder-over');
         if (!dragEl || dragEl === item) return;
 
-        const dragIdx = parseInt(dragEl.dataset.reorderIdx || '-1', 10);
-        const dropIdx = parseInt(item.dataset.reorderIdx || '-1', 10);
-        if (Number.isNaN(dragIdx) || Number.isNaN(dropIdx)) return;
-
-        const order = items.map((el) => parseInt(el.dataset.reorderIdx || '0', 10));
-        const [moved] = order.splice(dragIdx, 1);
-        order.splice(dropIdx, 0, moved);
-
-        // Сразу переставляем DOM чтобы пользователь видел результат
-        const before = dragIdx < dropIdx ? item.nextSibling : item;
+        // 1. Перестраиваем DOM на лету. Bounding-rect определяет «сверху ли
+        //    drop-цель или снизу относительно dragEl», чтобы вставить в
+        //    правильное место.
+        const dragRect = dragEl.getBoundingClientRect();
+        const itemRect = item.getBoundingClientRect();
+        const before = dragRect.top < itemRect.top ? item.nextSibling : item;
         list.insertBefore(dragEl, before);
+
+        // 2. Считываем АКТУАЛЬНЫЙ DOM-порядок и собираем order по data-reorder-idx
+        //    каждого элемента — это и есть «как пересобрать JSON-массив». Не
+        //    используем закэшированный items, потому что после второго drag
+        //    он перестаёт соответствовать визуальному порядку.
+        const domItems = Array.from(list.querySelectorAll<HTMLElement>('[data-reorder-idx]'))
+          .filter((el) => el.parentElement === list);
+        const order = domItems.map((el) => parseInt(el.dataset.reorderIdx || '0', 10));
 
         try {
           const res = await fetch('/api/admin/save', {
@@ -372,16 +376,19 @@ const collections: Array<{ id: CollectionId; label: string; count: number; }> = 
           const body = await res.json().catch(() => null);
           if (!res.ok || !body?.ok) {
             showToast(`Не удалось сохранить порядок: ${body?.error || res.status}`, 'error', 6000);
-            // Откатываем DOM-перестановку через перезагрузку
-            window.setTimeout(() => location.reload(), 1500);
+            // Не делаем reload: CF ещё отдаёт старую статику, перезагрузка
+            // вернёт пользователя к прежнему порядку и создаст иллюзию «слетело».
             return;
           }
-          showToast('Порядок сохранён.', 'success', 3500);
-          // После успеха — обновим страницу, чтобы data-reorder-idx пересчитались
-          window.setTimeout(() => location.reload(), 1000);
+          showToast('Порядок сохранён. На сайте обновится через ~1 минуту.', 'success', 4000);
+          // 3. После save сервер пересобрал JSON в новом порядке. Чтобы
+          //    следующий drag отправил корректный order поверх НОВОГО состояния,
+          //    переписываем data-reorder-idx последовательно [0..n-1] по
+          //    текущему DOM-порядку — теперь они соответствуют свежим
+          //    JSON-позициям.
+          domItems.forEach((el, i) => { el.dataset.reorderIdx = String(i); });
         } catch (err) {
           showToast(`Сеть: ${String(err)}`, 'error', 6000);
-          window.setTimeout(() => location.reload(), 1500);
         }
       });
     });
