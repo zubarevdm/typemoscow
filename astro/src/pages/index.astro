@@ -966,7 +966,14 @@ const schemaJsonLd = {
   @media (min-width: 760px) {
     .partner-row:nth-child(odd)  { padding-right: 56px; border-right: 1px solid var(--line-d); }
     .partner-row:nth-child(even) { padding-left: 56px; }
-    .partner-row:nth-last-child(-n+2) { border-bottom: none; }
+    /* Нижнюю линию убираем ТОЛЬКО у фактически последней строки.
+       Раньше тут было :nth-last-child(-n+2), но при нечётном количестве
+       партнёров (9-й full-width-акцент) это случайно скрывало линию у
+       предпоследнего — образуя «дыру» между парой и акцентной строкой. */
+    .partner-row:last-child { border-bottom: none; }
+    /* Если последний партнёр оказался один в строке слева (без правого
+       соседа в обычной grid-сетке) — у него убираем боковую линию. */
+    .partner-row:last-child:nth-child(odd) { border-right: none; }
   }
 
   .partner-logo {
