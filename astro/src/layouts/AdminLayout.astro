@@ -91,6 +91,14 @@ const collections: Array<{ id: CollectionId; label: string; count: number; }> = 
 <!-- Toast-уведомления -->
 <div class="admin-toast" data-admin-toast hidden></div>
 
+<!-- Sticky-панель для batch reorder: появляется когда порядок изменён,
+     но ещё не сохранён. -->
+<div class="reorder-bar" data-reorder-bar hidden>
+  <span class="reorder-bar__msg">Порядок изменён</span>
+  <button type="button" class="btn btn-ghost reorder-bar__cancel" data-reorder-cancel>Отменить</button>
+  <button type="button" class="btn btn-primary reorder-bar__save" data-reorder-save>Сохранить порядок</button>
+</div>
+
 <!-- Централизованный сабмит всех форм админки. Любая форма с data-edit-form
      автоматически отправляет POST /api/admin/save и показывает результат. -->
 <script>
@@ -305,13 +313,43 @@ const collections: Array<{ id: CollectionId; label: string; count: number; }> = 
     });
   });
 
-  // Drag-and-drop reorder для listing-страниц.
+  // Drag-and-drop reorder для listing-страниц в batch-режиме.
+  // Каждый drop только перестраивает DOM. Save идёт одним запросом по
+  // нажатию «Сохранить порядок» в sticky-баре внизу.
+  const reorderBar = document.querySelector<HTMLElement>('[data-reorder-bar]');
+  const reorderSaveBtn = document.querySelector<HTMLButtonElement>('[data-reorder-save]');
+  const reorderCancelBtn = document.querySelector<HTMLButtonElement>('[data-reorder-cancel]');
+
+  // Активный список с pending-изменениями. На странице может быть несколько
+  // reorder-listings (например 3 категории услуг), но pending-state — только
+  // у одного за раз: после save/cancel сбрасывается.
+  let pendingList: HTMLElement | null = null;
+  let pendingSnapshot: HTMLElement[] = []; // исходный DOM-порядок дочерних элементов
+
+  function showReorderBar() {
+    if (reorderBar) reorderBar.hidden = false;
+  }
+  function hideReorderBar() {
+    if (reorderBar) reorderBar.hidden = true;
+    pendingList = null;
+    pendingSnapshot = [];
+  }
+
+  function markDirty(list: HTMLElement) {
+    if (pendingList && pendingList !== list) {
+      // Юзер начал двигать в другом list — игнорируем (надо сначала сохранить/отменить)
+      return;
+    }
+    if (!pendingList) {
+      // Первое изменение — снимем снапшот ИСХОДНОГО DOM-порядка
+      pendingList = list;
+      pendingSnapshot = Array.from(list.querySelectorAll<HTMLElement>('[data-reorder-idx]'))
+        .filter((el) => el.parentElement === list);
+      showReorderBar();
+    }
+  }
+
   document.querySelectorAll<HTMLElement>('[data-reorder-collection]').forEach((list) => {
-    const collection = list.dataset.reorderCollection!;
-    // Опциональный ключ — например catId для services, чтобы reorder работал
-    // в пределах одной категории.
-    const reorderKey = list.dataset.reorderKey;
-    // Берём только прямых детей: один контейнер может содержать вложенные списки.
     const items = Array.from(list.querySelectorAll<HTMLElement>('[data-reorder-idx]'))
       .filter((el) => el.parentElement === list);
     let dragEl: HTMLElement | null = null;
@@ -322,7 +360,6 @@ const collections: Array<{ id: CollectionId; label: string; count: number; }> = 
       item.addEventListener('dragstart', (e) => {
         dragEl = item;
         item.classList.add('reorder-dragging');
-        // Лёгкий ghost — Firefox требует setData чтобы drag начался
         e.dataTransfer?.setData('text/plain', item.dataset.reorderIdx || '');
         if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move';
       });
@@ -341,57 +378,79 @@ const collections: Array<{ id: CollectionId; label: string; count: number; }> = 
 
       item.addEventListener('dragleave', () => item.classList.remove('reorder-over'));
 
-      item.addEventListener('drop', async (e) => {
+      item.addEventListener('drop', (e) => {
         e.preventDefault();
         item.classList.remove('reorder-over');
         if (!dragEl || dragEl === item) return;
+        if (pendingList && pendingList !== list) {
+          showToast('Сначала сохраните или отмените изменения в другом списке.', 'error', 4000);
+          return;
+        }
 
-        // 1. Перестраиваем DOM на лету. Bounding-rect определяет «сверху ли
-        //    drop-цель или снизу относительно dragEl», чтобы вставить в
-        //    правильное место.
+        // Перестраиваем DOM
         const dragRect = dragEl.getBoundingClientRect();
         const itemRect = item.getBoundingClientRect();
         const before = dragRect.top < itemRect.top ? item.nextSibling : item;
         list.insertBefore(dragEl, before);
 
-        // 2. Считываем АКТУАЛЬНЫЙ DOM-порядок и собираем order по data-reorder-idx
-        //    каждого элемента — это и есть «как пересобрать JSON-массив». Не
-        //    используем закэшированный items, потому что после второго drag
-        //    он перестаёт соответствовать визуальному порядку.
-        const domItems = Array.from(list.querySelectorAll<HTMLElement>('[data-reorder-idx]'))
-          .filter((el) => el.parentElement === list);
-        const order = domItems.map((el) => parseInt(el.dataset.reorderIdx || '0', 10));
-
-        try {
-          const res = await fetch('/api/admin/save', {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({
-              collection,
-              action: 'reorder',
-              key: reorderKey || undefined,
-              data: { order },
-            }),
-          });
-          const body = await res.json().catch(() => null);
-          if (!res.ok || !body?.ok) {
-            showToast(`Не удалось сохранить порядок: ${body?.error || res.status}`, 'error', 6000);
-            // Не делаем reload: CF ещё отдаёт старую статику, перезагрузка
-            // вернёт пользователя к прежнему порядку и создаст иллюзию «слетело».
-            return;
-          }
-          showToast('Порядок сохранён. На сайте обновится через ~1 минуту.', 'success', 4000);
-          // 3. После save сервер пересобрал JSON в новом порядке. Чтобы
-          //    следующий drag отправил корректный order поверх НОВОГО состояния,
-          //    переписываем data-reorder-idx последовательно [0..n-1] по
-          //    текущему DOM-порядку — теперь они соответствуют свежим
-          //    JSON-позициям.
-          domItems.forEach((el, i) => { el.dataset.reorderIdx = String(i); });
-        } catch (err) {
-          showToast(`Сеть: ${String(err)}`, 'error', 6000);
-        }
+        markDirty(list);
       });
     });
+  });
+
+  // «Сохранить порядок» — один POST с финальным order
+  reorderSaveBtn?.addEventListener('click', async () => {
+    if (!pendingList) return;
+    const list = pendingList;
+    const collection = list.dataset.reorderCollection!;
+    const reorderKey = list.dataset.reorderKey;
+    const domItems = Array.from(list.querySelectorAll<HTMLElement>('[data-reorder-idx]'))
+      .filter((el) => el.parentElement === list);
+    const order = domItems.map((el) => parseInt(el.dataset.reorderIdx || '0', 10));
+
+    reorderSaveBtn.disabled = true;
+    if (reorderCancelBtn) reorderCancelBtn.disabled = true;
+
+    try {
+      const res = await fetch('/api/admin/save', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          collection,
+          action: 'reorder',
+          key: reorderKey || undefined,
+          data: { order },
+        }),
+      });
+      const body = await res.json().catch(() => null);
+      if (!res.ok || !body?.ok) {
+        showToast(`Не удалось сохранить порядок: ${body?.error || res.status}`, 'error', 6000);
+        return;
+      }
+      showToast('Порядок сохранён. На сайте обновится через ~1 минуту.', 'success', 4000);
+      // Перенумеровываем dataset.reorderIdx по новому DOM-порядку — теперь
+      // он соответствует свежим JSON-позициям, и следующий батч drag-ов
+      // будет корректным.
+      domItems.forEach((el, i) => { el.dataset.reorderIdx = String(i); });
+      hideReorderBar();
+    } catch (err) {
+      showToast(`Сеть: ${String(err)}`, 'error', 6000);
+    } finally {
+      reorderSaveBtn.disabled = false;
+      if (reorderCancelBtn) reorderCancelBtn.disabled = false;
+    }
+  });
+
+  // «Отменить» — восстановить исходный DOM-порядок из snapshot
+  reorderCancelBtn?.addEventListener('click', () => {
+    if (!pendingList || pendingSnapshot.length === 0) {
+      hideReorderBar();
+      return;
+    }
+    // Восстанавливаем по очереди: append каждый snapshot-элемент — DOM
+    // сам выстроит их в исходном порядке.
+    pendingSnapshot.forEach((el) => pendingList!.appendChild(el));
+    hideReorderBar();
   });
 </script>
 
@@ -698,6 +757,47 @@ const collections: Array<{ id: CollectionId; label: string; count: number; }> = 
   [data-reorder-idx]:active { cursor: grabbing; }
   .reorder-dragging { opacity: .35; }
   .reorder-over { box-shadow: 0 0 0 2px var(--forest) inset; }
+
+  /* Sticky-панель batch-сохранения порядка */
+  .reorder-bar {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 12px 14px 12px 22px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3), 0 2px 8px rgba(0,0,0,0.15);
+    animation: reorder-bar-in .25s cubic-bezier(.2,.7,.3,1);
+  }
+  .reorder-bar[hidden] { display: none; }
+  .reorder-bar__msg {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+  body.cms-body .reorder-bar .btn { padding: 9px 18px; font-size: 10px; }
+  body.cms-body .reorder-bar .btn-ghost { color: var(--paper); border-color: rgba(235,234,229,.4); background: transparent; }
+  body.cms-body .reorder-bar .btn-ghost:hover { background: rgba(235,234,229,.12); color: var(--paper); }
+  body.cms-body .reorder-bar .btn-primary { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+  body.cms-body .reorder-bar .btn-primary:hover { background: var(--paper-2); border-color: var(--paper-2); color: var(--ink); }
+  @keyframes reorder-bar-in {
+    from { transform: translate(-50%, 30px); opacity: 0; }
+    to { transform: translate(-50%, 0); opacity: 1; }
+  }
+  @media (max-width: 600px) {
+    .reorder-bar { left: 12px; right: 12px; transform: none; border-radius: 14px; flex-wrap: wrap; }
+    @keyframes reorder-bar-in {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  }
 
   /* ── Mobile: hamburger + collapsible sidebar ──────────────── */
   .mobile-menu-btn {
