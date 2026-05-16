@@ -44,13 +44,6 @@
       "text": "Описание партнёрства со Сбером — отредактируйте через админку."
     },
     {
-      "id": "mastersuite",
-      "name": "Мастерсьют",
-      "logoType": "image",
-      "logoFile": "/assets/partners/mastersuite.png",
-      "text": "Описание партнёрства с Мастерсьют — отредактируйте через админку."
-    },
-    {
       "id": "skolkovo",
       "name": "Сколково",
       "logoType": "image",
@@ -63,6 +56,13 @@
       "logoType": "image",
       "logoFile": "/assets/partners/yandex.png",
       "text": "Описание партнёрства с Яндексом — отредактируйте через админку."
+    },
+    {
+      "id": "mastersuite",
+      "name": "Мастерсьют",
+      "logoType": "image",
+      "logoFile": "/assets/partners/mastersuite.png",
+      "text": "Описание партнёрства с Мастерсьют — отредактируйте через админку."
     }
   ]
 }
