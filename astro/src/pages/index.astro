@@ -1312,7 +1312,7 @@ const schemaJsonLd = {
           <div class="hero-video" id="heroVideo" hidden aria-label="Видео о TYPE">
             <button type="button" class="hero-video__close" data-video-close aria-label="Закрыть видео">&times;</button>
             <video class="hero-video__media" preload="metadata" controls playsinline>
-              <source src="/assets/video/style.mp4" type="video/mp4" />
+              <source src={site.heroVideo || '/assets/video/style.mp4'} type="video/mp4" />
               Ваш браузер не поддерживает видео.
             </video>
           </div>

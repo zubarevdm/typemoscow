@@ -7,16 +7,24 @@ import type { APIRoute } from 'astro';
 
 export const prerender = false;
 
-const MAX_BYTES = 8 * 1024 * 1024; // 8 МБ — фотки портфолио
+// Лимит base64-payload. Для CF Pages статика ограничена 25 МБ на файл,
+// плюс GitHub имеет лимит 100 МБ на blob (но base64 раздувает на 33%).
+// Фотки до 8 МБ, видео до 25 МБ.
+const MAX_BYTES_IMAGE = 8 * 1024 * 1024;
+const MAX_BYTES_VIDEO = 25 * 1024 * 1024;
 
-type UploadTarget = 'works' | 'team';
-const TARGET_PATHS: Record<UploadTarget, { repoDir: string; publicPrefix: string }> = {
+type UploadTarget = 'works' | 'team' | 'video';
+const TARGET_PATHS: Record<UploadTarget, { repoDir: string; publicPrefix: string; isVideo?: boolean }> = {
   works: { repoDir: 'astro/public/assets/works', publicPrefix: '/assets/works' },
   team:  { repoDir: 'astro/public/assets/team',  publicPrefix: '/assets/team'  },
+  video: { repoDir: 'astro/public/assets/video', publicPrefix: '/assets/video', isVideo: true },
 };
 
-const ALLOWED_EXT: Record<string, true> = {
+const ALLOWED_IMAGE_EXT: Record<string, true> = {
   jpg: true, jpeg: true, png: true, webp: true, JPG: true, JPEG: true, PNG: true, WEBP: true,
+};
+const ALLOWED_VIDEO_EXT: Record<string, true> = {
+  mp4: true, webm: true, MP4: true, WEBM: true,
 };
 
 interface UploadRequest {
@@ -40,17 +48,19 @@ export const POST: APIRoute = async ({ request, locals }) => {
     if (typeof contentBase64 !== 'string' || !contentBase64) {
       return json({ error: 'missing contentBase64' }, 400);
     }
-    const { repoDir: REPO_UPLOAD_PATH, publicPrefix: PUBLIC_URL_PREFIX } = TARGET_PATHS[target];
+    const { repoDir: REPO_UPLOAD_PATH, publicPrefix: PUBLIC_URL_PREFIX, isVideo } = TARGET_PATHS[target];
 
     const ext = filename.split('.').pop() || '';
-    if (!ALLOWED_EXT[ext]) {
-      return json({ error: `extension not allowed: .${ext}` }, 400);
+    const allowed = isVideo ? ALLOWED_VIDEO_EXT : ALLOWED_IMAGE_EXT;
+    if (!allowed[ext]) {
+      return json({ error: `extension not allowed for ${target}: .${ext}` }, 400);
     }
 
     // Грубая оценка размера: base64 ~= 4/3 от байтов.
     const approxBytes = Math.floor((contentBase64.length * 3) / 4);
-    if (approxBytes > MAX_BYTES) {
-      return json({ error: `file too large: ~${Math.round(approxBytes / 1024 / 1024)} МБ, лимит ${MAX_BYTES / 1024 / 1024} МБ` }, 413);
+    const maxBytes = isVideo ? MAX_BYTES_VIDEO : MAX_BYTES_IMAGE;
+    if (approxBytes > maxBytes) {
+      return json({ error: `file too large: ~${Math.round(approxBytes / 1024 / 1024)} МБ, лимит ${maxBytes / 1024 / 1024} МБ` }, 413);
     }
 
     // Нормализуем имя: оставляем латиницу/цифры/подчёркивание, обрезаем до 24 символов.

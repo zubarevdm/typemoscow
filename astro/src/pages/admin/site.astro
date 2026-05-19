@@ -95,6 +95,23 @@ import site from '../../content/site.json';
       </fieldset>
 
       <fieldset class="form-section">
+        <legend>Hero видео</legend>
+
+        <div class="field">
+          <label class="field-label" for="hero-video-file">Заменить видео</label>
+          <input id="hero-video-file" type="file" accept="video/mp4,video/webm" class="file-input" data-upload-target="heroVideo" data-upload-folder="video" />
+          <span class="field-hint">MP4 или WebM, до 25 МБ. Чтобы уменьшить .mov-файл — конвертируйте на handbrake.fr или cloudconvert.com (H.264, до 1280×720, ~5 Мбит/с).</span>
+          <p class="upload-status" data-upload-status hidden></p>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="heroVideo">Путь к файлу</label>
+          <input id="heroVideo" name="heroVideo" type="text" class="input" value={site.heroVideo} readonly />
+          <span class="field-hint">Заполнится автоматически после загрузки нового файла.</span>
+        </div>
+      </fieldset>
+
+      <fieldset class="form-section">
         <legend>Слоган</legend>
 
         <div class="fieldset-2">
