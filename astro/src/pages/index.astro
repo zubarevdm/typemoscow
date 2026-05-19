@@ -1076,6 +1076,18 @@ const schemaJsonLd = {
   .footer-col a { font-size: 14px; color: var(--ink); }
   .footer-col a:hover { color: var(--forest); }
 
+  /* Партнёры в подвале: на десктопе/планшете в 2 столбца чтобы 9 имён
+     не растягивали колонку в полосу. На мобиле — один столбец. */
+  .footer-col--partners ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+    row-gap: 10px;
+  }
+  @media (max-width: 480px) {
+    .footer-col--partners ul { grid-template-columns: 1fr; }
+  }
+
   .footer-pitch {
     font-family: var(--font-body); font-weight: 700;
     font-size: clamp(18px, 1.7vw, 22px); line-height: 1.25;
@@ -1577,10 +1589,10 @@ const schemaJsonLd = {
           </p>
         </div>
 
-        <div class="footer-col">
+        <div class="footer-col footer-col--partners">
           <h4>Партнёры</h4>
           <ul>
-            {partners.partners.slice(0, 6).map((p) => (
+            {partners.partners.map((p) => (
               <li><a href="#partners">{p.name}</a></li>
             ))}
           </ul>
