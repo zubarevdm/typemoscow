@@ -1580,10 +1580,9 @@ const schemaJsonLd = {
         <div class="footer-col">
           <h4>Партнёры</h4>
           <ul>
-            <li><a href="#partners">«Ш»</a></li>
-            <li><a href="#partners">BETONE</a></li>
-            <li><a href="#partners">SHEVELIZM</a></li>
-            <li><a href="#partners">TAKTO</a></li>
+            {partners.partners.slice(0, 6).map((p) => (
+              <li><a href="#partners">{p.name}</a></li>
+            ))}
           </ul>
         </div>
       </div>
