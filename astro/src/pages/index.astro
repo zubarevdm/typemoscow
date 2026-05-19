@@ -1254,7 +1254,7 @@ const schemaJsonLd = {
 
       <div class="nav-cta">
         <a href={`tel:${contacts.phone.tel}`} class="nav-phone">{contacts.phone.display}</a>
-        <a href="#cta" class="nav-book">Записаться</a>
+        <a href={contacts.booking.yclients} target="_blank" rel="noopener noreferrer" class="nav-book">Записаться</a>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Открыть меню">
           <span></span><span></span><span></span>
         </button>
@@ -1276,7 +1276,7 @@ const schemaJsonLd = {
     </nav>
     <div class="mobile-foot">
       <a href={`tel:${contacts.phone.tel}`} style="font-family:var(--font-mono); font-size:18px; color:var(--ink); letter-spacing:.04em; font-variant-numeric:tabular-nums;">{contacts.phone.display}</a>
-      <a href="#cta" class="btn btn-primary">Записаться <span class="arrow"></span></a>
+      <a href={contacts.booking.yclients} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Записаться <span class="arrow"></span></a>
     </div>
   </div>
 
@@ -1320,7 +1320,7 @@ const schemaJsonLd = {
 
         <div class="hero-foot">
           <span class="hero-pill">{contacts.address.city} · Остоженка 47</span>
-          <a href="#cta" class="hero-cta">Записаться онлайн <span class="arrow"></span></a>
+          <a href={contacts.booking.yclients} target="_blank" rel="noopener noreferrer" class="hero-cta">Записаться онлайн <span class="arrow"></span></a>
           <span class="hero-secondary">Сегодня открыто <span style="color:var(--ash);">·</span> до 22:00</span>
         </div>
       </div>
@@ -1369,7 +1369,7 @@ const schemaJsonLd = {
 
         <div class="services-foot">
           <span class="services-foot-note">{services.footnote}</span>
-          <a href="#cta" class="btn btn-ghost">Записаться <span class="arrow"></span></a>
+          <a href={contacts.booking.yclients} target="_blank" rel="noopener noreferrer" class="btn btn-ghost">Записаться <span class="arrow"></span></a>
         </div>
       </div>
     </section>
@@ -1446,8 +1446,8 @@ const schemaJsonLd = {
         <h2 class="cta-title">Записаться</h2>
         <p class="cta-sub">Запись по телефону или через онлайн-сервис. Перезвоним в течение 5 минут и подберём время у нужного мастера.</p>
         <div class="cta-buttons">
-          <a href={`tel:${contacts.phone.tel}`} class="btn btn-primary">Позвонить · {contacts.phone.display}</a>
-          <a href={contacts.booking.yclients} target="_blank" rel="noopener noreferrer" class="btn btn-ghost">Онлайн-запись (YClients) <span class="arrow"></span></a>
+          <a href={contacts.booking.yclients} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Записаться онлайн <span class="arrow"></span></a>
+          <a href={`tel:${contacts.phone.tel}`} class="btn btn-ghost">Позвонить · {contacts.phone.display}</a>
         </div>
       </div>
     </section>
@@ -1564,7 +1564,7 @@ const schemaJsonLd = {
             <li><a href="#team">Команда</a></li>
             <li><a href="/works/">Работы</a></li>
             <li><a href="#interior">Интерьер</a></li>
-            <li><a href="#cta">Записаться</a></li>
+            <li><a href={contacts.booking.yclients} target="_blank" rel="noopener noreferrer">Записаться</a></li>
             <li><a href="#contacts">Контакты</a></li>
             <li><a href="#partners">Партнёры</a></li>
           </ul>
@@ -1597,7 +1597,7 @@ const schemaJsonLd = {
 
   <!-- Sticky mobile CTA -->
   <div class="sticky-cta" id="stickyCta" aria-hidden="true">
-    <a href="#cta" class="btn btn-primary">Записаться <span class="arrow"></span></a>
+    <a href={contacts.booking.yclients} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Записаться <span class="arrow"></span></a>
   </div>
 
   <script>
